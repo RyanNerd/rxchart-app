@@ -30,8 +30,11 @@ class ValidateRequest
             return $handler->handle($request);
         }
 
-        // Put your logic here to determine if request is authorized and/or is admin
-        if (true) {
+        // Determine if request is authorized
+        $expectedApiKey = getenv('API_KEY');
+        $actualApiKey = $responseBody->getParsedRequest()['api_key'] ?? null;
+        if ($expectedApiKey === $actualApiKey) {
+            // Make all valid authentications admin
             $responseBody = $responseBody
                 ->setIsAdmin()
                 ->setIsAuthenticated();
@@ -39,7 +42,9 @@ class ValidateRequest
         }
 
         // Short circuit the request by returning a response with status of 401;
-        $responseBody = $responseBody->setStatus(401)->setMessage('Invalid API Key');
+        $responseBody = $responseBody
+            ->setStatus(401)
+            ->setMessage('Invalid API Key');
         return $responseBody();
     }
 }

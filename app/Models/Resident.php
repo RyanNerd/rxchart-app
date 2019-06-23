@@ -23,7 +23,7 @@ class Resident extends ModelBase
     public const FIELDS = [
         'Id' => 'integer',
         'LastName' => 'string',
-        'FIrstName' => 'string',
+        'FirstName' => 'string',
         'DOB_YEAR' => 'integer',
         'DOB_MONTH' => 'boolean',
         'DOB_DAY' => 'boolean',

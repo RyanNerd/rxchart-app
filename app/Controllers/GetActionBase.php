@@ -29,6 +29,12 @@ class GetActionBase
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
 
+        $id = $args['id'];
+
+        if ($id === 'all') {
+
+        }
+
         // Load the model with the given id (PK)
         $model = $this->model->find($args['id']);
 

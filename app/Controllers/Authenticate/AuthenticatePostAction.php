@@ -16,11 +16,11 @@ class AuthenticatePostAction
         $responseBody = $request->getAttribute('response_body');
         $body = $responseBody->getParsedRequest();
 
-        // Hard code this for now
-        if ($body['username'] === 'switchpoint' && $body['password'] === 'switchpoint123' ) {
+        // Single hard coded credentionals for now
+        if ($body['username'] === getenv('USER_NAME') && $body['password'] === getenv('PASSWORD')) {
             $responseBody = $responseBody
                 ->setStatus(200)
-                ->setData(['apiKey' => 'TEMP_APIKEY'])
+                ->setData(['apiKey' => getenv('API_KEY')])
                 ->setMessage('API Key set');
         } else {
             $responseBody = $responseBody

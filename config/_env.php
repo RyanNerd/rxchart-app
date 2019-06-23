@@ -12,6 +12,9 @@ $dotEnv->required(
         'DB_NAME',
         'DB_USER',
         'DB_PASSWORD',
-        'DISPLAY_ERROR_DETAILS'
+        'DISPLAY_ERROR_DETAILS',
+        'USER_NAME',
+        'PASSWORD',
+        'API_KEY'
     ]
 );
