@@ -9,7 +9,7 @@ use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
 use Willow\Models\ModelBase;
 
-class GetActionBase
+class GetActionBase extends ActionBase
 {
     /**
      * @var ModelBase
@@ -29,29 +29,6 @@ class GetActionBase
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
 
-        $id = $args['id'];
-
-        // If id is 'all' then get ALL the models in the table.
-        if ($id === 'all') {
-            $models = $this->model->get()->all();
-            $dataTables = [];
-            if ($models !== null) {
-                /** @var ModelBase $model */
-                foreach ($models as $model) {
-                    $data = $model->toArray();
-                    $this->sanitize($data, $model);
-                    $dataTables[] = $data;
-                }
-            } else {
-                $dataTables = [];
-            }
-
-            $responseBody = $responseBody
-                ->setData($dataTables)
-                ->setStatus(200);
-            return $responseBody();
-        }
-
         // Load the model with the given id (PK)
         $model = $this->model->find($args['id']);
 
@@ -62,7 +39,7 @@ class GetActionBase
         } else {
             // Remove any protected fields from the response
             $data = $model->toArray();
-            $this->sanitize($data, $model);
+            $this->sanitize($data, $model::FIELDS);
 
             $status = 200;
         }
@@ -74,17 +51,5 @@ class GetActionBase
 
         // Return the response as JSON
         return $responseBody();
-    }
-
-    private function sanitize(array &$data, ModelBase $model): void
-    {
-        foreach ($data as $field => $value) {
-            if (array_key_exists($field, $model::FIELDS)) {
-                $dataType = $model::FIELDS[$field];
-                if ($dataType{0} === '*') {
-                    unset($data[$field]);
-                }
-            }
-        }
     }
 }

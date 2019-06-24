@@ -10,6 +10,8 @@ class MedHistoryController implements IController
 {
     public function register(RouteCollectorProxyInterface $group): void
     {
+        $group->get('/medhistory/query/{value}', MedHistoryQueryAction::class)
+            ->add(MedHistoryQueryValidator::class);
         $group->get('/medhistory/{id}', MedHistoryGetAction::class);
         $group->post('/medhistory', MedHistoryPostAction::class)
             ->add(MedHistoryWriteValidator::class);

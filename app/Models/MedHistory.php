@@ -6,11 +6,11 @@ namespace Willow\Models;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
+ * @property \DateTime $Created
  * @property integer $Id
- * @property integer $ResidentId
  * @property integer $MedicineId
  * @property string $Notes
- * @property \DateTime $Created
+ * @property integer $ResidentId
  * @property \DateTime $Updated
  *
  * @mixin Builder
@@ -18,11 +18,11 @@ use Illuminate\Database\Eloquent\Builder;
 class MedHistory extends ModelBase
 {
     public const FIELDS = [
+        'Created' => 'datetime',
         'Id' => 'integer',
-        'ResidentId' => 'integer',
         'MedicineId' => 'integer',
         'Notes' => 'string',
-        'Created' => 'datetime',
+        'ResidentId' => 'integer',
         'Updated' => 'datetime',
 
     ];

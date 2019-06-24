@@ -6,14 +6,14 @@ namespace Willow\Models;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
+ * @property \DateTime $Created
+ * @property boolean $DOB_DAY
+ * @property boolean $DOB_MONTH
+ * @property integer $DOB_YEAR
+ * @property string $FirstName
  * @property integer $Id
  * @property string $LastName
- * @property string $FIrstName
- * @property integer $DOB_YEAR
- * @property boolean $DOB_MONTH
- * @property boolean $DOB_DAY
  * @property boolean $Status
- * @property \DateTime $Created
  * @property \DateTime $Updated
  *
  * @mixin Builder
@@ -21,14 +21,14 @@ use Illuminate\Database\Eloquent\Builder;
 class Resident extends ModelBase
 {
     public const FIELDS = [
+        'Created' => 'datetime',
+        'DOB_DAY' => 'boolean',
+        'DOB_MONTH' => 'boolean',
+        'DOB_YEAR' => 'integer',
+        'FirstName' => 'string',
         'Id' => 'integer',
         'LastName' => 'string',
-        'FirstName' => 'string',
-        'DOB_YEAR' => 'integer',
-        'DOB_MONTH' => 'boolean',
-        'DOB_DAY' => 'boolean',
         'Status' => 'boolean',
-        'Created' => 'datetime',
         'Updated' => 'datetime',
 
     ];

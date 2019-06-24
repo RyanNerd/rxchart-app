@@ -6,13 +6,13 @@ namespace Willow\Models;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
- * @property integer $Id
- * @property integer $ResidentId
- * @property string $MedicineName
  * @property string $Barcode
- * @property string $Directions
- * @property string $Notes
  * @property \DateTime $Created
+ * @property string $Directions
+ * @property integer $Id
+ * @property string $MedicineName
+ * @property string $Notes
+ * @property integer $ResidentId
  * @property \DateTime $Updated
  *
  * @mixin Builder
@@ -20,13 +20,13 @@ use Illuminate\Database\Eloquent\Builder;
 class Medicine extends ModelBase
 {
     public const FIELDS = [
-        'Id' => 'integer',
-        'ResidentId' => 'integer',
-        'MedicineName' => 'string',
         'Barcode' => 'string',
-        'Directions' => 'string',
-        'Notes' => 'string',
         'Created' => 'datetime',
+        'Directions' => 'string',
+        'Id' => 'integer',
+        'MedicineName' => 'string',
+        'Notes' => 'string',
+        'ResidentId' => 'integer',
         'Updated' => 'datetime',
 
     ];

@@ -10,6 +10,8 @@ class PillsController implements IController
 {
     public function register(RouteCollectorProxyInterface $group): void
     {
+        $group->get('/pills/query/{value}', PillsQueryAction::class)
+            ->add(PillsQueryValidator::class);
         $group->get('/pills/{id}', PillsGetAction::class);
         $group->post('/pills', PillsPostAction::class)
             ->add(PillsWriteValidator::class);
