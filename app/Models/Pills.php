@@ -6,10 +6,10 @@ namespace Willow\Models;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
- * @property \DateTime $Created
  * @property integer $Id
- * @property integer $MedicineId
  * @property integer $PillboxId
+ * @property integer $MedicineId
+ * @property \DateTime $Created
  * @property \DateTime $Updated
  *
  * @mixin Builder
@@ -17,10 +17,10 @@ use Illuminate\Database\Eloquent\Builder;
 class Pills extends ModelBase
 {
     public const FIELDS = [
-        'Created' => 'datetime',
         'Id' => 'integer',
-        'MedicineId' => 'integer',
         'PillboxId' => 'integer',
+        'MedicineId' => 'integer',
+        'Created' => 'datetime',
         'Updated' => 'datetime',
 
     ];
