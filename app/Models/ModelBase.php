@@ -15,6 +15,16 @@ abstract class ModelBase extends Model
 {
     public const FIELDS = [];
 
+    public function setUpdatedAt($value)
+    {
+        $this->updated = $value;
+    }
+
+    public function setCreatedAt($value)
+    {
+        $this->created = $value;
+    }
+
     /**
      * Return the name of the primary key column (usually but not always "id")
      *
