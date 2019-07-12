@@ -17,7 +17,8 @@ class AuthenticatePostAction
         $body = $responseBody->getParsedRequest();
 
         // Single hard coded credentials for now
-        if (($body['username'] === getenv('USER_NAME') && $body['password'] === getenv('PASSWORD')) || true) {
+        if ($body['username'] === getenv('USER_NAME') &&
+            $body['password'] === getenv('PASSWORD')) {
             $responseBody = $responseBody
                 ->setStatus(200)
                 ->setData(['apiKey' => getenv('API_KEY')])
