@@ -15,15 +15,12 @@ abstract class ModelBase extends Model
 {
     public const FIELDS = [];
 
-    public function setUpdatedAt($value)
-    {
-        $this->updated = $value;
-    }
+    // Override the created_at and updated_at column names
+    const UPDATED_AT = 'Updated';
+    const CREATED_AT = 'Created';
 
-    public function setCreatedAt($value)
-    {
-        $this->created = $value;
-    }
+    // Override the primary key name
+    protected $primaryKey = 'Id';
 
     /**
      * Return the name of the primary key column (usually but not always "id")
