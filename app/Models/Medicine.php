@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
  * @property integer $Id
  * @property integer $ResidentId
  * @property string $Drug
+ * @property string $Strength
  * @property string $Barcode
  * @property string $Directions
  * @property string $Notes
@@ -23,12 +24,12 @@ class Medicine extends ModelBase
         'Id' => 'integer',
         'ResidentId' => 'integer',
         'Drug' => 'string',
+        'Strength' => 'string',
         'Barcode' => 'string',
         'Directions' => 'string',
         'Notes' => 'string',
         'Created' => 'datetime',
-        'Updated' => 'datetime',
-
+        'Updated' => 'datetime'
     ];
 
     protected $table = 'Medicine';
