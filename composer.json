@@ -25,8 +25,8 @@
         "php" : "^7.1",
         "php-di/php-di": "^6.0.8",
         "respect/validation": "^2.0@dev",
-        "slim/psr7": "dev-master",
-        "slim/slim": "4.0.0-beta",
+        "slim/psr7": "^0.3.0",
+        "slim/slim": "^4.0.0",
         "vlucas/phpdotenv": "^3.3.3"
     },
     "require-dev": {

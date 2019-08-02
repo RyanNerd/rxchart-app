@@ -5,6 +5,7 @@ namespace Willow\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class ModelBase
@@ -13,6 +14,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 abstract class ModelBase extends Model
 {
+    use SoftDeletes;
+
     public const FIELDS = [];
 
     // Override the created_at and updated_at column names
