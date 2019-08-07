@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Willow\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property integer $Id
@@ -24,8 +25,13 @@ class MedHistory extends ModelBase
         'Notes' => 'string',
         'Created' => 'datetime',
         'Updated' => 'datetime',
-
+        'medicine' => 'model'
     ];
 
     protected $table = 'MedHistory';
+
+    public function medicine(): HasOne
+    {
+        return $this->hasOne(Medicine::class,'Id', 'MedicineId');
+    }
 }

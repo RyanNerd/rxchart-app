@@ -13,6 +13,10 @@ class MedHistoryQueryAction extends QueryActionBase
      */
     protected $model;
 
+    protected $relations = ['medicine'];
+
+    protected $allowAll = true;
+
     /**
      * Get the model via Dependency Injection and save it as a property.
      *

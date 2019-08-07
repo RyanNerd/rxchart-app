@@ -9,12 +9,17 @@ use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
 use Willow\Models\ModelBase;
 
-class QueryActionBase extends ActionBase
+abstract class QueryActionBase extends ActionBase
 {
     /**
      * @var ModelBase
      */
     protected $model;
+
+    /**
+     * @var array | null
+     */
+    protected $relations = null;
 
     /**
      * @var bool When set to true it allows queries with the value of * to return all records for the table.
@@ -43,12 +48,24 @@ class QueryActionBase extends ActionBase
             case '*':
                 {
                     if ($this->allowAll) {
-                        $models = $this->model->get()->all();
+                        if ($this->relations === null) {
+                            $models = $this
+                                ->model
+                                ->get()
+                                ->all();
+                        } else {
+                            assert(is_array($this->relations), '$this->relations must be an array');
+                            $models = $this
+                                ->model
+                                ->with($this->relations)
+                                ->get()
+                                ->all();
+                        }
                     }
                     break;
                 }
 
-            // SELECT * WHERE __columnName=value AND __columnName=value [...]
+            // SELECT * WHERE _columnName=value AND _columnName=value [...]
             case '_':
                 {
                     $model = $this->model;
@@ -58,7 +75,15 @@ class QueryActionBase extends ActionBase
                             $model = $model->where($columnName, '=', $value);
                         }
                     }
-                    $models = $model->get();
+
+                    if ($this->relations === null) {
+                        $models = $model
+                            ->get();
+                    } else {
+                        $models = $model
+                            ->with($this->relations)
+                            ->get();
+                    }
 
                     break;
                 }
@@ -68,7 +93,18 @@ class QueryActionBase extends ActionBase
                 {
                     $columnName = $parsedRequest['column_name'];
                     $operator = $parsedRequest['operator'] ?? '=';
-                    $models = $this->model->where($columnName, $operator, $value)->get();
+
+                    if ($this->relations === null) {
+                        $models = $this
+                            ->model
+                            ->where($columnName, $operator, $value)
+                            ->get();
+                    } else {
+                        $models = $this
+                            ->model
+                            ->with($this->relations)
+                            ->where($columnName, $operator, $value)->get();
+                    }
                 }
         }
 

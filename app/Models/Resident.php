@@ -30,7 +30,6 @@ class Resident extends ModelBase
         'Status' => 'boolean',
         'Created' => 'datetime',
         'Updated' => 'datetime',
-
     ];
 
     protected $table = 'Resident';

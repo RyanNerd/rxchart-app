@@ -20,7 +20,7 @@
         "doctrine/dbal": "^2.9.2",
         "ext-json": "*",
         "ext-pdo": "*",
-        "illuminate/database": "^5.8.22",
+        "illuminate/database": "^5.8.30",
         "league/climate": "^3.5",
         "php" : "^7.1",
         "php-di/php-di": "^6.0.8",
