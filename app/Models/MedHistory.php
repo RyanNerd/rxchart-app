@@ -29,9 +29,4 @@ class MedHistory extends ModelBase
     ];
 
     protected $table = 'MedHistory';
-
-    public function medicine(): HasOne
-    {
-        return $this->hasOne(Medicine::class,'Id', 'MedicineId');
-    }
 }

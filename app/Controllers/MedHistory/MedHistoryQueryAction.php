@@ -13,7 +13,7 @@ class MedHistoryQueryAction extends QueryActionBase
      */
     protected $model;
 
-    protected $relations = ['medicine'];
+    protected $orderBy = ['Created' => 'desc'];
 
     protected $allowAll = true;
 
