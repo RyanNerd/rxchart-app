@@ -15,6 +15,8 @@ class ResidentQueryAction extends QueryActionBase
 
     protected $allowAll = true;
 
+    protected $orderBy = ['LastName' => 'asc'];
+
     /**
      * Get the model via Dependency Injection and save it as a property.
      *
