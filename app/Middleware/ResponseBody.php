@@ -54,6 +54,11 @@ class ResponseBody
     protected $missing = [];
 
     /**
+     * @var int
+     */
+    protected $userId;
+
+    /**
      * Generate the response
      */
     public function __invoke(): ResponseInterface
@@ -117,7 +122,7 @@ class ResponseBody
      */
     public function getIsAdmin(): bool
     {
-        return ($this->isAdmin);
+        return $this->isAdmin;
     }
 
     /**
@@ -142,6 +147,17 @@ class ResponseBody
         return $this->isAuthenticated;
     }
 
+    public function setUserId(int $userId): self
+    {
+        $clone = clone $this;
+        $clone->userId = $userId;
+        return $clone;
+    }
+
+    public function getUserId(): int
+    {
+        return $this->userId;
+    }
     /**
      * Returns true if there are missing or required datapoints in the request
      *

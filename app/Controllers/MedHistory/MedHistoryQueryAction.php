@@ -15,6 +15,8 @@ class MedHistoryQueryAction extends QueryActionBase
 
     protected $orderBy = ['Created' => 'desc'];
 
+    protected $groupBy = ['MedicineId'];
+
     protected $allowAll = true;
 
     /**

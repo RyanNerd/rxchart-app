@@ -7,9 +7,22 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Routing\Route;
+use Willow\Models\User;
 
 class ValidateRequest
 {
+    /**
+     * @var User
+     */
+    private $user;
+
+    public function __construct(User $user)
+    {
+        if ($this->user === null) {
+            $this->user = $user;
+        }
+    }
+
     /**
      * Validation middleware
      *
@@ -22,23 +35,33 @@ class ValidateRequest
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
 
-        /** @var Route $route */
-        $route = $request->getAttribute('route');
-        $pattern = $route->getPattern();
-        // If this is an authenticate request then we let this through (this is how we get an API key)
-        if (strstr($pattern, 'authenticate')) {
-            return $handler->handle($request);
-        }
+        // Get the API key from the request
+        $apiKey = $responseBody->getParsedRequest()['api_key'] ?? null;
 
-        // Determine if request is authorized
-        $expectedApiKey = getenv('API_KEY');
-        $actualApiKey = $responseBody->getParsedRequest()['api_key'] ?? null;
-        if ($expectedApiKey === $actualApiKey) {
-            // Make all valid authentications admin
-            $responseBody = $responseBody
-                ->setIsAdmin()
-                ->setIsAuthenticated();
-            return $handler->handle($request->withAttribute('response_body', $responseBody));
+        // Is there an API key?
+        if ($apiKey !== null) {
+            $user = $this->user->where('API_KEY')->first();
+
+            if ($user !== null) {
+                if ($user->API_KEY === $apiKey) {
+
+                    // Make all valid authentications admin
+                    $responseBody = $responseBody
+                        ->setUserId($user->Id)
+                        ->setIsAdmin()
+                        ->setIsAuthenticated();
+                    return $handler->handle($request->withAttribute('response_body', $responseBody));
+                }
+            }
+        } else {
+            /** @var Route $route */
+            $route = $request->getAttribute('route');
+            $pattern = $route->getPattern();
+
+            // If this is an authenticate request then we let this through (this is how we get an API key)
+            if (strstr($pattern, 'authenticate')) {
+                return $handler->handle($request);
+            }
         }
 
         // Short circuit the request by returning a response with status of 401;

@@ -19,8 +19,8 @@ abstract class ModelBase extends Model
     public const FIELDS = [];
 
     // Override the created_at and updated_at column names
-    const UPDATED_AT = 'Updated';
-    const CREATED_AT = 'Created';
+    public const UPDATED_AT = 'Updated';
+    public const CREATED_AT = 'Created';
 
     // Override the primary key name
     protected $primaryKey = 'Id';

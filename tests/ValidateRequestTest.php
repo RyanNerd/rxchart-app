@@ -13,10 +13,19 @@ final class ValidateRequestTest extends TestCase
     {
         $validateRequest = new ValidateRequest();
         $responseBody = new ResponseBody();
-
+        $responseBody = $responseBody->setParsedRequest(['api_key' => 'invalid']);
+        $route = $this->createMock(\Slim\Routing\Route::class);
         $request = $this->createMock(Request::class);
-        $request->expects($this->atLeastOnce())->method('getAttribute')->with('response_body')->willReturn($responseBody);
-        $request->expects($this->once())->method('withAttribute')->with('response_body')->willReturnSelf();
+        $request->expects($this->at(0))
+            ->method('getAttribute')
+            ->with('response_body')
+            ->willReturn($responseBody);
+        $request->expects($this->at(1))
+            ->method('getAttribute')
+            ->with('route')
+            ->willReturn($route);
+
+        // $request->expects($this->once())->method('withAttribute')->with('response_body')->willReturnSelf();
 
         $requestHandler = $this->createMock(RequestHandler::class);
 
