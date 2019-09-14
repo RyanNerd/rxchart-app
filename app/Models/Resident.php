@@ -10,11 +10,11 @@ use Illuminate\Database\Eloquent\Builder;
  * @property string $LastName
  * @property string $FirstName
  * @property integer $DOB_YEAR
- * @property boolean $DOB_MONTH
- * @property boolean $DOB_DAY
- * @property boolean $Status
+ * @property integer $DOB_MONTH
+ * @property integer $DOB_DAY
  * @property \DateTime $Created
  * @property \DateTime $Updated
+ * @property \DateTime $deleted_at
  *
  * @mixin Builder
  */
@@ -25,11 +25,11 @@ class Resident extends ModelBase
         'LastName' => 'string',
         'FirstName' => 'string',
         'DOB_YEAR' => 'integer',
-        'DOB_MONTH' => 'boolean',
-        'DOB_DAY' => 'boolean',
-        'Status' => 'boolean',
+        'DOB_MONTH' => 'tinyint',
+        'DOB_DAY' => 'tinyint',
         'Created' => 'datetime',
         'Updated' => 'datetime',
+        'deleted_at' => 'datetiime'
     ];
 
     protected $table = 'Resident';

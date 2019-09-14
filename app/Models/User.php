@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @property integer $Id
- * @property string $SubDomain
+ * @property string $UserName
  * @property string $PasswordHash
  * @property string $API_KEY
  * @property \DateTime $Created
@@ -20,7 +20,7 @@ class User extends ModelBase
 {
     public const FIELDS = [
         'Id' => 'integer',
-        'SubDomain' => 'string',
+        'UserName' => 'string',
         'PasswordHash' => '*string',
         'API_KEY' => 'string',
         'Created' => 'datetime',

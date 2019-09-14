@@ -55,7 +55,6 @@ class App
         });
 
         // Add middleware that validates the overall request.
-        // TODO: Edit ValidateRequest to handle ALL request validations (e.g. API key validations)
         $v1->add(ValidateRequest::class);
 
         // Add ResponseBody as a Request attribute

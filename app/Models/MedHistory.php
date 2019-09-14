@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string $Notes
  * @property \DateTime $Created
  * @property \DateTime $Updated
+ * @property \DateTime $deleted_at
  *
  * @mixin Builder
  */
@@ -25,7 +26,7 @@ class MedHistory extends ModelBase
         'Notes' => 'string',
         'Created' => 'datetime',
         'Updated' => 'datetime',
-        'medicine' => 'model'
+        'deleted_at' => 'datetime'
     ];
 
     protected $table = 'MedHistory';

@@ -40,7 +40,7 @@ class ValidateRequest
 
         // Is there an API key?
         if ($apiKey !== null) {
-            $user = $this->user->where('API_KEY')->first();
+            $user = $this->user->where('API_KEY', '=', $apiKey)->first();
 
             if ($user !== null) {
                 if ($user->API_KEY === $apiKey) {

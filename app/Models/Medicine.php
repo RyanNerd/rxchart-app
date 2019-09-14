@@ -13,8 +13,12 @@ use Illuminate\Database\Eloquent\Builder;
  * @property string $Barcode
  * @property string $Directions
  * @property string $Notes
+ * @property integer $FillDateDay
+ * @property integer $FillDateMonth
+ * @property integer $FillDateYear
  * @property \DateTime $Created
  * @property \DateTime $Updated
+ * @property \DateTime $deleted_at
  *
  * @mixin Builder
  */
@@ -28,8 +32,12 @@ class Medicine extends ModelBase
         'Barcode' => 'string',
         'Directions' => 'string',
         'Notes' => 'string',
+        'FillDateMonth' => 'string',
+        'FillDateDay' => 'string',
+        'FillDateYear' => 'string',
         'Created' => 'datetime',
-        'Updated' => 'datetime'
+        'Updated' => 'datetime',
+        'deleted_at' => 'datetime'
     ];
 
     protected $table = 'Medicine';
