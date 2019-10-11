@@ -43,8 +43,8 @@ class ValidateRequest
             $user = $this->user->where('API_KEY', '=', $apiKey)->first();
 
             if ($user !== null) {
+                // SANITY CHECK
                 if ($user->API_KEY === $apiKey) {
-
                     // Make all valid authentications admin
                     $responseBody = $responseBody
                         ->setUserId($user->Id)

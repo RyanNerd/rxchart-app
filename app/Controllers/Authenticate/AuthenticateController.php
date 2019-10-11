@@ -10,6 +10,7 @@ class AuthenticateController implements IController
 {
     public function register(RouteCollectorProxyInterface $group): void
     {
-        $group->post('/authenticate', AuthenticatePostAction::class);
+        $group->post('/authenticate', AuthenticatePostAction::class)
+            ->add(AuthenticatePostValidator::class);
     }
 }
