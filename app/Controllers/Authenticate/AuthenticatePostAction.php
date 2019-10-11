@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Willow\Controllers\Authenticate;
 
+use DateTime;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
@@ -12,21 +13,34 @@ use Willow\Models\User;
 
 class AuthenticatePostAction
 {
+    /**
+     * @var User
+     */
     protected $userModel;
 
+    /**
+     * AuthenticatePostAction constructor.
+     * @param User $userModel
+     */
     public function __construct(User $userModel)
     {
         $this->userModel = $userModel;
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @return ResponseInterface
+     * @throws \Exception
+     */
     public function __invoke(Request $request, Response $response): ResponseInterface
     {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
         $body = $responseBody->getParsedRequest();
 
-        $userName = $body['username'] ?? null;
-
+        // Find the record matching username in the the User table
+        $userName = $body['username'];
         $user = $this->userModel->where('UserName', '=', $userName)->first();
 
         // Is the user not found or is the password not valid?
@@ -35,26 +49,40 @@ class AuthenticatePostAction
                 ->setStatus(401)
                 ->setData(null)
                 ->setMessage('Not authorized');
-        } else {
-            // Request is valid. Create new API_KEY for the user.
-            $user->API_KEY = GUID::v4();
+            return $responseBody();
+        }
 
-            // Save the API_KEY
-            if ($user->save()) {
-            $responseBody = $responseBody
-                ->setIsAuthenticated()
-                ->setStatus(200)
-                ->setData(['apiKey' => $user->API_KEY])
-                ->setMessage('API Key set');
-            } else {
+        // Request is authorized. Save the current API_KEY to memory.
+        $apiKey = $user->API_KEY;
+
+        // Calculate if the API_KEY is stale (One day)
+        $interval = $user->Updated->diff(new DateTime('now'));
+        if ($interval->d > 0) {
+            $apiKey = GUID::v4();
+        }
+
+        // Is the API_KEY stale?
+        if ($apiKey !== $user->API_KEY) {
+            // Update the user record with the new API_KEY
+            $user->API_KEY = $apiKey;
+
+            // Did the user update fail?
+            if (!$user->save()) {
                 // Save failed for some reason, so reject the request.
                 $responseBody = $responseBody
                     ->setStatus(500)
                     ->setData(null)
                     ->setMessage('Unable to set new API_KEY');
+                return $responseBody();
             }
         }
 
+        // Request is valid and authenticated!
+        $responseBody = $responseBody
+            ->setIsAuthenticated()
+            ->setStatus(200)
+            ->setData(['apiKey' => $user->API_KEY])
+            ->setMessage('API Key set');
         return $responseBody();
     }
 }
