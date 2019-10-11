@@ -9,7 +9,7 @@ namespace Willow\Main;
  */
 class GUID
 {
-    public static function v4()
+    public static function v4(): string
     {
         return sprintf(
             '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
