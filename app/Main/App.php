@@ -4,9 +4,17 @@ declare(strict_types=1);
 namespace Willow\Main;
 
 use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
+use Exception;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Slim\Factory\AppFactory;
 use Slim\Routing\RouteCollectorProxy;
+use Willow\Controllers\Authenticate\AuthenticateController;
+use Willow\Controllers\MedHistory\MedHistoryController;
+use Willow\Controllers\Medicine\MedicineController;
+use Willow\Controllers\PasswordReset\PasswordResetController;
+use Willow\Controllers\Resident\ResidentController;
 use Willow\Middleware\JsonBodyParser;
 use Willow\Middleware\ResponseBodyFactory;
 use Willow\Middleware\ValidateRequest;
@@ -18,6 +26,13 @@ class App
      */
     protected $capsule = null;
 
+    /**
+     * App constructor.
+     * @param bool $run
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws Exception
+     */
     public function __construct(bool $run = true)
     {
         // Set up Dependency Injection
@@ -42,16 +57,12 @@ class App
         // Register the routes via the controllers
         $v1 = $app->group('/v1', function (RouteCollectorProxy $collectorProxy) use ($container)
         {
-            $nameSpace = self::class;
-            $nameSpace = str_replace('\Main\App', '', $nameSpace);
-
-            // TODO: Speed things up by replacing the foreach logic with direct calls. For example:
-            //       $container->get(SampleController::class)->register($collectorProxy);
-            foreach(glob(__DIR__ . '/../Controllers/*',GLOB_ONLYDIR) as $controller) {
-                $controller = basename($controller);
-                $className = $nameSpace . '\Controllers\\' . $controller . '\\' . $controller . 'Controller';
-                $container->get($className)->register($collectorProxy);
-            }
+            // Register controllers/routes
+            $container->get(AuthenticateController::class)->register($collectorProxy);
+            $container->get(MedHistoryController::class)->register($collectorProxy);
+            $container->get(MedicineController::class)->register($collectorProxy);
+            $container->get(PasswordResetController::class)->register($collectorProxy);
+            $container->get(ResidentController::class)->register($collectorProxy);
         });
 
         // Add middleware that validates the overall request.

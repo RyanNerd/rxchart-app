@@ -39,4 +39,11 @@ if (file_exists(__DIR__ . '/../.env')) {
 }
 
 // Launch the app
-new App();
+try {
+    new App();
+} catch (Throwable $throwable) {
+    // Output to STDERR the exception error message.
+    $stdErr = fopen('php://stderr', 'b');
+    fwrite($stdErr, $throwable->getMessage() . PHP_EOL);
+    fclose($stdErr);
+}

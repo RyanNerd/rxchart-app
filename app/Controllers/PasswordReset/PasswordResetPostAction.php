@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Willow\Controllers\Authenticate;
+namespace Willow\Controllers\PasswordReset;
 
 use DateTime;
 use Psr\Http\Message\ResponseInterface;
@@ -11,7 +11,7 @@ use Willow\Main\GUID;
 use Willow\Middleware\ResponseBody;
 use Willow\Models\User;
 
-class AuthenticatePostAction
+class PasswordResetPostAction
 {
     /**
      * @var User
@@ -43,8 +43,8 @@ class AuthenticatePostAction
         $userName = $body['username'];
         $user = $this->userModel->where('UserName', '=', $userName)->first();
 
-        // Is the user not found or is the password not valid?
-        if ($user === null || !password_verify($body['password'], $user->PasswordHash)) {
+        // Is the user not found or is the old_password not valid or the api_key is invalid?
+        if ($user === null || $user->API_KEY != $body['api_key'] || !password_verify($body['old_password'], $user->PasswordHash)) {
             $responseBody = $responseBody
                 ->setStatus(401)
                 ->setData(null)
@@ -52,22 +52,11 @@ class AuthenticatePostAction
             return $responseBody();
         }
 
-        // Request is authorized. Save the current API_KEY to memory.
-        $apiKey = $user->API_KEY;
+        // Request is authorized. Calculate new API_KEY
+        $user->API_KEY = GUID::v4();
 
-        // Calculate if the API_KEY is stale (30-days since a new login)
-        $interval = $user->Updated->diff(new DateTime('now'));
-        if ($interval->d > 30) {
-            $apiKey = GUID::v4();
-        }
-
-        // Is the API_KEY stale?
-        if ($apiKey !== $user->API_KEY) {
-            // Update the user record with the new API_KEY
-            $user->API_KEY = $apiKey;
-        }
-
-        $user->Updated = new DateTime();
+        // Update PasswordHash
+        $user->PasswordHash = password_hash($body['new_password'], PASSWORD_DEFAULT);
 
         // Did the user update fail?
         if (!$user->save()) {
@@ -75,16 +64,17 @@ class AuthenticatePostAction
             $responseBody = $responseBody
                 ->setStatus(500)
                 ->setData(null)
-                ->setMessage('Unable to set new API_KEY');
+                ->setMessage('Unable to set new password');
             return $responseBody();
         }
 
-        // Request is valid and authenticated!
+        // Request is valid and authenticated with new API_KEY
         $responseBody = $responseBody
             ->setIsAuthenticated()
             ->setStatus(200)
             ->setData(['apiKey' => $user->API_KEY])
-            ->setMessage('API Key set');
+            ->setMessage('Password reset');
         return $responseBody();
     }
 }
+
