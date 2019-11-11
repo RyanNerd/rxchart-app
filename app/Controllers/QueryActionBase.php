@@ -89,7 +89,7 @@ abstract class QueryActionBase extends ActionBase
             {
                 $model = $this->model;
                 foreach ($parsedRequest as $item => $fieldValue) {
-                    if ($item{0} === '_') {
+                    if ($item[0] === '_') {
                         $columnName = substr($item, 1);
                         $model = $model->where($columnName, '=', $fieldValue);
                     }
