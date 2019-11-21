@@ -33,4 +33,6 @@ class Resident extends ModelBase
     ];
 
     protected $table = 'Resident';
+
+    public $allowAll = true;
 }
