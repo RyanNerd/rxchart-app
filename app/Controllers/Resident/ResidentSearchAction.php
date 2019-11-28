@@ -13,6 +13,10 @@ class ResidentSearchAction extends SearchActionBase
      */
     protected $model;
 
+    /**
+     * ResidentSearchAction constructor.
+     * @param Resident $model
+     */
     public function __construct(Resident $model)
     {
         $this->model = $model;

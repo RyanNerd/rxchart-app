@@ -13,6 +13,10 @@ class ResidentSearchValidator extends SearchValidatorBase
      */
     protected $model;
 
+    /**
+     * ResidentSearchValidator constructor.
+     * @param Resident $resident
+     */
     public function __construct(Resident $resident)
     {
         $this->model = $resident;
