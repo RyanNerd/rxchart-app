@@ -28,14 +28,13 @@ class SearchActionBase extends ActionBase
     {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
-
         $model = $this->model;
         $modelColumns = $model::FIELDS;
 
         // Get the request to build the query
         $parsedBody = $responseBody->getParsedRequest();
 
-        // WHERE Section (required) TODO: Additional where clauses such as WhereBetween
+        // WHERE Section TODO: Additional where clauses such as WhereBetween
         // @see https://laravel.com/docs/6.x/queries#where-clauses
         $where = $parsedBody['where'];
         foreach ($where as $item) {
@@ -56,13 +55,6 @@ class SearchActionBase extends ActionBase
         // LIMIT Section (optional) TODO: Validate
         if (array_key_exists('limit', $parsedBody)) {
             $model = $model->limit($parsedBody['limit']);
-        }
-
-        // PLUCK Section (optional) TODO: Validate
-        if (array_key_exists('pluck', $parsedBody)) {
-            foreach ($parsedBody['pluck'] as $pluck) {
-                $model = $model->pluck($pluck);
-            }
         }
 
         // JOIN Section (optional) TODO: Validate

@@ -22,6 +22,16 @@ class SearchValidatorBase
         'like'
     ];
 
+    protected const VALID_CLAUSES = [
+        'id',
+        'api_key',
+        'where',
+        'order_by',
+        'limit',
+        'with_trashed',
+        'only_trashed'
+    ];
+
     /**
      * @var ModelBase
      */
@@ -39,42 +49,52 @@ class SearchValidatorBase
         $parsedBody = $responseBody->getParsedRequest();
         $model = $this->model;
 
-        // where is required
-        if (!array_key_exists('where', $parsedBody) && !$model->allowAll) {
-            $responseBody->registerParam('required', 'where', 'array<object>');
-        } else {
-            foreach ($parsedBody['where'] as $item) {
-                $column = $item['column'] ?? '';
+        $parsedKeys= array_keys($parsedBody);
 
-                // Check the white listed columns for the model.
-                // If the column is not in the white list then register it as invalid.
-                if (!array_key_exists($column, $model::FIELDS)) {
-                    $responseBody->registerParam('invalid', $column, 'column');
-                } else {
-                    if (!array_key_exists('column', $item)) {
-                        $responseBody->registerParam('required', 'where->column', 'string');
-                    }
+        // where may be required
+        if (!$model->allowAll) {
+            if (!in_array('where', $parsedKeys)) {
+                $responseBody->registerParam('required', 'where', 'array<object>');
+            }
+        }
 
-                    if (!array_key_exists('value', $item)) {
-                        $responseBody->registerParam('required', 'where->value', 'string');
-                    }
+        $invalidClauses = array_diff($parsedKeys, self::VALID_CLAUSES);
+        foreach ($invalidClauses as $invalidClause) {
+            $responseBody->registerParam('invalid', $invalidClause, null);
+        }
 
-                    // Is a comparison item given?
-                    if (array_key_exists('comparison', $item)) {
-                        // Make sure the comparison string is valid
-                        if (!in_array($item['comparison'], self::VALID_COMPARISON_STRINGS)) {
-                            $responseBody->registerParam('invalid', 'where->comparison', 'string');
-                        }
+        $where = $parsedBody['where'] ?? [];
+        foreach ($where as $item) { // FIXME: PHP Notice:  Undefined index: where in /var/www/rxchart-app/app/Controllers/SearchValidatorBase.php on line 46
+            $column = $item['column'] ?? '';
+
+            // Check the white listed columns for the model.
+            // If the column is not in the white list then register it as invalid.
+            if (!array_key_exists($column, $model::FIELDS)) {
+                $responseBody->registerParam('invalid', $column, 'column');
+            } else {
+                if (!array_key_exists('column', $item)) {
+                    $responseBody->registerParam('required', 'where->column', 'string');
+                }
+
+                if (!array_key_exists('value', $item)) {
+                    $responseBody->registerParam('required', 'where->value', 'string');
+                }
+
+                // Is a comparison item given?
+                if (array_key_exists('comparison', $item)) {
+                    // Make sure the comparison string is valid
+                    if (!in_array($item['comparison'], self::VALID_COMPARISON_STRINGS)) {
+                        $responseBody->registerParam('invalid', 'where->comparison', 'string');
                     }
                 }
             }
+        }
 
-            // Is limit requested?
-            if (array_key_exists('limit', $parsedBody)) {
-                // The limit value MUST be an integer.
-                if (!is_int($parsedBody['limit'])) {
-                    $responseBody->registerParam('invalid', 'limit', 'integer');
-                }
+        // Is limit requested?
+        if (array_key_exists('limit', $parsedBody)) {
+            // The limit value MUST be an integer.
+            if (!is_int($parsedBody['limit'])) {
+                $responseBody->registerParam('invalid', 'limit', 'integer');
             }
         }
 
