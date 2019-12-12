@@ -20,5 +20,7 @@ class ResidentController implements IController
         $group->patch('/resident', ResidentPatchAction::class)
             ->add(ResidentWriteValidator::class);
         $group->delete('/resident/{id}', ResidentDeleteAction::class);
+        $group->post('/resident/restore', ResidentRestoreAction::class)
+            ->add(ResidentRestoreValidator::class);
     }
 }
