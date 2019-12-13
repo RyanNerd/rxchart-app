@@ -8,6 +8,7 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Psr\Container\ContainerInterface;
 use Slim\Factory\AppFactory;
 use Slim\Routing\RouteCollectorProxy;
 use Willow\Controllers\Authenticate\AuthenticateController;
@@ -22,9 +23,14 @@ use Willow\Middleware\ValidateRequest;
 class App
 {
     /**
-     * @var Capsule
+     * @var Capsule|null
      */
-    protected $capsule = null;
+    protected static $capsule;
+
+    /**
+     * @var ContainerInterface|null
+     */
+    protected static $container;
 
     /**
      * App constructor.
@@ -44,10 +50,11 @@ class App
             }
         }
         $container = $builder->build();
+        self::$container = $container;
 
         // Establish an instance of the Illuminate database capsule (if not already established)
-        if ($this->capsule === null) {
-            $this->capsule = $container->get(Capsule::class);
+        if (self::$capsule === null) {
+            self::$capsule = $container->get(Capsule::class);
         }
 
         // Get an instance of Slim\App
@@ -82,5 +89,15 @@ class App
         if ($run) {
             $app->run();
         }
+    }
+
+    static function getContainer(): ?ContainerInterface
+    {
+        return self::$container;
+    }
+
+    static function getCapsule(): ?Capsule
+    {
+        return self::$capsule;
     }
 }
