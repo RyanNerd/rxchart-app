@@ -17,8 +17,8 @@ class ResidentRestoreAction extends RestoreActionBase
      * ResidentRestoreAction constructor.
      * @param Resident $model
      */
-    public function __construct(Resident $model)
+    public function __construct(Resident $resident)
     {
-        $this->model = $model;
+        $this->model = $resident;
     }
 }

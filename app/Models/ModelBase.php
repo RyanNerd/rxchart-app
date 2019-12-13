@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Class ModelBase
  *
  * @mixin Builder
+ * @mixin SoftDeletes
  */
 abstract class ModelBase extends Model
 {

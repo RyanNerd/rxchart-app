@@ -22,7 +22,7 @@ class RestoreValidatorBase
         $parsedBody = $responseBody->getParsedRequest();
 
         // Does the id key exist in the request? If not then register as required.
-        if (!key_exists('id', $parsedBody)) {
+        if (!key_exists('restore_id', $parsedBody)) {
             $responseBody->registerParam('required', 'id', 'primary key');
         }
 

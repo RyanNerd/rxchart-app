@@ -31,14 +31,17 @@ class RestoreActionBase extends ActionBase
 
         // Get the record via the id from the parsed request body
         $parsedBody = $responseBody->getParsedRequest();
-        $record = $this->model->find($parsedBody['id']);
+        $record = $this
+            ->model
+            ->withTrashed()
+            ->find($parsedBody['restore_id']);
 
         // Default values
-        $message = null;
+        $message = '';
 
         // Did we find a record to restore? Try to restore record, otherwise return status 404.
         if ($record !== null) {
-            // Was the record successfully restored? Return the record and status of 200 otherwise return status 500;
+            // Was the record successfully restored? Return the record and status of 200, otherwise return status 500;
             if ($record->restore()) {
                 $data = $record->toArray();
                 $status = 200;

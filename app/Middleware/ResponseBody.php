@@ -242,7 +242,7 @@ class ResponseBody
     }
 
     /**
-     * Set the reponse message
+     * Set the response message
      *
      * @param string $message
      * @return ResponseBody
