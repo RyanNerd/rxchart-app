@@ -6,7 +6,7 @@ namespace Willow\Middleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use Slim\Routing\Route;
+use Slim\Routing\RouteContext;
 use Willow\Models\User;
 
 class ValidateRequest
@@ -54,8 +54,8 @@ class ValidateRequest
                 }
             }
         } else {
-            /** @var Route $route */
-            $route = $request->getAttribute('route');
+            $routeContext = RouteContext::fromRequest($request);
+            $route = $routeContext->getRoute();
             $pattern = $route->getPattern();
 
             // If this is an authenticate request then we let this through (this is how we get an API key)

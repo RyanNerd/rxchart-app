@@ -6,7 +6,7 @@ namespace Willow\Controllers;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use Slim\Routing\Route;
+use Slim\Routing\RouteContext;
 use Willow\Middleware\ResponseBody;
 
 abstract class QueryValidatorBase
@@ -22,8 +22,8 @@ abstract class QueryValidatorBase
         $responseBody = $request->getAttribute('response_body');
         $parsedRequest = $responseBody->getParsedRequest();
 
-        /** @var Route $route */
-        $route = $request->getAttribute('route');
+        $routeContext = RouteContext::fromRequest($request);
+        $route = $routeContext->getRoute();
         $value = $route->getArgument('value');
 
         switch ($value)
