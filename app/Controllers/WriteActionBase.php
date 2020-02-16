@@ -60,6 +60,9 @@ abstract class WriteActionBase extends ActionBase
             }
         }
 
+        // Force the UserId
+        $model->UserId = $responseBody->getUserId();
+
         // Call the beforeSave event hook
         $this->beforeSave($model);
 

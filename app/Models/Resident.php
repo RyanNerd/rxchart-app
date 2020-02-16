@@ -22,6 +22,7 @@ class Resident extends ModelBase
 {
     public const FIELDS = [
         'Id' => 'integer',
+        'UserId' => 'integer',
         'LastName' => 'string',
         'FirstName' => 'string',
         'DOB_YEAR' => 'integer',
@@ -29,7 +30,7 @@ class Resident extends ModelBase
         'DOB_DAY' => 'tinyint',
         'Created' => 'datetime',
         'Updated' => 'datetime',
-        'deleted_at' => 'datetiime'
+        'deleted_at' => 'datetime'
     ];
 
     protected $table = 'Resident';

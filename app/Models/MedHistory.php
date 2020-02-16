@@ -22,6 +22,7 @@ class MedHistory extends ModelBase
         'Id' => 'integer',
         'ResidentId' => 'integer',
         'MedicineId' => 'integer',
+        'UserId' => 'integer',
         'Notes' => 'string',
         'Created' => 'datetime',
         'Updated' => 'datetime',
