@@ -9,7 +9,7 @@ use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
 use Willow\Models\ModelBase;
 
-class DeleteActionBase
+class DeleteActionBase extends ActionBase
 {
     /**
      * @var ModelBase
