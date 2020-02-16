@@ -31,6 +31,9 @@ class SearchActionBase extends ActionBase
         $model = $this->model;
         $modelColumns = $model::FIELDS;
 
+        // Force UserScope
+        $model = $model->where('UserId', '=', $responseBody->getUserId());
+
         // Get the request to build the query
         $parsedBody = $responseBody->getParsedRequest();
 

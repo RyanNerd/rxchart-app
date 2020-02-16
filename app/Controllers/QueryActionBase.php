@@ -53,6 +53,9 @@ abstract class QueryActionBase extends ActionBase
         $value = $args['value'];
         $models = null;
 
+        // Force UserScope
+        $this->model = $this->model->where('UserId', '=', $responseBody->getUserId());
+
         switch ($value) {
             // SELECT *
             case '*':

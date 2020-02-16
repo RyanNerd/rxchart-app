@@ -27,6 +27,7 @@ class Medicine extends ModelBase
     public const FIELDS = [
         'Id' => 'integer',
         'ResidentId' => 'integer',
+        'UserId' => 'integer',
         'Drug' => 'string',
         'Strength' => 'string',
         'Barcode' => 'string',
