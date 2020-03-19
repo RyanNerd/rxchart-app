@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
  * @property integer $FillDateDay
  * @property integer $FillDateMonth
  * @property integer $FillDateYear
+ * @property boolean $OTC
  * @property \DateTime $Created
  * @property \DateTime $Updated
  * @property \DateTime $deleted_at
@@ -36,6 +37,7 @@ class Medicine extends ModelBase
         'FillDateMonth' => 'string',
         'FillDateDay' => 'string',
         'FillDateYear' => 'string',
+        'OTC' => 'boolean',
         'Created' => 'datetime',
         'Updated' => 'datetime',
         'deleted_at' => 'datetime'

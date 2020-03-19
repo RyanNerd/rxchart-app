@@ -23,7 +23,7 @@ abstract class WriteActionBase extends ActionBase
         $body = $responseBody->getParsedRequest();
         $model = $this->model;
 
-        $primaryKeyName = $model->getPrimaryKey();
+        $primaryKeyName = $model->getKeyName();
 
         // Does the request body have an Id / PrimaryKeyName?
         if (array_key_exists($primaryKeyName, $body) && $body[$primaryKeyName] !== null) {
