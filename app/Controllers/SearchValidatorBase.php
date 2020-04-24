@@ -63,8 +63,9 @@ class SearchValidatorBase
             $responseBody->registerParam('invalid', $invalidClause, null);
         }
 
+        // There's no way to preemptively determine if no where clause is allowed.
         $where = $parsedBody['where'] ?? [];
-        foreach ($where as $item) { // FIXME: PHP Notice:  Undefined index: where in /var/www/rxchart-app/app/Controllers/SearchValidatorBase.php on line 46
+        foreach ($where as $item) {
             $column = $item['column'] ?? '';
 
             // Check the white listed columns for the model.

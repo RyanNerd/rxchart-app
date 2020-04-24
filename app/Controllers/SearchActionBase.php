@@ -39,7 +39,7 @@ class SearchActionBase extends ActionBase
 
         // WHERE Section TODO: Additional where clauses such as WhereBetween
         // @see https://laravel.com/docs/6.x/queries#where-clauses
-        $where = $parsedBody['where'];
+        $where = $parsedBody['where'] ?? [];
         foreach ($where as $item) {
             $column = $item['column'];
             $comparison = $item['comparison'] ?? '=';
