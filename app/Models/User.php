@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @property integer $Id
+ * @property string $Organization
  * @property string $UserName
  * @property string $PasswordHash
  * @property string $API_KEY
@@ -20,6 +21,7 @@ class User extends ModelBase
 {
     public const FIELDS = [
         'Id' => 'integer',
+        'Organization' => 'string',
         'UserName' => 'string',
         'PasswordHash' => '*string',
         'API_KEY' => 'string',

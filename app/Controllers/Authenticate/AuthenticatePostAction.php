@@ -83,7 +83,10 @@ class AuthenticatePostAction
         $responseBody = $responseBody
             ->setIsAuthenticated()
             ->setStatus(200)
-            ->setData(['apiKey' => $user->API_KEY])
+            ->setData([
+                'apiKey' => $user->API_KEY,
+                'organization' => $user->Organization
+            ])
             ->setMessage('API Key set');
         return $responseBody();
     }
