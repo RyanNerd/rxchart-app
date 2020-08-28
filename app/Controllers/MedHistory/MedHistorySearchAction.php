@@ -3,25 +3,18 @@ declare(strict_types=1);
 
 namespace Willow\Controllers\MedHistory;
 
-use Willow\Controllers\QueryActionBase;
+use Willow\Controllers\SearchActionBase;
 use Willow\Models\MedHistory;
 
-class MedHistoryQueryAction extends QueryActionBase
+class MedHistorySearchAction extends SearchActionBase
 {
     /**
      * @var MedHistory
      */
     protected $model;
 
-    protected $orderBy = ['Created' => 'desc'];
-
-    protected $groupBy = ['MedicineId'];
-
-    protected $allowAll = true;
-
     /**
-     * Get the model via Dependency Injection and save it as a property.
-     *
+     * MedHistorySearchAction constructor.
      * @param MedHistory $model
      */
     public function __construct(MedHistory $model)
