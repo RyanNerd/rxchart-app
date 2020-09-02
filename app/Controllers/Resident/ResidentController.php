@@ -10,8 +10,6 @@ class ResidentController implements IController
 {
     public function register(RouteCollectorProxyInterface $group): void
     {
-        $group->get('/resident/query/{value}', ResidentQueryAction::class)
-            ->add(ResidentQueryValidator::class);
         $group->post('/resident/search', ResidentSearchAction::class)
             ->add(ResidentSearchValidator::class);
         $group->get('/resident/{id}', ResidentGetAction::class);
