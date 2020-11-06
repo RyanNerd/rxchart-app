@@ -34,6 +34,13 @@ class MedicineWriteValidator extends WriteValidatorBase
                 if ($dataType[1] === '*') {
                     $responseBody->registerParam('invalid', $field, null);
                 }
+
+                // Don't allow emoji or other "strange" characters -- this prevents SQL Errors
+                if ($field === 'Drug') {
+                    if (!V::alnum(' ', "'", '#', '(', ')')->validate($parsedRequest['Drug'])) {
+                        $responseBody->registerParam('invalid', $field, 'alpha-numeric. Value given: ' . $parsedRequest['Drug']);
+                    }
+                }
             }
         }
     }

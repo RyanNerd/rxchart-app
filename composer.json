@@ -17,21 +17,21 @@
         "sort-packages": true
     },
     "require": {
-        "doctrine/dbal": "^2.9.2",
+        "php": "^7.1",
         "ext-json": "*",
         "ext-pdo": "*",
-        "illuminate/database": "^5.8.30",
-        "league/climate": "^3.5",
-        "php" : "^7.1",
-        "php-di/php-di": "^6.0.8",
-        "respect/validation": "^2.0@dev",
+        "doctrine/dbal": "^2.10.3",
+        "illuminate/database": "^5.8.36",
+        "league/climate": "^3.5.2",
+        "php-di/php-di": "^6.2.2",
+        "respect/validation": "^2.1.0",
         "slim/psr7": "^0.3.0",
-        "slim/slim": "^4.2.0",
-        "vlucas/phpdotenv": "^3.3.3"
+        "slim/slim": "^4.5.0",
+        "vlucas/phpdotenv": "^3.6.7"
     },
     "require-dev": {
         "consolidation/robo": "1.4.9",
-        "phpunit/phpunit": "^8.2.2"
+        "phpunit/phpunit": "^8.5.8"
     },
     "autoload": {
         "psr-4": {
