@@ -40,7 +40,6 @@ class MedHistoryDeleteAction
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
 
-        /** @var ModelBase $model */
         $model = $this->model;
 
         // Destroy the model given the id.
