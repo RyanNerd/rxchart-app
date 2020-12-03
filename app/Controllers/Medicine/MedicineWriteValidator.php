@@ -10,6 +10,8 @@ use Willow\Models\Medicine;
 
 class MedicineWriteValidator extends WriteValidatorBase
 {
+    private const ALLOWED_CHARACTERS = [' ', "'", '#', '(', ')', '-', '*', '/', '_', '\\', '.'];
+
     /**
      * We override the processValidation placing our own validations for the given model
      *
@@ -37,7 +39,7 @@ class MedicineWriteValidator extends WriteValidatorBase
 
                 // Don't allow emoji or other "strange" characters -- this prevents SQL Errors
                 if ($field === 'Drug') {
-                    if (!V::alnum(' ', "'", '#', '(', ')')->validate($parsedRequest['Drug'])) {
+                    if (!V::alnum(implode(self::ALLOWED_CHARACTERS))->validate($parsedRequest['Drug'])) {
                         $responseBody->registerParam('invalid', $field, 'alpha-numeric. Value given: ' . $parsedRequest['Drug']);
                     }
                 }
