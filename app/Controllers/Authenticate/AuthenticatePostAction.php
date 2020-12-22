@@ -22,8 +22,7 @@ class AuthenticatePostAction
      * AuthenticatePostAction constructor.
      * @param User $userModel
      */
-    public function __construct(User $userModel)
-    {
+    public function __construct(User $userModel) {
         $this->userModel = $userModel;
     }
 
@@ -33,8 +32,7 @@ class AuthenticatePostAction
      * @return ResponseInterface
      * @throws \Exception
      */
-    public function __invoke(Request $request, Response $response): ResponseInterface
-    {
+    public function __invoke(Request $request, Response $response): ResponseInterface {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
         $body = $responseBody->getParsedRequest();

@@ -10,8 +10,8 @@ class MedCheckoutController implements IController
 {
     public function register(RouteCollectorProxyInterface $group): void
     {
-        $group->get('/medcheckout/query/{value}', MedCheckoutQueryAction::class)
-            ->add(MedCheckoutQueryValidator::class);
+        $group->get('/medcheckout/search', MedCheckoutSearchAction::class)
+            ->add(MedCheckoutSearchValidator::class);
         $group->get('/medcheckout/{id}', MedCheckoutGetAction::class);
         $group->post('/medcheckout', MedCheckoutPostAction::class)
             ->add(MedCheckoutWriteValidator::class);

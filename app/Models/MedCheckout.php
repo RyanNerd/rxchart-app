@@ -20,15 +20,14 @@ use Illuminate\Database\Eloquent\Builder;
 class MedCheckout extends ModelBase
 {
     public const FIELDS = [
-        'Id' => 'integer',
-        'UserId' => 'integer',
-        'MedicineId' => 'integer',
-        'Out' => 'boolean',
-        'In' => 'boolean',
         'Created' => 'datetime',
-        'MedCheckoutcol' => 'datetime',
         'deleted_at' => 'datetime',
-
+        'Id' => 'integer',
+        'In' => 'integer',
+        'MedicineId' => 'integer',
+        'Notes' => 'string',
+        'Out' => 'datetime',
+        'UserId' => 'integer'
     ];
 
     protected $table = 'MedCheckout';
