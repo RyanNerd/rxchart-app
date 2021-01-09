@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Builder;
  * @property integer $ResidentId
  * @property integer $MedicineId
  * @property string $Notes
+ * @property integer $In
+ * @property integer $Out
  * @property \DateTime $Created
  * @property \DateTime $Updated
  * @property \DateTime $deleted_at
@@ -24,6 +26,8 @@ class MedHistory extends ModelBase
         'MedicineId' => 'integer',
         'UserId' => 'integer',
         'Notes' => 'string',
+        'In' => 'integer',
+        'Out' => 'integer',
         'Created' => 'datetime',
         'Updated' => 'datetime',
         'deleted_at' => 'datetime'

@@ -71,7 +71,6 @@ class App
             $container->get(MedicineController::class)->register($collectorProxy);
             $container->get(PasswordResetController::class)->register($collectorProxy);
             $container->get(ResidentController::class)->register($collectorProxy);
-            $container->get(MedCheckoutController::class)->register($collectorProxy);
         });
 
         // Add middleware that validates the overall request.
