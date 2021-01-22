@@ -56,7 +56,7 @@ class ResponseBody
     /**
      * @var int
      */
-    protected $userId;
+    protected ?int $userId = null;
 
     /**
      * Generate the response
@@ -147,7 +147,7 @@ class ResponseBody
         return $this->isAuthenticated;
     }
 
-    public function setUserId(int $userId): self
+    public function setUserId(?int $userId): self
     {
         $clone = clone $this;
         $clone->userId = $userId;

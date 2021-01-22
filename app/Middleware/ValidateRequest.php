@@ -6,21 +6,15 @@ namespace Willow\Middleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use Slim\Routing\RouteContext;
 use Willow\Models\User;
 
 class ValidateRequest
 {
-    /**
-     * @var User
-     */
-    private $user;
+    private User $user;
 
     public function __construct(User $user)
     {
-        if ($this->user === null) {
-            $this->user = $user;
-        }
+        $this->user = $user;
     }
 
     /**
@@ -50,24 +44,9 @@ class ValidateRequest
                         ->setUserId($user->Id)
                         ->setIsAdmin()
                         ->setIsAuthenticated();
-                    return $handler->handle($request->withAttribute('response_body', $responseBody));
                 }
             }
-        } else {
-            $routeContext = RouteContext::fromRequest($request);
-            $route = $routeContext->getRoute();
-            $pattern = $route->getPattern();
-
-            // If this is an authenticate request then we let this through (this is how we get an API key)
-            if (strstr($pattern, 'authenticate')) {
-                return $handler->handle($request);
-            }
         }
-
-        // Short circuit the request by returning a response with status of 401;
-        $responseBody = $responseBody
-            ->setStatus(401)
-            ->setMessage('Invalid API Key');
-        return $responseBody();
+        return $handler->handle($request->withAttribute('response_body', $responseBody));
     }
 }
