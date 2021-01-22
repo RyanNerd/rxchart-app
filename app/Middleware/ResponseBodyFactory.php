@@ -13,7 +13,7 @@ class ResponseBodyFactory
     /**
      * @var ResponseBody
      */
-    protected $responseBody;
+    protected ResponseBody $responseBody;
 
     /**
      * ResponseBodyFactory constructor.
