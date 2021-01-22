@@ -12,6 +12,7 @@ use Psr\Container\ContainerInterface;
 use Slim\Factory\AppFactory;
 use Slim\Routing\RouteCollectorProxy;
 use Willow\Controllers\Authenticate\AuthenticateController;
+use Willow\Controllers\MedCheckout\MedCheckoutController;
 use Willow\Controllers\MedHistory\MedHistoryController;
 use Willow\Controllers\Medicine\MedicineController;
 use Willow\Controllers\PasswordReset\PasswordResetController;
@@ -63,8 +64,7 @@ class App
         $app->addRoutingMiddleware();
 
         // Register the routes via the controllers
-        $v1 = $app->group('/v1', function (RouteCollectorProxy $collectorProxy) use ($container)
-        {
+        $v1 = $app->group('/v1', function (RouteCollectorProxy $collectorProxy) use ($container) {
             // Register controllers/routes
             $container->get(AuthenticateController::class)->register($collectorProxy);
             $container->get(MedHistoryController::class)->register($collectorProxy);
