@@ -8,54 +8,38 @@ use Slim\Psr7\Response;
 
 class ResponseBody
 {
-    /**
-     * Associative array of the request
-     *
-     * @var array
-     */
-    protected $parsedRequest = null;
-
-    /**
-     * @var bool
-     */
-    protected $isAuthenticated = false;
-
-    /**
-     * @var bool
-     */
-    protected $isAdmin = false;
+    protected ?array $parsedRequest = null;
+    protected bool $isAuthenticated = false;
+    protected bool $isAdmin = false;
 
     /**
      * The response data
      *
      * @var array | null
      */
-    protected $data = null;
+    protected ?array $data = null;
 
     /**
      * HTTP status code
      *
      * @var int
      */
-    protected $status = 200;
+    protected int $status = 200;
 
     /**
      * Response informational string
      *
      * @var string
      */
-    protected $message = '';
+    protected string $message = '';
 
     /**
      * Missing parameters
      *
      * @var array
      */
-    protected $missing = [];
+    protected array $missing = [];
 
-    /**
-     * @var int
-     */
     protected ?int $userId = null;
 
     /**
@@ -113,16 +97,6 @@ class ResponseBody
         $clone = clone $this;
         $clone->isAdmin = true;
         return $clone;
-    }
-
-    /**
-     * Returns true if the current authenticated user is an admin, false otherwise.
-     *
-     * @return bool
-     */
-    public function getIsAdmin(): bool
-    {
-        return $this->isAdmin;
     }
 
     /**
@@ -190,20 +164,6 @@ class ResponseBody
     }
 
     /**
-     * Register multiple parameters as optional, required, or invalid.
-     *
-     * @param string $section
-     * @param array $names
-     * @param string $type
-     */
-    public function registerParams(string $section, array $names, string $type): void
-    {
-        foreach ($names as $name) {
-            $this->registerParam($section, $name, $type);
-        }
-    }
-
-    /**
      * Set the response data.
      *
      * @param array|null $data
@@ -229,16 +189,6 @@ class ResponseBody
         $clone = clone $this;
         $clone->status = $status;
         return $clone;
-    }
-
-    /**
-     * Return the http status code
-     *
-     * @return int
-     */
-    public function getStatus(): int
-    {
-        return $this->status;
     }
 
     /**

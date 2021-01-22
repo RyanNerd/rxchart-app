@@ -5,13 +5,11 @@ namespace Willow\Controllers\MedHistory;
 
 use Willow\Controllers\WriteActionBase;
 use Willow\Models\MedHistory;
+use Willow\Models\ModelBase;
 
 class MedHistoryPostAction extends WriteActionBase
 {
-    /**
-     * @var MedHistory
-     */
-    protected $model;
+    protected ModelBase $model;
 
     public function __construct(MedHistory $model)
     {

@@ -5,13 +5,13 @@ namespace Willow\Controllers\MedHistory;
 
 use Willow\Controllers\SearchActionBase;
 use Willow\Models\MedHistory;
-
+use Willow\Models\ModelBase;
 class MedHistorySearchAction extends SearchActionBase
 {
     /**
-     * @var MedHistory
+     * @var ModelBase|MedHistory
      */
-    protected $model;
+    protected ModelBase $model;
 
     /**
      * MedHistorySearchAction constructor.

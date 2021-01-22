@@ -5,13 +5,14 @@ namespace Willow\Controllers\Resident;
 
 use Willow\Controllers\SearchActionBase;
 use Willow\Models\Resident;
+use Willow\Models\ModelBase;
 
 class ResidentSearchAction extends SearchActionBase
 {
     /**
-     * @var Resident
+     * @var Resident | ModelBase
      */
-    protected $model;
+    protected ModelBase $model;
 
     /**
      * ResidentSearchAction constructor.

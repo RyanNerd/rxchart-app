@@ -7,15 +7,11 @@ use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
-use Willow\Models\ModelBase;
 use Willow\Models\MedHistory;
 
 class MedHistoryDeleteAction
 {
-    /**
-     * @var MedHistory
-     */
-    protected $model;
+    protected MedHistory $model;
 
     /**
      * Get the model via Dependency Injection and save it.

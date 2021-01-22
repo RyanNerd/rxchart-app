@@ -32,10 +32,7 @@ class SearchValidatorBase
         'only_trashed'
     ];
 
-    /**
-     * @var ModelBase
-     */
-    protected $model;
+    protected ModelBase $model;
 
     /**
      * @param Request $request

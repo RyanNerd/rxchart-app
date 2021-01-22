@@ -11,10 +11,7 @@ use Willow\Models\ModelBase;
 
 class GetActionBase extends ActionBase
 {
-    /**
-     * @var ModelBase
-     */
-    protected $model;
+    protected ModelBase $model;
 
     /**
      * Handle GET request

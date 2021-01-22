@@ -5,14 +5,15 @@ namespace Willow\Controllers\Medicine;
 
 use Willow\Controllers\SearchActionBase;
 use Willow\Models\Medicine;
+use Willow\Models\ModelBase;
 
 
 class MedicineSearchAction extends SearchActionBase
 {
     /**
-     * @var Medicine
+     * @var Medicine | ModelBase
      */
-    protected $model;
+    protected ModelBase $model;
 
     /**
      * MedicineSearchAction constructor.

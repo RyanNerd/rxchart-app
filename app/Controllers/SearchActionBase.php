@@ -14,10 +14,7 @@ use Willow\Models\ModelBase;
  */
 class SearchActionBase extends ActionBase
 {
-    /**
-     * @var ModelBase
-     */
-    protected $model;
+    protected ModelBase $model;
 
     /**
      * @param Request $request

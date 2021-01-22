@@ -5,13 +5,14 @@ namespace Willow\Controllers\Resident;
 
 use Willow\Controllers\WriteActionBase;
 use Willow\Models\Resident;
+use Willow\Models\ModelBase;
 
 class ResidentPostAction extends WriteActionBase
 {
     /**
-     * @var Resident
+     * @var Resident | ModelBase
      */
-    protected $model;
+    protected ModelBase $model;
 
     public function __construct(Resident $model)
     {

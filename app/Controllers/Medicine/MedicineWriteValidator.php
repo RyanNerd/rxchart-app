@@ -18,7 +18,7 @@ class MedicineWriteValidator extends WriteValidatorBase
      * @param ResponseBody $responseBody
      * @param array $parsedRequest
      */
-    protected function processValidation(ResponseBody $responseBody, array &$parsedRequest): void
+    protected function processValidation(ResponseBody $responseBody, array $parsedRequest): void
     {
         // Iterate all the model fields
         foreach(Medicine::FIELDS as $field => $dataType) {

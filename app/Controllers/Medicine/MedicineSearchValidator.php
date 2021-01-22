@@ -5,13 +5,14 @@ namespace Willow\Controllers\Medicine;
 
 use Willow\Controllers\SearchValidatorBase;
 use Willow\Models\Medicine;
+use Willow\Models\ModelBase;
 
 class MedicineSearchValidator extends SearchValidatorBase
 {
     /**
-     * @var Medicine
+     * @var Medicine | ModelBase
      */
-    protected $model;
+    protected ModelBase $model;
 
     /**
      * MedicineSearchValidator constructor.

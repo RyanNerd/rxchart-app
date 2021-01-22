@@ -5,13 +5,12 @@ namespace Willow\Controllers\MedHistory;
 
 use Willow\Controllers\SearchValidatorBase;
 use Willow\Models\MedHistory;
+use Willow\Models\ModelBase;
 
 class MedHistorySearchValidator extends SearchValidatorBase
 {
-    /**
-     * @var MedHistory
-     */
-    protected $model;
+    /** @var ModelBase|MedHistory  */
+    protected ModelBase $model;
 
     /**
      * MedHistorySearchValidator constructor.

@@ -10,9 +10,6 @@ use Slim\Routing\RouteContext;
 
 class ResponseBodyFactory
 {
-    /**
-     * @var ResponseBody
-     */
     protected ResponseBody $responseBody;
 
     /**

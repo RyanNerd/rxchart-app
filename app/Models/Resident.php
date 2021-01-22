@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Willow\Models;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
@@ -12,9 +13,9 @@ use Illuminate\Database\Eloquent\Builder;
  * @property integer $DOB_YEAR
  * @property integer $DOB_MONTH
  * @property integer $DOB_DAY
- * @property \DateTime $Created
- * @property \DateTime $Updated
- * @property \DateTime $deleted_at
+ * @property DateTime $Created
+ * @property DateTime $Updated
+ * @property DateTime $deleted_at
  *
  * @mixin Builder
  */
@@ -35,5 +36,5 @@ class Resident extends ModelBase
 
     protected $table = 'Resident';
 
-    public $allowAll = true;
+    public bool $allowAll = true;
 }

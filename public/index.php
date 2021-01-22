@@ -36,6 +36,10 @@ if (file_exists(__DIR__ . '/../.env')) {
     $stdErr = fopen('php://stderr', 'b');
     fwrite($stdErr, 'WARNING: The .env file is missing' . PHP_EOL);
     fclose($stdErr);
+    ob_start();
+    echo 'The .env file is missing';
+    ob_end_flush();
+    exit();
 }
 
 // Launch the app
@@ -46,4 +50,11 @@ try {
     $stdErr = fopen('php://stderr', 'b');
     fwrite($stdErr, $throwable->getMessage() . PHP_EOL);
     fclose($stdErr);
+
+    ob_start();
+    echo 'Message: ' . $throwable->getMessage() . ' --- ';
+    echo 'File: ' . $throwable->getFile() . ' --- ';
+    echo 'Line: ' . $throwable->getLine();
+    ob_end_flush();
+    exit();
 }

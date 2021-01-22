@@ -16,7 +16,7 @@ class MedHistoryWriteValidator extends WriteValidatorBase
      * @param ResponseBody $responseBody
      * @param array $parsedRequest
      */
-    protected function processValidation(ResponseBody $responseBody, array &$parsedRequest): void
+    protected function processValidation(ResponseBody $responseBody, array $parsedRequest): void
     {
         // Iterate all the model fields
         foreach(MedHistory::FIELDS as $field => $dataType) {

@@ -13,10 +13,7 @@ use Willow\Models\User;
 
 class AuthenticatePostAction
 {
-    /**
-     * @var User
-     */
-    protected $userModel;
+    protected User $userModel;
 
     /**
      * AuthenticatePostAction constructor.
