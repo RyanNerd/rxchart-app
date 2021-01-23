@@ -35,17 +35,7 @@ abstract class ModelBase extends Model
      *
      * @var bool
      */
-    public $allowAll = false;
-
-    /**
-     * Return the name of the primary key column (usually but not always "id")
-     *
-     * @return string
-     */
-    public function getPrimaryKey(): string
-    {
-        return $this->primaryKey;
-    }
+    public bool $allowAll = false;
 
     /*
      * Return the name of the table for this model

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Willow\Controllers\PasswordReset;
 
-use DateTime;
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
@@ -13,10 +13,7 @@ use Willow\Models\User;
 
 class PasswordResetPostAction
 {
-    /**
-     * @var User
-     */
-    protected $userModel;
+    protected User $userModel;
 
     /**
      * AuthenticatePostAction constructor.
@@ -31,7 +28,7 @@ class PasswordResetPostAction
      * @param Request $request
      * @param Response $response
      * @return ResponseInterface
-     * @throws \Exception
+     * @throws Exception
      */
     public function __invoke(Request $request, Response $response): ResponseInterface
     {
@@ -77,4 +74,3 @@ class PasswordResetPostAction
         return $responseBody();
     }
 }
-

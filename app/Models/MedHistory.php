@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Willow\Models;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
@@ -12,9 +13,9 @@ use Illuminate\Database\Eloquent\Builder;
  * @property string $Notes
  * @property integer $In
  * @property integer $Out
- * @property \DateTime $Created
- * @property \DateTime $Updated
- * @property \DateTime $deleted_at
+ * @property DateTime $Created
+ * @property DateTime $Updated
+ * @property DateTime $deleted_at
  *
  * @mixin Builder
  */

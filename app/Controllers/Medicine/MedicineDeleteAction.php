@@ -7,15 +7,11 @@ use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
-use Willow\Models\ModelBase;
 use Willow\Models\Medicine;
 
 class MedicineDeleteAction
 {
-    /**
-     * @var Medicine
-     */
-    protected $model;
+    protected Medicine $model;
 
     /**
      * Get the model via Dependency Injection and save it.
@@ -40,7 +36,6 @@ class MedicineDeleteAction
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
 
-        /** @var ModelBase $model */
         $model = $this->model;
 
         // Destroy the model given the id.

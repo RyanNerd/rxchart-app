@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Willow\Models;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
@@ -11,9 +12,9 @@ use Illuminate\Database\Eloquent\Builder;
  * @property string $UserName
  * @property string $PasswordHash
  * @property string $API_KEY
- * @property \DateTime $Created
- * @property \DateTime $Updated
- * @property \DateTime $deleted_at
+ * @property DateTime $Created
+ * @property DateTime $Updated
+ * @property DateTime $deleted_at
  *
  * @mixin Builder
  */

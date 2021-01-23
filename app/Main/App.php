@@ -12,7 +12,6 @@ use Psr\Container\ContainerInterface;
 use Slim\Factory\AppFactory;
 use Slim\Routing\RouteCollectorProxy;
 use Willow\Controllers\Authenticate\AuthenticateController;
-use Willow\Controllers\MedCheckout\MedCheckoutController;
 use Willow\Controllers\MedHistory\MedHistoryController;
 use Willow\Controllers\Medicine\MedicineController;
 use Willow\Controllers\PasswordReset\PasswordResetController;
@@ -23,15 +22,8 @@ use Willow\Middleware\ValidateRequest;
 
 class App
 {
-    /**
-     * @var Capsule|null
-     */
-    protected static $capsule;
-
-    /**
-     * @var ContainerInterface|null
-     */
-    protected static $container;
+    protected static Capsule $capsule;
+    protected static ContainerInterface $container;
 
     /**
      * App constructor.
@@ -46,7 +38,7 @@ class App
         $builder = new ContainerBuilder();
         foreach (glob(__DIR__ . '/../../config/*.php') as $definitions) {
             // Skip the _env.php file for the definitions as this was required already in public/index.php
-            if (strpos($definitions, '_env.php') === false) {
+            if (!str_contains($definitions, '_env.php')) {
                 $builder->addDefinitions(realpath($definitions));
             }
         }
@@ -54,9 +46,7 @@ class App
         self::$container = $container;
 
         // Establish an instance of the Illuminate database capsule (if not already established)
-        if (self::$capsule === null) {
             self::$capsule = $container->get(Capsule::class);
-        }
 
         // Get an instance of Slim\App
         AppFactory::setContainer($container);
@@ -95,10 +85,5 @@ class App
     static function getContainer(): ?ContainerInterface
     {
         return self::$container;
-    }
-
-    static function getCapsule(): ?Capsule
-    {
-        return self::$capsule;
     }
 }

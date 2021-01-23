@@ -5,13 +5,11 @@ namespace Willow\Controllers\Resident;
 
 use Willow\Controllers\SearchValidatorBase;
 use Willow\Models\Resident;
+use Willow\Models\ModelBase;
 
 class ResidentSearchValidator extends SearchValidatorBase
 {
-    /**
-     * @var Resident
-     */
-    protected $model;
+    protected ModelBase|Resident $model;
 
     /**
      * ResidentSearchValidator constructor.

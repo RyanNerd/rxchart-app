@@ -2,10 +2,9 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Capsule\Manager as Capsule;
-use Psr\Container\ContainerInterface;
 
 return [
-    Capsule::class => function (ContainerInterface $c) {
+    Capsule::class => function () {
         $eloquent = new Capsule;
 
         $eloquent->addConnection([

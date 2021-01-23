@@ -5,7 +5,4 @@ namespace Willow\Controllers\Resident;
 
 use Willow\Controllers\RestoreValidatorBase;
 
-class ResidentRestoreValidator extends RestoreValidatorBase
-{
-
-}
+class ResidentRestoreValidator extends RestoreValidatorBase {}
