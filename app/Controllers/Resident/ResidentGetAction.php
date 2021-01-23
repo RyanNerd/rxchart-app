@@ -9,10 +9,7 @@ use Willow\Models\ModelBase;
 
 class ResidentGetAction extends GetActionBase
 {
-    /**
-     * @var Resident | ModelBase
-     */
-    protected ModelBase $model;
+    protected ModelBase|Resident $model;
 
     /**
      * Get the model via Dependency Injection and save it as a property.

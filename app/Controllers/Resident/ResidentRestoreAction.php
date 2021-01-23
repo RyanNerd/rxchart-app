@@ -9,10 +9,7 @@ use Willow\Models\ModelBase;
 
 class ResidentRestoreAction extends RestoreActionBase
 {
-    /**
-     * @var Resident | ModelBase
-     */
-    protected ModelBase $model;
+    protected Resident|ModelBase $model;
 
     /**
      * ResidentRestoreAction constructor.

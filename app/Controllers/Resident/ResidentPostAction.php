@@ -9,10 +9,7 @@ use Willow\Models\ModelBase;
 
 class ResidentPostAction extends WriteActionBase
 {
-    /**
-     * @var Resident | ModelBase
-     */
-    protected ModelBase $model;
+    protected ModelBase|Resident $model;
 
     public function __construct(Resident $model)
     {

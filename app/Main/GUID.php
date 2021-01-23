@@ -3,13 +3,15 @@ declare(strict_types=1);
 
 namespace Willow\Main;
 
+use JetBrains\PhpStorm\Pure;
+
 /**
  * Class GUID
  * @see http://www.inanzzz.com/index.php/post/vjqh/generating-a-rfc-4211-compliant-valid-uuid-or-guid-string-with-php
  */
 class GUID
 {
-    public static function v4(): string
+    #[Pure] public static function v4(): string
     {
         return sprintf(
             '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',

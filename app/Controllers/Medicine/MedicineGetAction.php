@@ -9,8 +9,7 @@ use Willow\Models\ModelBase;
 
 class MedicineGetAction extends GetActionBase
 {
-    /** @var ModelBase|Medicine  */
-    protected ModelBase $model;
+    protected ModelBase|Medicine $model;
 
     /**
      * Get the model via Dependency Injection and save it as a property.

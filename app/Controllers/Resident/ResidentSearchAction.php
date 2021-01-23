@@ -9,10 +9,7 @@ use Willow\Models\ModelBase;
 
 class ResidentSearchAction extends SearchActionBase
 {
-    /**
-     * @var Resident | ModelBase
-     */
-    protected ModelBase $model;
+    protected ModelBase|Resident $model;
 
     /**
      * ResidentSearchAction constructor.

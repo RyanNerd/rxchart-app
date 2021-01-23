@@ -9,10 +9,7 @@ use Willow\Models\ModelBase;
 
 class ResidentSearchValidator extends SearchValidatorBase
 {
-    /**
-     * @var Resident | ModelBase
-     */
-    protected ModelBase $model;
+    protected ModelBase|Resident $model;
 
     /**
      * ResidentSearchValidator constructor.

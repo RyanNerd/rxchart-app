@@ -8,10 +8,7 @@ use Willow\Models\MedHistory;
 use Willow\Models\ModelBase;
 class MedHistorySearchAction extends SearchActionBase
 {
-    /**
-     * @var ModelBase|MedHistory
-     */
-    protected ModelBase $model;
+    protected ModelBase|MedHistory $model;
 
     /**
      * MedHistorySearchAction constructor.

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Willow\Controllers\Authenticate;
 
 use DateTime;
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
@@ -27,7 +28,7 @@ class AuthenticatePostAction
      * @param Request $request
      * @param Response $response
      * @return ResponseInterface
-     * @throws \Exception
+     * @throws Exception
      */
     public function __invoke(Request $request, Response $response): ResponseInterface {
         /** @var ResponseBody $responseBody */

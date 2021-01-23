@@ -9,8 +9,7 @@ use Willow\Models\ModelBase;
 
 class MedHistorySearchValidator extends SearchValidatorBase
 {
-    /** @var ModelBase|MedHistory  */
-    protected ModelBase $model;
+    protected ModelBase|MedHistory $model;
 
     /**
      * MedHistorySearchValidator constructor.

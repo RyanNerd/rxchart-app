@@ -9,7 +9,7 @@ use Willow\Models\ModelBase;
 
 class MedHistoryPostAction extends WriteActionBase
 {
-    protected ModelBase $model;
+    protected ModelBase|MedHistory $model;
 
     public function __construct(MedHistory $model)
     {

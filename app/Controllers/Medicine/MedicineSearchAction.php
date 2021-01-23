@@ -10,10 +10,7 @@ use Willow\Models\ModelBase;
 
 class MedicineSearchAction extends SearchActionBase
 {
-    /**
-     * @var Medicine | ModelBase
-     */
-    protected ModelBase $model;
+    protected ModelBase|Medicine $model;
 
     /**
      * MedicineSearchAction constructor.

@@ -38,7 +38,7 @@ class App
         $builder = new ContainerBuilder();
         foreach (glob(__DIR__ . '/../../config/*.php') as $definitions) {
             // Skip the _env.php file for the definitions as this was required already in public/index.php
-            if (strpos($definitions, '_env.php') === false) {
+            if (!str_contains($definitions, '_env.php')) {
                 $builder->addDefinitions(realpath($definitions));
             }
         }

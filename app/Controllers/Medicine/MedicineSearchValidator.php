@@ -9,10 +9,7 @@ use Willow\Models\ModelBase;
 
 class MedicineSearchValidator extends SearchValidatorBase
 {
-    /**
-     * @var Medicine | ModelBase
-     */
-    protected ModelBase $model;
+    protected ModelBase|Medicine $model;
 
     /**
      * MedicineSearchValidator constructor.
