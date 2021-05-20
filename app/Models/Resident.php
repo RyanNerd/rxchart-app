@@ -39,4 +39,17 @@ class Resident extends ModelBase
     protected $table = 'Resident';
 
     public bool $allowAll = true;
+
+    /**
+     * Override Notes to null if empty string
+     * @param string|null $value
+     */
+    public function setNotesAttribute(?string $value)
+    {
+        if (empty($value)) {
+            $this->attributes['Notes'] = null;
+        } else {
+            $this->attributes['Notes'] = $value;
+        }
+    }
 }
