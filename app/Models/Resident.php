@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
  * @property integer $DOB_YEAR
  * @property integer $DOB_MONTH
  * @property integer $DOB_DAY
+ * @property string $Notes
  * @property DateTime $Created
  * @property DateTime $Updated
  * @property DateTime $deleted_at
@@ -29,6 +30,7 @@ class Resident extends ModelBase
         'DOB_YEAR' => 'integer',
         'DOB_MONTH' => 'tinyint',
         'DOB_DAY' => 'tinyint',
+        'Notes' => 'string',
         'Created' => 'datetime',
         'Updated' => 'datetime',
         'deleted_at' => 'datetime'
@@ -37,4 +39,17 @@ class Resident extends ModelBase
     protected $table = 'Resident';
 
     public bool $allowAll = true;
+
+    /**
+     * Override Notes to null if empty string
+     * @param string|null $value
+     */
+    public function setNotesAttribute(?string $value)
+    {
+        if (empty($value)) {
+            $this->attributes['Notes'] = null;
+        } else {
+            $this->attributes['Notes'] = $value;
+        }
+    }
 }

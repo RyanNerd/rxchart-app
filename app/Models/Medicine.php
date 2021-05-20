@@ -45,4 +45,43 @@ class Medicine extends ModelBase
     ];
 
     protected $table = 'Medicine';
+
+    /**
+     * Override Strength field to null if empty string
+     * @param string|null $value
+     */
+    public function setStrengthAttribute(?string $value)
+    {
+        if (empty($value)) {
+            $this->attributes['Strength'] = null;
+        } else {
+            $this->attributes['Strength'] = $value;
+        }
+    }
+
+    /**
+     * Override Barcode field to null if empty string
+     * @param string|null $value
+     */
+    public function setBarcodeAttribute(?string $value)
+    {
+        if (empty($value)) {
+            $this->attributes['Barcode'] = null;
+        } else {
+            $this->attributes['Barcode'] = $value;
+        }
+    }
+
+    /**
+     * Override Directions field to null if empty string
+     * @param string|null $value
+     */
+    public function setDirectionsAttribute(?string $value)
+    {
+        if (empty($value)) {
+            $this->attributes['Directions'] = null;
+        } else {
+            $this->attributes['Directions'] = $value;
+        }
+    }
 }

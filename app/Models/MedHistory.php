@@ -35,4 +35,17 @@ class MedHistory extends ModelBase
     ];
 
     protected $table = 'MedHistory';
+
+    /**
+     * Override Notes to null if empty string
+     * @param string|null $value
+     */
+    public function setNotesAttribute(?string $value)
+    {
+        if (empty($value)) {
+            $this->attributes['Notes'] = null;
+        } else {
+            $this->attributes['Notes'] = $value;
+        }
+    }
 }
