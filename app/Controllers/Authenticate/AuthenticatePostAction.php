@@ -42,7 +42,7 @@ class AuthenticatePostAction
         // Is the user not found or is the password not valid?
         if ($user === null || !password_verify($body['password'], $user->PasswordHash)) {
             $responseBody = $responseBody
-                ->setStatus(401)
+                ->setStatus(ResponseBody::HTTP_UNAUTHORIZED)
                 ->setData(null)
                 ->setMessage('Not authorized');
             return $responseBody();
@@ -69,7 +69,7 @@ class AuthenticatePostAction
         if (!$user->save()) {
             // Save failed for some reason, so reject the request.
             $responseBody = $responseBody
-                ->setStatus(500)
+                ->setStatus(ResponseBody::HTTP_INTERNAL_SERVER_ERROR)
                 ->setData(null)
                 ->setMessage('Unable to set new API_KEY');
             return $responseBody();
@@ -78,7 +78,7 @@ class AuthenticatePostAction
         // Request is valid and authenticated!
         $responseBody = $responseBody
             ->setIsAuthenticated()
-            ->setStatus(200)
+            ->setStatus(ResponseBody::HTTP_OK)
             ->setData([
                 'apiKey' => $user->API_KEY,
                 'organization' => $user->Organization

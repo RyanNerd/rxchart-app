@@ -17,7 +17,7 @@ class ApiValidator
         if (!$responseBody->getIsAuthenticated()) {
             // Short circuit the request by returning a response with status of 401;
             $responseBody = $responseBody
-                ->setStatus(401)
+                ->setStatus(ResponseBody::HTTP_UNAUTHORIZED)
                 ->setMessage('Invalid or missing API Key');
             return $responseBody();
         }
