@@ -40,9 +40,9 @@ class ResidentDeleteAction
 
         // Destroy the model given the id.
         if ($model->destroy($args['id']) === 1) {
-            $status = 200;
+            $status = ResponseBody::HTTP_OK;
         } else {
-            $status = 404;
+            $status = ResponseBody::HTTP_NOT_FOUND;
         }
 
         // Set the status and data of the ResponseBody

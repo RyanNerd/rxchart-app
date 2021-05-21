@@ -36,7 +36,8 @@ class SearchValidatorBase
 
     /**
      * @param Request $request
-     * @param RequestHandler $handler
+     * @param RequestHandler $handlernamespace Willow\Controllers;
+
      * @return ResponseInterface
      */
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface
@@ -100,7 +101,7 @@ class SearchValidatorBase
         if ($responseBody->hasMissingRequiredOrInvalid()) {
             $responseBody = $responseBody
                 ->setData(null)
-                ->setStatus(400);
+                ->setStatus(ResponseBody::HTTP_BAD_REQUEST);
             return $responseBody();
         }
 

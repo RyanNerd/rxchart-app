@@ -43,7 +43,7 @@ class PasswordResetPostAction
         // Is the user not found or is the old_password not valid or the api_key is invalid?
         if ($user === null || $user->API_KEY != $body['api_key'] || !password_verify($body['old_password'], $user->PasswordHash)) {
             $responseBody = $responseBody
-                ->setStatus(401)
+                ->setStatus(ResponseBody::HTTP_UNAUTHORIZED)
                 ->setData(null)
                 ->setMessage('Not authorized');
             return $responseBody();
@@ -59,7 +59,7 @@ class PasswordResetPostAction
         if (!$user->save()) {
             // Save failed for some reason, so reject the request.
             $responseBody = $responseBody
-                ->setStatus(500)
+                ->setStatus(ResponseBody::HTTP_INTERNAL_SERVER_ERROR)
                 ->setData(null)
                 ->setMessage('Unable to set new password');
             return $responseBody();
@@ -68,7 +68,7 @@ class PasswordResetPostAction
         // Request is valid and authenticated with new API_KEY
         $responseBody = $responseBody
             ->setIsAuthenticated()
-            ->setStatus(200)
+            ->setStatus(ResponseBody::HTTP_OK)
             ->setData(['apiKey' => $user->API_KEY])
             ->setMessage('Password reset');
         return $responseBody();

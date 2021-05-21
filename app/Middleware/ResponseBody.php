@@ -6,7 +6,7 @@ namespace Willow\Middleware;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Response;
 
-class ResponseBody
+class ResponseBody extends ResponseCodes
 {
     protected ?array $parsedRequest = null;
     protected bool $isAuthenticated = false;
@@ -132,7 +132,7 @@ class ResponseBody
     {
         return $this->userId;
     }
-    /**
+    /** trashed records
      * Returns true if there are missing or required datapoints in the request
      *
      * @return bool

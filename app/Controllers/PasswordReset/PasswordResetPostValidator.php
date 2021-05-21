@@ -48,7 +48,7 @@ class PasswordResetPostValidator
         // If there are any missing required, or invalid data points then we short circuit and return invalid request.
         if ($responseBody->hasMissingRequiredOrInvalid()) {
             $responseBody = $responseBody
-                ->setStatus(400)
+                ->setStatus(ResponseBody::HTTP_BAD_REQUEST)
                 ->setMessage('Missing or invalid request');
             return $responseBody();
         }
