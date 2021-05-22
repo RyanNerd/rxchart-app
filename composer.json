@@ -30,7 +30,7 @@
         "vlucas/phpdotenv": "^v4.2.0"
     },
     "require-dev": {
-        "consolidation/robo": "2.2.2",
+        "consolidation/robo": "3.0.3",
         "phpunit/phpunit": "^9.3.8"
     },
     "autoload": {
