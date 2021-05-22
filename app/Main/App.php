@@ -46,7 +46,7 @@ class App
         self::$container = $container;
 
         // Establish an instance of the Illuminate database capsule (if not already established)
-            self::$capsule = $container->get(Capsule::class);
+        self::$capsule = $container->get(Capsule::class);
 
         // Get an instance of Slim\App
         AppFactory::setContainer($container);
@@ -73,7 +73,7 @@ class App
         $app->add(JsonBodyParser::class);
 
         // Add Error Middleware
-        $displayErrorDetails = getenv('DISPLAY_ERROR_DETAILS') === 'true';
+        $displayErrorDetails = true; // getenv('DISPLAY_ERROR_DETAILS') === 'true';
         $app->addErrorMiddleware($displayErrorDetails, true, true);
 
         // Run will be true unless we are doing a unit test.
