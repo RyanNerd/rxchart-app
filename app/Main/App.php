@@ -16,7 +16,6 @@ use Willow\Controllers\MedHistory\MedHistoryController;
 use Willow\Controllers\Medicine\MedicineController;
 use Willow\Controllers\PasswordReset\PasswordResetController;
 use Willow\Controllers\Resident\ResidentController;
-use Willow\Middleware\JsonBodyParser;
 use Willow\Middleware\ResponseBodyFactory;
 use Willow\Middleware\ValidateRequest;
 
@@ -69,8 +68,8 @@ class App
         // Add ResponseBody as a Request attribute
         $v1->add(ResponseBodyFactory::class);
 
-        // Add JSON parser middleware
-        $app->add(JsonBodyParser::class);
+        // Add Body parser middleware
+        $app->addBodyParsingMiddleware();
 
         // Add Error Middleware
         $displayErrorDetails = true; // getenv('DISPLAY_ERROR_DETAILS') === 'true';
