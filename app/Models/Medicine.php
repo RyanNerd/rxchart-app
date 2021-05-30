@@ -35,9 +35,9 @@ class Medicine extends ModelBase
         'Barcode' => 'string',
         'Directions' => 'string',
         'Notes' => 'string',
-        'FillDateMonth' => 'string',
-        'FillDateDay' => 'string',
-        'FillDateYear' => 'string',
+        'FillDateMonth' => 'tinyint',
+        'FillDateDay' => 'tinyint',
+        'FillDateYear' => 'integer',
         'OTC' => 'boolean',
         'Created' => 'datetime',
         'Updated' => 'datetime',
@@ -82,6 +82,42 @@ class Medicine extends ModelBase
             $this->attributes['Directions'] = null;
         } else {
             $this->attributes['Directions'] = $value;
+        }
+    }
+
+    /**
+     * Override FillDateMonth field to null if empty string
+     * @param string|null $value
+     */
+    public function setFillDateMonthAttribute(?string $value) {
+        if (empty($value)) {
+            $this->attributes['FillDateMonth'] = null;
+        } else {
+            $this->attributes['FillDateMonth'] = (int)$value;
+        }
+    }
+
+    /**
+     * Override FillDateDay field to null if empty string
+     * @param string|null $value
+     */
+    public function setFillDateDayAttribute(?string $value) {
+        if (empty($value)) {
+            $this->attributes['FillDateDay'] = null;
+        } else {
+            $this->attributes['FillDateDay'] = (int)$value;
+        }
+    }
+
+    /**
+     * Override FillDateYear field to null if empty string
+     * @param string|null $value
+     */
+    public function setFillDateYearAttribute(?string $value) {
+        if (empty($value)) {
+            $this->attributes['FillDateYear'] = null;
+        } else {
+            $this->attributes['FillDateYear'] = (int)$value;
         }
     }
 }
