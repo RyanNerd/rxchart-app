@@ -7,5 +7,5 @@ use Slim\Interfaces\RouteCollectorProxyInterface;
 
 Interface IController
 {
-    public function register(RouteCollectorProxyInterface $group);
+    public function register(RouteCollectorProxyInterface $group): void;
 }
