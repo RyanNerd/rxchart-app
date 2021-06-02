@@ -9,6 +9,10 @@ use Willow\Controllers\IController;
 
 class ResidentController implements IController
 {
+    /**
+     * Register routes and actions
+     * @param RouteCollectorProxyInterface $group
+     */
     public function register(RouteCollectorProxyInterface $group): void
     {
         $group->post('/resident/search', ResidentSearchAction::class)
