@@ -1,19 +1,20 @@
 <?php
 declare(strict_types=1);
 
-use Illuminate\Database\Capsule\Manager as Capsule;
+use Psr\Container\ContainerInterface;
+use Illuminate\Database\Capsule\Manager;
 
 return [
-    Capsule::class => function () {
-        $eloquent = new Capsule;
+    'Eloquent' => function(ContainerInterface $c) {
+        $eloquent = new Manager;
 
         $eloquent->addConnection([
-            'driver'    => getenv('DB_DRIVER') ?? 'mysql',
-            'host'      => getenv('DB_HOST'),
-            'port'      => getenv('DB_PORT') ?? '',
-            'database'  => getenv('DB_NAME'),
-            'username'  => getenv('DB_USER'),
-            'password'  => getenv('DB_PASSWORD'),
+            'driver'    => 'mysql',
+            'host'      => $c->get('ENV')['DB_HOST'],
+            'port'      => $c->get('ENV')['DB_PORT'],
+            'database'  => $c->get('ENV')['DB_NAME'],
+            'username'  => $c->get('ENV')['DB_USER'],
+            'password'  => $c->get('ENV')['DB_PASSWORD'],
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => ''
