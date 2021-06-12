@@ -1,10 +1,8 @@
-CREATE DATABASE  IF NOT EXISTS `RxChart` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `RxChart`;
 -- MySQL dump 10.13  Distrib 8.0.25, for Linux (x86_64)
 --
 -- Host: localhost    Database: RxChart
 -- ------------------------------------------------------
--- Server version	8.0.25
+-- Server version	8.0.25-0ubuntu0.20.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -42,7 +40,7 @@ CREATE TABLE `MedHistory` (
   CONSTRAINT `fk_MedHistory_Medicine` FOREIGN KEY (`MedicineId`) REFERENCES `Medicine` (`Id`),
   CONSTRAINT `fk_MedHistory_Resident` FOREIGN KEY (`ResidentId`) REFERENCES `Resident` (`Id`),
   CONSTRAINT `fk_MedHistory_User` FOREIGN KEY (`UserId`) REFERENCES `User` (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=61964 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -74,7 +72,7 @@ CREATE TABLE `Medicine` (
   KEY `fk_Medicine_User` (`UserId`),
   CONSTRAINT `fk_Medicine_Resident` FOREIGN KEY (`ResidentId`) REFERENCES `Resident` (`Id`),
   CONSTRAINT `fk_Medicine_User` FOREIGN KEY (`UserId`) REFERENCES `User` (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3885 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -89,6 +87,7 @@ CREATE TABLE `Resident` (
   `UserId` int NOT NULL,
   `LastName` varchar(50) NOT NULL,
   `FirstName` varchar(50) NOT NULL,
+  `Nickname` varchar(50) DEFAULT NULL,
   `DOB_YEAR` int DEFAULT NULL,
   `DOB_MONTH` tinyint DEFAULT NULL,
   `DOB_DAY` tinyint DEFAULT NULL,
@@ -100,7 +99,7 @@ CREATE TABLE `Resident` (
   UNIQUE KEY `unique_Resident` (`UserId`,`LastName`,`FirstName`,`DOB_YEAR`,`DOB_MONTH`,`DOB_DAY`),
   KEY `fk_Resident_User` (`UserId`),
   CONSTRAINT `fk_Resident_User` FOREIGN KEY (`UserId`) REFERENCES `User` (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=865 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -132,4 +131,4 @@ CREATE TABLE `User` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-20  2:11:42
+-- Dump completed on 2021-06-12 12:40:19

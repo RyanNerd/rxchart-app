@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
  * @property integer $UserId
  * @property string $LastName
  * @property string $FirstName
+ * @property string $Nickname
  * @property integer $DOB_YEAR
  * @property integer $DOB_MONTH
  * @property integer $DOB_DAY
@@ -28,6 +29,7 @@ class Resident extends ModelBase
         'UserId' => 'integer',
         'LastName' => 'string',
         'FirstName' => 'string',
+        'Nickname' => 'string',
         'DOB_YEAR' => 'integer',
         'DOB_MONTH' => 'tinyint',
         'DOB_DAY' => 'tinyint',
@@ -50,6 +52,18 @@ class Resident extends ModelBase
             $this->attributes['Notes'] = null;
         } else {
             $this->attributes['Notes'] = $value;
+        }
+    }
+
+    /**
+     * Override Nickname to null if empty string
+     * @param string|null $value
+     */
+    final public function setNicknameAttribute(?string $value): void {
+        if (empty($value)) {
+            $this->attributes['Nickname'] = null;
+        } else {
+            $this->attributes['Nickname'] = $value;
         }
     }
 }
