@@ -42,8 +42,7 @@ abstract class ModelBase extends Model
      *
      * @return @string;
      */
-    public function getTableName(): string
-    {
+    final public function getTableName(): string {
         return $this->table;
     }
 }

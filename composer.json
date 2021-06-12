@@ -1,6 +1,6 @@
 {
-    "name": "ryannerd/willow",
-    "description": "Willow Framework for creating ORM/RESTful APIs",
+    "name": "ryannerd/rxchart",
+    "description": "RxChart",
     "license": ["MIT"],
     "type": "project",
     "minimum-stability": "stable",
@@ -10,19 +10,18 @@
         "homepage": "https://www.patreon.com/bePatron?u=3985594"
     }],
     "support": {
-        "docs": "https://willow.plexie.com/app/#/public/project/f66cdc9e-18dd-419c-8575-0c8901152cd3",
-        "issues": "https://github.com/RyanNerd/willow/issues"
+        "issues": "https://github.com/RyanNerd/rxchart/issues"
     },
     "config": {
         "sort-packages": true
     },
     "require": {
-        "php": "^8.0",
+        "doctrine/dbal": "^3.1.0",
         "ext-json": "*",
         "ext-pdo": "*",
-        "doctrine/dbal": "^3.1.0",
-        "illuminate/database": "^v8.42.1",
+        "illuminate/database": "^v8.44.0",
         "league/climate": "^3.7.0",
+        "php": "^8.0",
         "php-di/php-di": "^6.3.3",
         "respect/validation": "^2.2.3",
         "slim/psr7": "^1.4.0",
@@ -31,14 +30,11 @@
     },
     "require-dev": {
         "consolidation/robo": "3.0.3",
-        "phpunit/phpunit": "^9.3.8"
+        "phpunit/phpunit": "^9.5.4"
     },
     "autoload": {
         "psr-4": {
             "Willow\\": "app/"
         }
-    },
-    "scripts": {
-        "post-create-project-cmd":["Willow\\Robo\\Script::postCreateProjectCmd"]
     }
 }

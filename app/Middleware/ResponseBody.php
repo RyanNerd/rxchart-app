@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Willow\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
+use Slim\Psr7\Factory\StreamFactory;
+use Slim\Psr7\Headers;
 use Slim\Psr7\Response;
 
 class ResponseBody extends ResponseCodes
@@ -42,12 +44,21 @@ class ResponseBody extends ResponseCodes
 
     protected ?int $userId = null;
 
+    protected ?StreamFactory $streamFactory;
+
+    /**
+     * ResponseBody constructor.
+     * @param StreamFactory $streamFactory
+     */
+    public function __construct(StreamFactory $streamFactory) {
+        $this->streamFactory = $streamFactory;
+    }
+
     /**
      * Generate the response
      */
-    public function __invoke(): ResponseInterface
-    {
-        $payload = [
+    public function __invoke(): ResponseInterface {
+        return $this->response([
             'authenticated' => $this->isAuthenticated,
             'success' => ($this->status === 200),
             'status' => $this->status,
@@ -55,13 +66,20 @@ class ResponseBody extends ResponseCodes
             'missing' => $this->missing,
             'message' => $this->message,
             'timestamp' => time()
-        ];
+        ]);
+    }
 
-        $response = new Response();
-        $response->getBody()->write(json_encode($payload));
-        return $response
-            ->withStatus($this->status)
-            ->withHeader('content-type', 'application\json');
+    /**
+     * Serialize the $payload and Return a Response object
+     * @param array $payload
+     * @return Response
+     */
+    private function response(array $payload): Response {
+        return new Response(
+            $this->status,
+            new Headers(['content-type' => 'application\json']),
+            $this->streamFactory->createStream(json_encode($payload))
+        );
     }
 
     /**
@@ -70,7 +88,7 @@ class ResponseBody extends ResponseCodes
      * @param array $parsedRequest
      * @return ResponseBody
      */
-    public function setParsedRequest(array $parsedRequest): self
+    final public function setParsedRequest(array $parsedRequest): self
     {
         $clone = clone $this;
         $clone->parsedRequest = $parsedRequest;
@@ -82,8 +100,7 @@ class ResponseBody extends ResponseCodes
      *
      * @return array
      */
-    public function getParsedRequest(): array
-    {
+    final public function getParsedRequest(): array {
         return $this->parsedRequest;
     }
 
@@ -92,8 +109,7 @@ class ResponseBody extends ResponseCodes
      *
      * @return ResponseBody
      */
-    public function setIsAdmin(): self
-    {
+    final public function setIsAdmin(): self {
         $clone = clone $this;
         $clone->isAdmin = true;
         return $clone;
@@ -104,8 +120,7 @@ class ResponseBody extends ResponseCodes
      *
      * @return ResponseBody
      */
-    public function setIsAuthenticated(): self
-    {
+    final public function setIsAuthenticated(): self {
         $clone = clone $this;
         $clone->isAuthenticated = true;
         return $clone;
@@ -116,20 +131,17 @@ class ResponseBody extends ResponseCodes
      *
      * @return bool
      */
-    public function getIsAuthenticated(): bool
-    {
+    final public function getIsAuthenticated(): bool {
         return $this->isAuthenticated;
     }
 
-    public function setUserId(?int $userId): self
-    {
+    final public function setUserId(?int $userId): self {
         $clone = clone $this;
         $clone->userId = $userId;
         return $clone;
     }
 
-    public function getUserId(): int
-    {
+    final public function getUserId(): int {
         return $this->userId;
     }
     /** trashed records
@@ -137,8 +149,7 @@ class ResponseBody extends ResponseCodes
      *
      * @return bool
      */
-    public function hasMissingRequiredOrInvalid(): bool
-    {
+    final public function hasMissingRequiredOrInvalid(): bool {
         return (isset($this->missing['invalid']) || isset($this->missing['required']));
     }
 
@@ -149,8 +160,7 @@ class ResponseBody extends ResponseCodes
      * @param string $name
      * @param string | null $type
      */
-    public function registerParam(string $section, string $name, ?string $type): void
-    {
+    final public function registerParam(string $section, string $name, ?string $type): void {
         assert(in_array($section, ['optional', 'required', 'invalid']));
         assert($name !== '');
 
@@ -169,8 +179,7 @@ class ResponseBody extends ResponseCodes
      * @param array|null $data
      * @return ResponseBody
      */
-    public function setData(?array $data): self
-    {
+    final public function setData(?array $data): self {
         $clone = clone $this;
         $clone->data = $data;
         return $clone;
@@ -182,10 +191,8 @@ class ResponseBody extends ResponseCodes
      * @param int $status
      * @return self
      */
-    public function setStatus(int $status): self
-    {
+    final public function setStatus(int $status): self {
         assert($status > 99 && $status < 1000);
-
         $clone = clone $this;
         $clone->status = $status;
         return $clone;
@@ -197,10 +204,8 @@ class ResponseBody extends ResponseCodes
      * @param string $message
      * @return ResponseBody
      */
-    public function setMessage(string $message): self
-    {
+    final public function setMessage(string $message): self {
         assert($message !== '');
-
         $clone = clone $this;
         $clone->message = $message;
         return $clone;

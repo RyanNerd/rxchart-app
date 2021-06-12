@@ -34,6 +34,12 @@ try {
         ->addDefinitions(__DIR__ . '/../config/_env.php')
         ->addDefinitions(__DIR__ . '/../config/db.php');
     $container = $builder->build();
+
+    // Instantiate the Eloquent ORM
+    $container->get('Eloquent');
+
+    // Launch the App
+    new App($container);
 } catch (Throwable $throwable) {
     // See: https://github.com/krakjoe/pthreads/issues/806
     if (!defined('STDOUT')) {
@@ -54,9 +60,3 @@ try {
     $cli->br(2);
     exit();
 }
-
-// Instantiate the Eloquent ORM
-$container->get('Eloquent');
-
-// Launch the App
-new App($container);
