@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
  * @property integer $Id
  * @property integer $ResidentId
  * @property integer $MedicineId
+ * @property integer $UserId
  * @property string $Notes
  * @property integer $In
  * @property integer $Out
@@ -40,8 +41,7 @@ class MedHistory extends ModelBase
      * Override Notes to null if empty string
      * @param string|null $value
      */
-    public function setNotesAttribute(?string $value)
-    {
+    final public function setNotesAttribute(?string $value): void  {
         if (empty($value)) {
             $this->attributes['Notes'] = null;
         } else {

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 /**
  * @property integer $Id
  * @property integer $ResidentId
+ * @property integer $UserId
  * @property string $Drug
  * @property string $Strength
  * @property string $Barcode
@@ -50,8 +51,7 @@ class Medicine extends ModelBase
      * Override Strength field to null if empty string
      * @param string|null $value
      */
-    public function setStrengthAttribute(?string $value)
-    {
+    final public function setStrengthAttribute(?string $value): void {
         if (empty($value)) {
             $this->attributes['Strength'] = null;
         } else {
@@ -63,8 +63,7 @@ class Medicine extends ModelBase
      * Override Barcode field to null if empty string
      * @param string|null $value
      */
-    public function setBarcodeAttribute(?string $value)
-    {
+    final public function setBarcodeAttribute(?string $value): void {
         if (empty($value)) {
             $this->attributes['Barcode'] = null;
         } else {
@@ -76,8 +75,7 @@ class Medicine extends ModelBase
      * Override Directions field to null if empty string
      * @param string|null $value
      */
-    public function setDirectionsAttribute(?string $value)
-    {
+    final public function setDirectionsAttribute(?string $value): void {
         if (empty($value)) {
             $this->attributes['Directions'] = null;
         } else {
@@ -89,7 +87,7 @@ class Medicine extends ModelBase
      * Override FillDateMonth field to null if empty string
      * @param string|null $value
      */
-    public function setFillDateMonthAttribute(?string $value) {
+    final public function setFillDateMonthAttribute(?string $value): void {
         if (empty($value)) {
             $this->attributes['FillDateMonth'] = null;
         } else {
@@ -101,7 +99,7 @@ class Medicine extends ModelBase
      * Override FillDateDay field to null if empty string
      * @param string|null $value
      */
-    public function setFillDateDayAttribute(?string $value) {
+    final public function setFillDateDayAttribute(?string $value): void {
         if (empty($value)) {
             $this->attributes['FillDateDay'] = null;
         } else {
@@ -113,7 +111,7 @@ class Medicine extends ModelBase
      * Override FillDateYear field to null if empty string
      * @param string|null $value
      */
-    public function setFillDateYearAttribute(?string $value) {
+    final function setFillDateYearAttribute(?string $value): void {
         if (empty($value)) {
             $this->attributes['FillDateYear'] = null;
         } else {

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @property integer $Id
+ * @property integer $UserId
  * @property string $LastName
  * @property string $FirstName
  * @property integer $DOB_YEAR
@@ -44,8 +45,7 @@ class Resident extends ModelBase
      * Override Notes to null if empty string
      * @param string|null $value
      */
-    final public function setNotesAttribute(?string $value): void
-    {
+    final public function setNotesAttribute(?string $value): void {
         if (empty($value)) {
             $this->attributes['Notes'] = null;
         } else {

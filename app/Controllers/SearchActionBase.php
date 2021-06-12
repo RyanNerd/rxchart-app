@@ -25,7 +25,7 @@ class SearchActionBase extends ActionBase
     {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
-        $model = $this->model;
+        $model = clone $this->model;
         $modelColumns = $model::FIELDS;
 
         // Force UserScope

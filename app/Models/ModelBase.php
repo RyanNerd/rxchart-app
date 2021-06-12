@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @mixin SoftDeletes
  * @property int $UserId
  */
-abstract class ModelBase extends Model
+abstract class ModelBase extends Model implements IModelBase
 {
     use SoftDeletes;
 
