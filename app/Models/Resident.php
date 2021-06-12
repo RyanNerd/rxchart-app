@@ -44,7 +44,7 @@ class Resident extends ModelBase
      * Override Notes to null if empty string
      * @param string|null $value
      */
-    public function setNotesAttribute(?string $value)
+    final public function setNotesAttribute(?string $value): void
     {
         if (empty($value)) {
             $this->attributes['Notes'] = null;

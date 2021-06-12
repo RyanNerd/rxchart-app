@@ -15,8 +15,7 @@ class ResidentPostAction extends WriteActionBase
 {
     protected ModelBase|Resident $model;
 
-    public function __construct(Resident $model)
-    {
+    public function __construct(Resident $model) {
         $this->model = $model;
     }
 
@@ -38,45 +37,46 @@ class ResidentPostAction extends WriteActionBase
         // Get the id/Id from the request
         $id = $parsedBody['Id'] ?? null;
 
-        // Are we inserting a new record?
-        if ($id === null) {
-            // Force UserScope and look for existing records including trashed records
-            $residentModel = $residentModel->
-            where('UserId', '=', $responseBody->getUserId())->
-            where('FirstName', '=', $parsedBody['FirstName'])->
-            where('LastName', '=', $parsedBody['LastName'])->
-            where('DOB_YEAR', '=', $parsedBody['DOB_YEAR'])->
-            where('DOB_MONTH', '=', $parsedBody['DOB_MONTH'])->
-            where('DOB_DAY', '=', $parsedBody['DOB_DAY'])->
-            withTrashed()->
-            first();
+        // Force UserScope and look for existing records including trashed records
+        $residentModel = $residentModel
+            ->where('UserId', '=', $responseBody->getUserId())
+            ->where('FirstName', '=', $parsedBody['FirstName'])
+            ->where('LastName', '=', $parsedBody['LastName'])
+            ->where('DOB_YEAR', '=', $parsedBody['DOB_YEAR'])
+            ->where('DOB_MONTH', '=', $parsedBody['DOB_MONTH'])
+            ->where('DOB_DAY', '=', $parsedBody['DOB_DAY'])
+            ->where('Id', '<>', $id)
+            ->withTrashed()
+            ->first();
 
-            // Did we get any results?
-            if ($residentModel !== null) {
+        // Did we get any results (dupes)?
+        if ($residentModel !== null) {
+            // Are we adding a new record?
+            if ($id === null) {
                 // Is the client deactivated (trashed)?
                 if ($residentModel->trashed()) {
                     // Undelete the record
                     if ($residentModel->restore()) {
                         $data = $residentModel->toArray();
                         $this->sanitize($data, $modelColumns);
-
                         // Return the response as the restored record.
                         $responseBody = $responseBody
                             ->setData($data)
                             ->setStatus(ResponseBody::HTTP_OK);
                         return $responseBody();
                     }
-                } else {
-                    // Prevent inserting duplicate clients
-                    $responseBody = $responseBody
-                        ->setData(null)
-                        ->setStatus(ResponseBody::HTTP_CONFLICT)
-                        ->setMessage('Duplicates not allowed');
-                    return $responseBody();
                 }
             }
+
+            // Prevent inserting duplicate clients
+            $responseBody = $responseBody
+                ->setData(null)
+                ->setStatus(ResponseBody::HTTP_CONFLICT)
+                ->setMessage('Duplicates not allowed');
+            return $responseBody();
         }
 
+        // No dupes detected so carry on, nothing to see here.
         return parent::__invoke($request, $response);
     }
 }
