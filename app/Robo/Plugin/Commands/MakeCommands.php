@@ -3,431 +3,223 @@ declare(strict_types=1);
 
 namespace Willow\Robo\Plugin\Commands;
 
-use League\CLImate\CLImate;
+use League\CLImate\TerminalObject\Dynamic\Input;
+use Twig\Loader\FilesystemLoader;
+use Twig\Environment as Twig;
+use Throwable;
+use Willow\Robo\Plugin\Commands\Traits\EnvSetupTrait;
+use Willow\Robo\Plugin\Commands\Traits\RouteSetupTrait;
+use Willow\Robo\Plugin\Commands\Traits\TableSetupTrait;
+use Exception;
 
 class MakeCommands extends RoboBase
 {
-    /**
-     * Create a Model, Controller, and Actions for all selected entities (tables/views)
-     */
-    public function makeAll()
-    {
-        if (!$this->isDatabaseEnvironmentReady()) return;
+    use EnvSetupTrait;
+    use RouteSetupTrait;
+    use TableSetupTrait;
 
-        $tables = $this->getTables();
-        $views = $this->getViews();
-        $entities = array_merge($views, $tables);
-
-        $cli = $this->cli;
-
-        // Are we using Windows?
-        if (self::isWindows()) {
-            // CLIMATE does not support checkboxes in Windows so prompt the user entity by entity instead.
-            $selectedEntities = [];
-            foreach ($entities as $entity) {
-                $input = $cli->confirm('Generate for: ' . $entity);
-                if ($input->confirmed()) {
-                    $selectedEntities[] = $entity;
-                }
-            }
-        } else {
-            $input = $cli->checkboxes('Select the entities you want to generate', $entities);
-            $selectedEntities = $input->prompt();
-        }
-
-        // Do we have at least one selected entity?
-        if (count($selectedEntities) === 0) {
-            $this->warning('You did not make any selections.');
-            return;
-        }
-
-        // Iterate through all selected entities
-        foreach($selectedEntities as $entity) {
-            $tableAlias = str_replace('_', '', ucwords($entity, '_'));
-
-            // Create Models for selected entities
-            $message = $this->createModel($entity);
-            if ($message === '') {
-                $cli->out("Model $tableAlias created for $entity");
-            } else {
-                $this->warning($message);
-            }
-
-            // Create Controllers for selected entities
-            $message = $this->createController($entity);
-            if ($message === '') {
-                $cli->out($tableAlias . 'Controller created');
-            } else {
-                $this->warning($message);
-            }
-
-            // Create WriteValidators for selected entities
-            $message = $this->createWriteValidator($entity);
-            if ($message === '') {
-                $cli->out($tableAlias . 'WriteValidator created');
-            } else {
-                $this->warning($message);
-            }
-
-            // Create QueryValidators for selected entities
-            $message = $this->createQueryValidator($entity);
-            if ($message === '') {
-                $cli->out($tableAlias . 'QueryValidator created');
-            } else {
-                $this->warning($message);
-            }
-
-            // Create Actions for selected entities
-            $message = $this->createActions($entity);
-            if ($message === '') {
-                $cli->out("Actions created for $tableAlias");
-            } else {
-                $this->warning($message);
-            }
-        }
-    }
-
-    /**
-     * Create a Model for a given table name
-     *
-     * @param string $tableName
-     */
-    public function makeModel(string $tableName)
-    {
-        if (!$this->isDatabaseEnvironmentReady()) return;
-
-        /** @var CLImate $cli */
-        $cli = $this->cli;
-        $message = $this->createModel($tableName);
-        if ($message !== '') {
-            $this->warning($message);
-        } else {
-            $tableAlias = str_replace('_', '', ucwords($tableName, '_'));
-            $cli->out("Model $tableAlias created for $tableName");
-        }
-    }
-
-    /**
-     * Create a controller given a table/view name
-     * 
-     * @param string $tableName
-     */
-    public function makeController(string $tableName)
-    {
-        $cli = $this->cli;
-        $message = $this->createController($tableName);
-        if ($message === '') {
-            $tableAlias = str_replace('_', '', ucwords($tableName, '_'));
-            $cli->out($tableAlias . 'Controller created');
-        } else {
-            $this->warning($message);
-        }
-
-        // Create Validators for the table
-        $message = $this->createWriteValidator($tableName);
-        if ($message === '') {
-            $cli->out($tableAlias . 'WriteValidator created');
-        } else {
-            $this->warning($message);
-        }
-    }
-
-    /**
-     * Create Get, Patch, Post, and Delete actions for the given table name
-     * @param string $tableName
-     */
-    public function makeActions(string $tableName)
-    {
-        $cli = $this->cli;
-        $tableAlias = str_replace('_', '', ucwords($tableName, '_'));
-        $message = $this->createActions($tableName);
-        if ($message === '') {
-            $cli->out("Actions created for $tableAlias");
-        } else {
-            $this->warning($message);
-        }
-    }
-
-    /**
-     * Proxy to Model Generator
-     *
-     * @param string $tableName
-     * @return string
-     */
-    private function createModel(string $tableName): string
-    {
-        $columns = $this->getTableDetails($tableName);
-        if (count($columns) === 0) {
-            return "$tableName is not a valid entity (table/view)";
-        }
-
-        $tableAlias = str_replace('_', '', ucwords($tableName, '_'));
-        $modelPath = __DIR__ . '/../../../../app/Models/' . $tableAlias . '.php';
-
-        // Bail if the Model already exists
-        if (file_exists($modelPath)) {
-            return "Model $tableAlias already exists.";
-        }
-
-        $modelTemplate = $this->generateModel($tableName, $tableAlias, $columns);
-
-        // Did we successfully create the Model?
-        if (file_put_contents($modelPath, $modelTemplate) !== false) {
-            return '';
-        } else {
-            return "Unable to generate model for: $tableName";
-        }
-    }
-
-    private function generateModel($tableName, string $tableAlias, array $tableDetails): string
-    {
-        $modelTemplate = file_get_contents(__DIR__ . '/Templates/ModelTemplate.php');
-        $modelTemplate = str_replace("\n\r", "\n", $modelTemplate);
-        $modelTemplate = str_replace('class ModelTemplate', "class $tableAlias", $modelTemplate);
-        $modelTemplate = str_replace('TableName', $tableName, $modelTemplate);
-        $modelTemplateLines = explode("\n", $modelTemplate);
-
-        $fields = '';
-        foreach ($tableDetails as $columnName => $columnType) {
-            $fields .= "        '$columnName' => '$columnType'," . PHP_EOL;
-        }
-        $fieldList = <<<fields
-    public const FIELDS = [
-$fields
+    protected const PROGRESS_STAGES = [
+        'Model',
+        'Controller',
+        'Actions',
+        'Validators'
     ];
-fields;
 
-        $template = '';
-        foreach ($modelTemplateLines as $line) {
-            if (strstr($line, 'public const FIELDS = [];')) {
-                $template .= $fieldList . PHP_EOL;
-                continue;
+    private const VIRIDIAN_PATH = __DIR__ . '/../../../../.viridian';
+
+    /**
+     * Builds the app using database tables
+     */
+    final public function make(): void {
+        $cli = $this->cli;
+
+        $container = self::getWillowContainer();
+
+        try {
+            // If viridian has any entries it means that make has already been run.
+            // In this case the user must run the reset command before running make again.
+            $viridian = $container->get('viridian');
+            if (count($viridian) > 0) {
+                $cli->br();
+                $cli->bold()
+                    ->backgroundLightRed()
+                    ->white()
+                    ->border('*');
+                $cli
+                    ->bold()
+                    ->backgroundLightRed()
+                    ->white('                 !!!Running make is destructive!!!                              ');
+                $cli
+                    ->bold()
+                    ->backgroundLightRed()
+                    ->white(' Re-running make will destroy & replace all models, controllers, models etc.    ');
+                $cli
+                    ->bold()
+                    ->backgroundLightRed()
+                    ->white()
+                    ->border(' ');
+                $cli
+                    ->bold()
+                    ->backgroundLightRed()
+                    ->white(' You must run the reset command before you can re-run the make command.         ');
+                $cli->bold()
+                    ->backgroundLightRed()
+                    ->white()
+                    ->border('*');
+                $cli->br();
+                $input = $cli->bold()->lightGray()->input('Press enter to exit');
+                $input->prompt();
+                die();
             }
 
-            if (strstr($line,'* @mixin Builder')) {
-                foreach ($tableDetails as $columnName => $columnType) {
-                    if ($columnType === 'datetime') {
-                        $columnType = '\DateTime';
-                    }
-                    if ($columnType === 'decimal') {
-                        $columnType = 'float';
-                    }
-                    $template .=" * @property $columnType $" . $columnName . PHP_EOL;
+
+            // Has .env file been read into ENV?
+            if ($container->has('ENV') && !empty($container->get('ENV')['DB_NAME'])) {
+                $cli->bold()->yellow()->border();
+                $cli->bold()->white("Database configuration already exists in .env");
+                $cli->br();
+                /** @var Input $input */
+                $input = $cli->bold()->lightGray()->confirm('Do you want to OVERWRITE it?');
+                $cli->bold()->yellow()->border();
+                if ($input->confirmed()) {
+                    $this->setEnvFromUser();
                 }
-                $template .= ' *' . PHP_EOL;
-                $template .= $line . PHP_EOL;
             } else {
-                $template .= $line . PHP_EOL;
+                $this->setEnvFromUser();
             }
+        } catch (Throwable $e) {
+                RoboBase::showThrowableAndDie($e);
         }
-        return $template;
+
+        try {
+            // Get Eloquent ORM manager
+            $eloquent = RoboBase::getEloquent();
+
+            // Get the database connection object
+            $conn = $eloquent->getConnection();
+
+            // Get the tables from the database
+            $tables = DatabaseUtilities::getTableList($conn);
+
+            // Get the list of tables the user wants in their project
+            $selectedTables = $this->tableInit($tables);
+
+            // Get the routes for each table that the user wants to use
+            $selectedRoutes = $this->routeInit($selectedTables);
+
+            // Create the .viridian semaphore file
+            if (file_put_contents(self::VIRIDIAN_PATH, 'TIMESTAMP=' . time()) === false) {
+                RoboBase::showThrowableAndDie(new Exception('Unable to create .viridian file.'));
+            }
+            $loader = new FilesystemLoader(__DIR__ . '/Templates');
+            $twig = new Twig($loader);
+            $actionsForge = new ActionsForge($twig);
+            $controllerForge = new ControllerForge($twig);
+            $modelForge = new ModelForge($twig);
+            $registerForge = new RegisterForge($twig);
+            $validatorForge = new ValidatorForge($twig);
+
+            $cli->br();
+            $cli->bold()->white()->border('*');
+            $cli->bold()->white('Building project');
+            $cli->bold()->white()->border('*');
+            foreach ($selectedRoutes as $table => $route) {
+                $cli->br();
+                $cli->bold()->lightGreen('Working on: ' . $table);
+                $progress = $cli->progress()->total(count(self::PROGRESS_STAGES));
+                foreach (self::PROGRESS_STAGES as $key => $stage) {
+                    $progress->current($key + 1, $stage);
+                    switch ($stage) {
+                        case 'Model':
+                            $modelForge->forgeModel($table);
+                            break;
+
+                        case 'Controller':
+                            $controllerForge->forgeController($table, $route);
+                            break;
+
+                        case 'Actions':
+                            $actionsForge->forgeDeleteAction($table);
+                            $actionsForge->forgeGetAction($table);
+                            $actionsForge->forgePatchAction($table);
+                            $actionsForge->forgePostAction($table);
+                            $actionsForge->forgeRestoreAction($table);
+                            $actionsForge->forgeSearchAction($table);
+                            break;
+
+                        case 'Validators':
+                            $validatorForge->forgeRestoreValidator($table);
+                            $validatorForge->forgeSearchValidator($table);
+                            $validatorForge->forgeWriteValidator($table);
+                            break;
+                    }
+                }
+            }
+
+            $cli->br();
+            $cli->bold()->lightGreen('Registering controllers...');
+
+            // Register the controllers
+            $registerForge->forgeRegisterControllers();
+
+            $cli->br();
+            $cli->bold()->lightYellow()->border('*');
+            $cli->bold()->lightYellow('Project build completed!');
+            $cli->bold()->lightYellow()->border('*');
+            $cli->br();
+        } catch (Throwable $throwable) {
+            self::showThrowableAndDie($throwable);
+        }
     }
 
     /**
-     * Proxy to generateController
-     *
-     * @param string $tableName
-     * @return string
+     * Resets the project back to factory defaults
      */
-    private function createController(string $tableName): string
-    {
-        $tableAlias = str_replace('_', '', ucwords($tableName, '_'));
-        $targetDir =  __DIR__ . '/../../../../app/Controllers/' . $tableAlias;
-        if (!is_dir($targetDir)) {
-            mkdir($targetDir);
+    final public function reset(): void {
+        $cli = $this->cli;
+
+        try {
+            $container = self::getWillowContainer();
+
+            $viridian = $container->get('viridian');
+
+            // If viridian has no entries then there's nothing to do.
+            if (count($viridian) === 0) {
+                $cli->bold()->white('Project appears to be uninitialized. Nothing to do.');
+                die();
+            }
+
+            $cli->br();
+            $cli->bold()
+                ->backgroundLightRed()
+                ->white()
+                ->border('*');
+            $cli
+                ->bold()
+                ->backgroundLightRed()
+                ->white('Running reset will allow the make command to be re-run.');
+            $cli
+                ->bold()
+                ->backgroundLightRed()
+                ->white('Running make more than once is a destructive action.');
+            $cli
+                ->bold()
+                ->backgroundLightRed()
+                ->white('Any code in the controllers, models, routes, etc. will be overwritten.');
+            $cli->br();
+            /** @var Input $input */
+            $input = $cli->bold()->lightGray()->confirm('Are you sure you want to reset?');
+            if ($input->confirmed()) {
+                unlink(self::VIRIDIAN_PATH);
+            }
+            $cli->bold()
+                ->backgroundLightRed()
+                ->white()
+                ->border('*');
+            $cli->br();
+            die();
+        } catch (Exception $e) {
+            RoboBase::showThrowableAndDie($e);
         }
-
-        $controllerPath = $targetDir . '/' . $tableAlias . 'Controller.php';
-        if (file_exists($controllerPath)) {
-            return $tableAlias . 'Controller already exists.';
-        }
-
-        $controllerTemplate = $this->generateController($tableAlias, strtolower($tableName));
-
-        if (file_put_contents($controllerPath, $controllerTemplate) !== false) {
-            return '';
-        } else {
-            return "Unable to create $tableAlias Controller";
-        }
-    }
-
-    private function generateController(string $tableAlias, string $route): string
-    {
-        $controllerTemplate = file_get_contents(__DIR__ . '/Templates/ControllerTemplate.php');
-        $controllerTemplate = str_replace('TableAlias', $tableAlias, $controllerTemplate);
-        $controllerTemplate = str_replace('%route%', $route, $controllerTemplate);
-
-        return $controllerTemplate;
-    }
-
-    /**
-     * Proxy to:
-     *  generateGetAction
-     *  generatePostAction
-     *  generatePatchAction
-     *  generateDeleteAction
-     *
-     * @param string $tableName
-     * @return string
-     */
-    private function createActions(string $tableName): string
-    {
-        $tableAlias = str_replace('_', '', ucwords($tableName, '_'));
-        $targetDir =  __DIR__ . '/../../../../app/Controllers/' . $tableAlias;
-        if (!is_dir($targetDir)) {
-            mkdir($targetDir);
-        }
-
-        $getActionPath = $targetDir . '/' . $tableAlias . 'GetAction.php';
-        if (file_exists($getActionPath)) {
-            return $tableAlias . 'GetAction already exists.';
-        }
-
-        $getActionTemplate = $this->generateGetAction($tableAlias);
-        if (file_put_contents($getActionPath, $getActionTemplate) === false) {
-            return 'Unable to create ' . $tableAlias . 'GetAction.php';
-        }
-
-        $queryActionPath = $targetDir . '/' . $tableAlias . 'QueryAction.php';
-        if (file_exists($queryActionPath)) {
-            return $tableAlias . 'QueryAction already exists.';
-        }
-
-        $queryActionTemplate = $this->generateQueryAction($tableAlias);
-        if (file_put_contents($queryActionPath, $queryActionTemplate) === false) {
-            return 'Unable to create ' . $tableAlias . 'QueryAction.php';
-        }
-
-        $postActionPath = $targetDir . '/' . $tableAlias . 'PostAction.php';
-        if (file_exists($postActionPath)) {
-            return $tableAlias . 'PostAction already exists.';
-        }
-
-        $postActionTemplate = $this->generatePostAction($tableAlias);
-        if (file_put_contents($postActionPath, $postActionTemplate) === false) {
-            return 'Unable to create ' . $tableAlias . 'PostAction.php';
-        }
-
-        $patchActionPath = $targetDir . '/' . $tableAlias . 'PatchAction.php';
-        if (file_exists($patchActionPath)) {
-            return $tableAlias . 'PatchAction already exists.';
-        }
-
-        $patchActionTemplate = $this->generatePatchAction($tableAlias);
-        if (file_put_contents($patchActionPath, $patchActionTemplate) === false) {
-            return 'Unable to create ' . $tableAlias . 'PatchAction.php';
-        }
-
-        $deleteActionPath = $targetDir . '/' . $tableAlias . 'DeleteAction.php';
-        if (file_exists($deleteActionPath)) {
-            return $tableAlias . 'DeleteAction already exists.';
-        }
-
-        $deleteActionTemplate = $this->generateDeleteAction($tableAlias);
-        if (file_put_contents($deleteActionPath, $deleteActionTemplate) === false) {
-            return 'Unable to create ' . $tableAlias . 'DeleteAction.php';
-        }
-
-        return '';
-    }
-
-    private function generateGetAction(string $tableAlias): string
-    {
-        $getActionTemplate = file_get_contents(__DIR__ . '/Templates/GetActionTemplate.php');
-        return str_replace('TableAlias', $tableAlias, $getActionTemplate);
-    }
-
-    private function generateQueryAction(string $tableAlias): string
-    {
-        $queryActionTemplate = file_get_contents(__DIR__ . '/Templates/QueryActionTemplate.php');
-        return str_replace('TableAlias', $tableAlias, $queryActionTemplate);
-    }
-
-    private function generatePostAction(string $tableAlias): string
-    {
-        $postActionTemplate = file_get_contents(__DIR__ . '/Templates/PostActionTemplate.php');
-        return str_replace('TableAlias', $tableAlias, $postActionTemplate);
-    }
-
-    private function generatePatchAction(string $tableAlias): string
-    {
-        $patchActionTemplate = file_get_contents(__DIR__ . '/Templates/PatchActionTemplate.php');
-        return str_replace('TableAlias', $tableAlias, $patchActionTemplate);
-    }
-
-    private function generateDeleteAction(string $tableAlias): string
-    {
-        $deleteActionTemplate = file_get_contents(__DIR__ . '/Templates/DeleteActionTemplate.php');
-        return str_replace('TableAlias', $tableAlias, $deleteActionTemplate);
-    }
-
-    /**
-     * Proxy to generateWriteValidator
-     *
-     * @param string $tableName
-     * @return string
-     */
-    private function createWriteValidator(string $tableName): string
-    {
-        $tableAlias = str_replace('_', '', ucwords($tableName, '_'));
-        $targetDir =  __DIR__ . '/../../../../app/Controllers/' . $tableAlias;
-        if (!is_dir($targetDir)) {
-            mkdir($targetDir);
-        }
-
-        $validatorPath = $targetDir . '/' . $tableAlias . 'WriteValidator.php';
-        if (file_exists($validatorPath)) {
-            return $tableAlias . 'WriteValidator already exists.';
-        }
-
-        $validatorTemplate = $this->generateWriteValidator($tableAlias);
-
-        if (file_put_contents($validatorPath, $validatorTemplate) !== false) {
-            return '';
-        } else {
-            return 'Unable to create $tableAlias' . 'WriteValidator';
-        }
-    }
-
-    private function generateWriteValidator(string $tableAlias): string
-    {
-        $validatorTemplate = file_get_contents(__DIR__ . '/Templates/WriteValidatorTemplate.php');
-        $validatorTemplate = str_replace('TableAlias', $tableAlias, $validatorTemplate);
-        return $validatorTemplate;
-    }
-
-    /**
-     * Proxy to generateQueryValidator
-     *
-     * @param string $tableName
-     * @return string
-     */
-    private function createQueryValidator(string $tableName): string
-    {
-        $tableAlias = str_replace('_', '', ucwords($tableName, '_'));
-        $targetDir =  __DIR__ . '/../../../../app/Controllers/' . $tableAlias;
-        if (!is_dir($targetDir)) {
-            mkdir($targetDir);
-        }
-
-        $validatorPath = $targetDir . '/' . $tableAlias . 'QueryValidator.php';
-        if (file_exists($validatorPath)) {
-            return $tableAlias . 'QueryValidator already exists.';
-        }
-
-        $validatorTemplate = $this->generateQueryValidator($tableAlias);
-
-        if (file_put_contents($validatorPath, $validatorTemplate) !== false) {
-            return '';
-        } else {
-            return 'Unable to create $tableAlias' . 'QueryValidator';
-        }
-    }
-
-    private function generateQueryValidator(string $tableAlias): string
-    {
-        $validatorTemplate = file_get_contents(__DIR__ . '/Templates/QueryValidatorTemplate.php');
-        $validatorTemplate = str_replace('TableAlias', $tableAlias, $validatorTemplate);
-        return $validatorTemplate;
     }
 }

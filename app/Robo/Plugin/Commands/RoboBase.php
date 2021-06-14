@@ -5,224 +5,171 @@ namespace Willow\Robo\Plugin\Commands;
 
 use DI\Container;
 use DI\ContainerBuilder;
-use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Database\Capsule\Manager as Eloquent;
 use League\CLImate\CLImate;
+use League\CLImate\TerminalObject\Dynamic\Confirm;
 use Robo\Tasks;
 use Throwable;
+use Willow\Robo\Plugin\Commands\Traits\EnvSetupTrait;
 
 abstract class RoboBase extends Tasks
 {
-    /**
-     * @var CLImate
-     */
-    protected $cli;
+    protected CLImate $cli;
 
     /**
-     * @var Capsule
+     * @var Container | null
      */
-    protected $capsule = null;
+    protected static $willowContainer;
 
-    /**
-     * @var Container
-     */
-    protected $willowContainer;
+    private const ENV_ERROR = 'Unable to create the .env file. You may need to create this manually.';
+    private const CONFIG_PATH = __DIR__ . '/../../../../config/';
+    private const ENV_PATH = __DIR__ . '/../../../../.env';
+    private const TEMPLATE_PATH = __DIR__ . '/Templates';
+    private const MODELS_PATH = __DIR__ . '/../../../Robo/../Models/';
+    private const CONTROLLERS_PATH = __DIR__ . '/../../../Robo/../Controllers/';
 
-    /**
-     * RoboBase constructor.
-     */
-    public function __construct()
-    {
-        $this->cli = new CLImate;
+    use EnvSetupTrait;
 
-        // Set up DI and ORM only if the .env file exists.
-        if (file_exists(__DIR__ . '/../../../../.env')) {
-            // Load Default configuration from environment
-            include_once __DIR__ . '/../../../../config/_env.php';
+    public function __construct() {
+        $this->cli = new CLImate();
 
-            // Set up Dependency Injection
-            try {
+        try {
+            // Set up DI
+            if (!static::$willowContainer instanceof Container) {
                 $builder = new ContainerBuilder();
-                $builder->addDefinitions(__DIR__ . '/../../../../config/db.php');
+                $builder = $builder
+                    ->addDefinitions([
+                        'template_path' => self::TEMPLATE_PATH,
+                        'controllers_path' => self::CONTROLLERS_PATH,
+                        'models_path' => self::MODELS_PATH
+                    ])
+                    ->addDefinitions(self::CONFIG_PATH . '/_viridian.php');
+                if (file_exists(self::ENV_PATH)) {
+                    $builder = $builder
+                    ->addDefinitions(self::CONFIG_PATH . '_env.php')
+                    ->addDefinitions(self::CONFIG_PATH . 'db.php');
+                }
                 $container = $builder->build();
-            } catch (Throwable $exception) {
-                $this->error($exception->getMessage());
-                return;
+                self::setWillowContainer($container);
             }
-
-            // Save container for reference.
-            $this->willowContainer = $container;
-
-            // Boot Eloquent
-            $this->bootDatabase($container);
+        } catch (Throwable $throwable) {
+            $cli = $this->cli;
+            $cli->br(2);
+            $cli->bold()->yellow('[WARNING] Something went wrong');
+            $cli->bold()->white('Check that the .env file is valid');
+            $cli->bold()->yellow()->inline('Error Message: ')->white($throwable->getMessage());
+            $cli->br(2);
+            exit();
         }
     }
 
     /**
-     * Create an Eloquent ORM capsule from the .env settings
-     *
+     * Set the DI/Container
      * @param Container $container
      */
-    protected function bootDatabase(Container $container): void
-    {
+    public static function setWillowContainer(Container $container): void {
+        static::$willowContainer = $container;
+    }
 
-        // Establish an instance of the Illuminate database capsule (if not already established)
-        try {
-            if ($this->capsule === null) {
-                $this->capsule = $container->get(Capsule::class);
+    /**
+     * Return the DI/Container
+     * @return Container
+     */
+    public static function getWillowContainer(): Container {
+        return static::$willowContainer;
+    }
+
+    /**
+     * Display an optional error message and prompt the user if they want to see the details of the error then die.
+     * @param Throwable $throwable
+     * @param array|null $message
+     */
+    public static function showThrowableAndDie(Throwable $throwable, ?array $message = null): void { // phpcs:ignore
+        $cli = new CLImate();
+        $cli->br();
+        $cli->bold()->yellow()->border('*');
+        if ($message !== null) {
+            foreach ($message as $text) {
+                $cli->bold()->yellow($text);
             }
-        } catch (Throwable $exception) {
-            $this->error($exception->getMessage());
-            return;
+        } else {
+            $cli->bold()->yellow('An error has occurred.');
         }
-    }
-
-    /**
-     * Climate helper function
-     *
-     * @param string $warningMessage
-     */
-    protected function warning(string $warningMessage): void
-    {
-        $this->cli->bold()->yellow()->inline('[WARNING] ');
-        $this->cli->yellow($warningMessage);
-    }
-
-    /**
-     * Climate helper function
-     *
-     * @param string $errorMessage
-     */
-    protected function error(string $errorMessage): void
-    {
-        $this->cli->bold()->red()->inline('[ERROR] ');
-        $this->cli->lightRed($errorMessage);
-    }
-
-    /**
-     * Returns true if eloquent has booted and a connection is established to the database.
-     *
-     * @return bool
-     */
-    protected function isDatabaseEnvironmentReady(): bool
-    {
-        if ($this->capsule === null) {
-            $this->error('Database not set up. Run willow:init or create the .env file manually.');
-            return false;
+        $cli->br();
+        /** @var Confirm $input */
+        $input = $cli->bold()->lightGray()->confirm('Do you want to see the error details?');
+        $cli->bold()->yellow()->border('*');
+        if ($input->confirmed()) {
+            $cli->br();
+            $cli->bold()->red()->json([self::parseThrowableToArray($throwable)]);
+            $cli->br();
         }
+        die();
+    }
 
+    /**
+     * Given a Throwable object parse the properties and return the result as [['label' => 'value],...]
+     * @param Throwable $t
+     * @return array[]
+     */
+    public static function parseThrowableToArray(Throwable $t): array {
+        $traceString = $t->getTraceAsString();
+        $tracer = explode("\n", $traceString);
+        $contents = [
+            'Message' => $t->getMessage(),
+            'File' => $t->getFile(),
+            'Line' => (string)$t->getLine()
+        ];
+        foreach ($tracer as $key => $value) {
+            $contents['Trace' . $key] = $value;
+        }
+        return $contents;
+    }
+
+    /**
+     * Get the .env settings from the user
+     * Save them in the .env file.
+     * Validate and set the 'ENV' entry in the container.
+     * @throws {self::ENV_ERROR}
+     */
+    final protected function setEnvFromUser(): void {
         try {
-            $conn = $this->capsule->getConnection();
-            $driver = $conn->getDriverName();
-
-            switch ($driver) {
-                case 'sqlite':
-                    $sql = 'SELECT name as table_name FROM sqlite_master';
-                    break;
-
-                default:
-                    $sql = 'SELECT table_name as table_name FROM INFORMATION_SCHEMA.TABLES';
+            // Get the .env contents from the user
+            $envText = $this->envInit();
+            // Was the .env file successfully created?
+            if (file_put_contents(self::ENV_PATH, $envText) !== false) {
+                // Validate the .env file.
+                $env = include __DIR__ .  '/../../../../config/_env.php';
+                // Dynamically add ENV to the container
+                self::getWillowContainer()->set('ENV', $env['ENV']);
+            } else {
+                die(self::ENV_ERROR);
             }
-
-            $conn->select($sql . ' WHERE 1=0');
-        } catch (Throwable $exception) {
-            $this->error('Cannot connect to database: ' . $exception->getMessage());
-        }
-
-        return true;
-    }
-
-    /**
-     * Returns an array of all the tables in the database
-     *
-     * @return string[]
-     */
-    protected function getTables(): array
-    {
-        $capsule = $this->capsule;
-        $conn = $capsule->getConnection();
-        $driver = $conn->getDriverName();
-        $db = $conn->getDatabaseName();
-
-        switch ($driver) {
-            case 'sqlite':
-                $select = 'SELECT name as table_name 
-                    FROM sqlite_master
-                    ORDER BY table_name';
-                break;
-
-            default:
-                $select = "SELECT table_name as table_name
-            FROM INFORMATION_SCHEMA.TABLES
-            WHERE table_schema = '$db'
-            ORDER BY table_name;";
-        }
-
-
-        $rows = $conn->select($select);
-        $tables = [];
-        foreach($rows as $row) {
-            $tables[] = $row->table_name;
-        }
-        return $tables;
-    }
-
-    /**
-     * Returns an array of all the views in the database
-     *
-     * @return string[]
-     */
-    protected function getViews(): array
-    {
-        $capsule = $this->capsule;
-        $conn = $capsule->getConnection();
-        $driver = $conn->getDriverName();
-        $db = $conn->getDatabaseName();
-
-        switch ($driver) {
-            case 'sqlite':
-                return [];
-
-            default:
-                $select = "SELECT table_name as table_name
-            FROM INFORMATION_SCHEMA.VIEWS
-            WHERE table_schema = '$db'
-            ORDER BY table_name;";
-                $rows = $conn->select($select);
-                $views = [];
-                foreach($rows as $row) {
-                    $views[] = $row->table_name;
-                }
-                return $views;
+        } catch (Throwable $throwable) {
+            self::showThrowableAndDie($throwable, [self::ENV_ERROR]);
         }
     }
 
     /**
-     * Returns an associative array of column names and column types for the given tableName
-     *   ex: 'id' => 'integer', 'first_name' => 'string'
-     *
-     * @param string $tableName
-     * @return array
+     * Checks the container to see if Eloquent has already been defined.
+     * If not dynamically add Eloquent to the container;
+     * @return Eloquent
      */
-    protected function getTableDetails(string $tableName): array
-    {
-        $tableDetails = [];
-        $capsule = $this->capsule;
-        $schema = $capsule::schema();
-        $columns = $schema->getColumnListing($tableName);
-        foreach ($columns as $column) {
-            $columnType = $schema->getColumnType($tableName, $column);
-            $tableDetails[$column] = $columnType;
+    public static function getEloquent(): Eloquent {
+        try {
+            // Has Eloquent been defined?
+            if (!self::getWillowContainer()->has('Eloquent')) {
+                // Dynamically add Eloquent to the container
+                $db = include __DIR__ . '/../../../../config/db.php';
+                self::getWillowContainer()->set('Eloquent', $db['Eloquent']);
+            }
+            return self::getWillowContainer()->get('Eloquent');
+        } catch (Throwable $throwable) {
+            self::showThrowableAndDie(
+                $throwable,
+                ['Unable to connect to database. Check that the .env configuration is correct']
+            );
         }
-        return $tableDetails;
-    }
-
-    /**
-     * Returns true if the current O/S is any flavor Windows
-     *
-     * @return bool
-     */
-    public static function isWindows(): bool
-    {
-        return stripos(PHP_OS, 'WIN') === 0;
+        die();
     }
 }
