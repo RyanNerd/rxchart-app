@@ -8,6 +8,10 @@ use Willow\Models\Medicine;
 
 class MedicineWriteValidator extends WriteValidatorBase
 {
+    /**
+     * MedicineWriteValidator constructor.
+     * @param MedicineRules $medicineRules
+     */
     public function __construct(MedicineRules $medicineRules) {
         $this->rules = $medicineRules;
     }

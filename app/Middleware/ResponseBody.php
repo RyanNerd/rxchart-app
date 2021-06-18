@@ -16,45 +16,33 @@ class ResponseBody extends ResponseCodes
 
     /**
      * The response data
-     *
-     * @var array | null
      */
     protected ?array $data = null;
 
     /**
      * HTTP status code
-     *
-     * @var int
      */
     protected int $status = 200;
 
     /**
-     * Response informational string
-     *
-     * @var string
+     * Response informational string[]
      */
-    protected string $message = '';
+    protected array $messages = [];
 
     /**
      * Missing parameters
      */
     protected array $missing = [];
 
-    /**
-     * Messages from registerParam()
-     */
-    protected array $messages = [];
 
     protected ?int $userId = null;
-
-    protected ?StreamFactory $streamFactory;
 
     /**
      * ResponseBody constructor.
      * @param StreamFactory $streamFactory
+     * @param Headers $headers
      */
-    public function __construct(StreamFactory $streamFactory) {
-        $this->streamFactory = $streamFactory;
+    public function __construct(private StreamFactory $streamFactory, private Headers $headers) {
     }
 
     /**
@@ -67,7 +55,7 @@ class ResponseBody extends ResponseCodes
             'status' => $this->status,
             'data' => $this->data,
             'missing' => $this->missing,
-            'message' => $this->message,
+            'message' => $this->messages,
             'timestamp' => time()
         ]);
     }
@@ -80,7 +68,7 @@ class ResponseBody extends ResponseCodes
     private function response(array $payload): Response {
         return new Response(
             $this->status,
-            new Headers(['content-type' => 'application\json']),
+            $this->headers->addHeader('content-type', 'application\json'),
             $this->streamFactory->createStream(json_encode($payload))
         );
     }
@@ -172,14 +160,13 @@ class ResponseBody extends ResponseCodes
             $type = 'unknown';
         }
 
-        // Not implemented
         $data = $this->missing[$section] ?? [];
         $data[$name] = $data[$name] ?? $type;
+
         $this->missing[$section] = $data;
+
         if ($message !== null) {
-            $messages = $this->messages[$name] ?? [];
-            $messages[] = $message;
-            $this->messages[$name] = $messages;
+            $this->messages[] = $message;
         }
     }
 
@@ -210,14 +197,17 @@ class ResponseBody extends ResponseCodes
 
     /**
      * Set the response message
-     *
      * @param string $message
      * @return ResponseBody
      */
     final public function setMessage(string $message): self {
         assert($message !== '');
+
+        $messages = $this->messages;
+        $messages[] = $message;
+
         $clone = clone $this;
-        $clone->message = $message;
+        $clone->messages = $messages;
         return $clone;
     }
 }

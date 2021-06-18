@@ -10,16 +10,11 @@ use Slim\Routing\RouteContext;
 
 class ResponseBodyFactory
 {
-    private ResponseBody $responseBody;
-
     /**
      * ResponseBodyFactory constructor.
-     *
      * @param ResponseBody $responseBody
      */
-    public function __construct(ResponseBody $responseBody)
-    {
-        $this->responseBody = $responseBody;
+    public function __construct(private ResponseBody $responseBody) {
     }
 
     /**

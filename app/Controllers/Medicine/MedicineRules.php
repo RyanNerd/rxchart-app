@@ -20,7 +20,7 @@ class MedicineRules implements IRules
             $value = $parsedRequest[$field];
             if ($type === 'string') {
                 if (RulesBase::checkEmoji($value)) {
-                    $responseBody->registerParam('invalid', $field, 'string', 'Emoji characters not allowed');
+                    $responseBody->registerParam('invalid', $field, 'string', "$field: Emoji characters not allowed");
                 }
             }
 
