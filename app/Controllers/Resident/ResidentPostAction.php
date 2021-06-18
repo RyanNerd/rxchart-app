@@ -9,12 +9,13 @@ use Slim\Psr7\Response;
 use Willow\Controllers\WriteActionBase;
 use Willow\Middleware\ResponseBody;
 use Willow\Models\Resident;
-use Willow\Models\ModelBase;
 
 class ResidentPostAction extends WriteActionBase
 {
-    protected ModelBase|Resident $model;
-
+    /**
+     * ResidentPostAction constructor.
+     * @param Resident $model
+     */
     public function __construct(Resident $model) {
         $this->model = $model;
     }

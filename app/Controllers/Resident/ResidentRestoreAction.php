@@ -5,18 +5,14 @@ namespace Willow\Controllers\Resident;
 
 use Willow\Controllers\RestoreActionBase;
 use Willow\Models\Resident;
-use Willow\Models\ModelBase;
 
 class ResidentRestoreAction extends RestoreActionBase
 {
-    protected Resident|ModelBase $model;
-
     /**
      * ResidentRestoreAction constructor.
      * @param Resident $resident
      */
-    public function __construct(Resident $resident)
-    {
+    public function __construct(Resident $resident) {
         $this->model = $resident;
     }
 }

@@ -4,15 +4,15 @@ declare(strict_types=1);
 namespace Willow\Controllers\PillboxItem;
 
 use Willow\Controllers\SearchValidatorBase;
-use Willow\Models\ModelBase;
-use Willow\Models\Pillbox;
+use Willow\Models\PillboxItem;
 
 class PillboxItemSearchValidator extends SearchValidatorBase
 {
     /**
-     * PillboxSearchValidator constructor.
-     * @param ModelBase|Pillbox $model
+     * PillboxItemSearchValidator constructor.
+     * @param PillboxItem $model
      */
-    public function __construct(protected ModelBase|Pillbox $model) {
+    public function __construct(PillboxItem $model) {
+        $this->model = $model;
     }
 }

@@ -5,14 +5,14 @@ namespace Willow\Controllers\Medicine;
 
 use Willow\Controllers\WriteActionBase;
 use Willow\Models\Medicine;
-use Willow\Models\ModelBase;
 
 class MedicinePostAction extends WriteActionBase
 {
-    protected ModelBase|Medicine $model;
-
-    public function __construct(Medicine $model)
-    {
+    /**
+     * MedicinePostAction constructor.
+     * @param Medicine $model
+     */
+    public function __construct(Medicine $model) {
         $this->model = $model;
     }
 }

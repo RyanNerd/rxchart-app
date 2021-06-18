@@ -4,16 +4,15 @@ declare(strict_types=1);
 namespace Willow\Controllers\PillboxItem;
 
 use Willow\Controllers\SearchActionBase;
-use Willow\Models\ModelBase;
-use Willow\Models\Pillbox;
-
+use Willow\Models\PillboxItem;
 
 class PillboxItemSearchAction extends SearchActionBase
 {
     /**
      * PillboxItemSearchAction constructor.
-     * @param ModelBase|Pillbox $model
+     * @param PillboxItem $model
      */
-    public function __construct(protected ModelBase|Pillbox $model) {
+    public function __construct(PillboxItem $model) {
+        $this->model = $model;
     }
 }

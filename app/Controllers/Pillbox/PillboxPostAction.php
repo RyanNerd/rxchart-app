@@ -4,11 +4,15 @@ declare(strict_types=1);
 namespace Willow\Controllers\Pillbox;
 
 use Willow\Controllers\WriteActionBase;
-use Willow\Models\ModelBase;
 use Willow\Models\Pillbox;
 
 class PillboxPostAction extends WriteActionBase
 {
-    public function __construct(Protected Modelbase|Pillbox $model) {
+    /**
+     * PillboxPostAction constructor.
+     * @param Pillbox $model
+     */
+    public function __construct(Pillbox $model) {
+        $this->model = $model;
     }
 }

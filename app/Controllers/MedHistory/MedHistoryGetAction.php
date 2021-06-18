@@ -5,19 +5,14 @@ namespace Willow\Controllers\MedHistory;
 
 use Willow\Controllers\GetActionBase;
 use Willow\Models\MedHistory;
-use Willow\Models\ModelBase;
 
 class MedHistoryGetAction extends GetActionBase
 {
-    protected MedHistory|ModelBase $model;
-
     /**
-     * Get the model via Dependency Injection and save it as a property.
-     *
+     * MedHistoryGetAction constructor.
      * @param MedHistory $model
      */
-    public function __construct(MedHistory $model)
-    {
+    public function __construct(MedHistory $model) {
         $this->model = $model;
     }
 }

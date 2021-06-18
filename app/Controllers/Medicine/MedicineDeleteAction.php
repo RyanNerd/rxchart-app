@@ -5,14 +5,11 @@ namespace Willow\Controllers\Medicine;
 
 use Willow\Controllers\DeleteActionBase;
 use Willow\Models\Medicine;
-use Willow\Models\ModelBase;
 
 class MedicineDeleteAction extends DeleteActionBase
 {
-    protected Medicine|ModelBase $model;
-
     /**
-     * Get the model via Dependency Injection and save it.
+     * MedicineDeleteAction constructor.
      * @param Medicine $model
      */
     public function __construct(Medicine $model) {

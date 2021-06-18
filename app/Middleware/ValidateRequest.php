@@ -10,9 +10,6 @@ use Willow\Models\User;
 
 class ValidateRequest
 {
-    public function __construct(private User $user) {
-    }
-
     /**
      * Validation middleware
      * @param Request $request
@@ -29,17 +26,14 @@ class ValidateRequest
 
         // Is there an API key?
         if ($apiKey !== null) {
-            $user = $this->user->where('API_KEY', '=', $apiKey)->first();
+            $user = User::where('API_KEY', '=', $apiKey)->first();
 
-            if ($user !== null) {
-                // SANITY CHECK
-                if ($user->API_KEY === $apiKey) {
-                    // Make all valid authentications admin
-                    $responseBody = $responseBody
-                        ->setUserId($user->Id)
-                        ->setIsAdmin()
-                        ->setIsAuthenticated();
-                }
+            if ($user !== null && $user->API_KEY === $apiKey) {
+                // Make all valid authentications admin
+                $responseBody = $responseBody
+                    ->setUserId($user->Id)
+                    ->setIsAdmin()
+                    ->setIsAuthenticated();
             }
         }
         return $handler->handle($request->withAttribute('response_body', $responseBody));

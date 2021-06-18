@@ -34,5 +34,7 @@ class User extends ModelBase
         'deleted_at' => 'datetime'
     ];
 
+    protected $hidden = ['PasswordHash'];
+
     protected $table = 'User';
 }
