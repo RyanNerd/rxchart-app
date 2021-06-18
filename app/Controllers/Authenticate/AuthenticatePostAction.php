@@ -14,14 +14,11 @@ use Willow\Models\User;
 
 class AuthenticatePostAction
 {
-    protected User $userModel;
-
     /**
      * AuthenticatePostAction constructor.
      * @param User $userModel
      */
-    public function __construct(User $userModel) {
-        $this->userModel = $userModel;
+    public function __construct(private User $userModel) {
     }
 
     /**

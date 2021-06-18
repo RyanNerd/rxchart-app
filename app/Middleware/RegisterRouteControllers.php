@@ -7,27 +7,20 @@ use Slim\Routing\RouteCollectorProxy;
 use Willow\Controllers\Authenticate\AuthenticateController;
 use Willow\Controllers\MedHistory\MedHistoryController;
 use Willow\Controllers\Medicine\MedicineController;
+use Willow\Controllers\Pillbox\PillboxController;
+use Willow\Controllers\PillboxItem\PillboxItemController;
 use Willow\Controllers\Resident\ResidentController;
 
 class RegisterRouteControllers
 {
-    protected AuthenticateController $authenticateController;
-    protected MedHistoryController $medHistoryController;
-    protected MedicineController $medicineController;
-    protected ResidentController $residentController;
-
     public function __construct(
-        AuthenticateController $authenticateController,
-        MedHistoryController $medHistoryController,
-        MedicineController $medicineController,
-        ResidentController $residentController
-    )
-    {
-        $this->authenticateController = $authenticateController;
-        $this->medHistoryController = $medHistoryController;
-        $this->medicineController = $medicineController;
-        $this->residentController = $residentController;
-    }
+        private AuthenticateController $authenticateController,
+        private MedHistoryController $medHistoryController,
+        private MedicineController $medicineController,
+        private PillboxController $pillboxController,
+        private PillboxItemController $pillboxItemController,
+        private ResidentController $residentController
+    ) {}
 
     public function __invoke(RouteCollectorProxy $collectorProxy): self
     {
@@ -35,6 +28,8 @@ class RegisterRouteControllers
         $this->authenticateController->register($collectorProxy);
         $this->medHistoryController->register($collectorProxy);
         $this->medicineController->register($collectorProxy);
+        $this->pillboxController->register($collectorProxy);
+        $this->pillboxItemController->register($collectorProxy);
         $this->residentController->register($collectorProxy);
         return $this;
     }

@@ -37,10 +37,13 @@ class ResponseBody extends ResponseCodes
 
     /**
      * Missing parameters
-     *
-     * @var array
      */
     protected array $missing = [];
+
+    /**
+     * Messages from registerParam()
+     */
+    protected array $messages = [];
 
     protected ?int $userId = null;
 
@@ -159,8 +162,9 @@ class ResponseBody extends ResponseCodes
      * @param string $section
      * @param string $name
      * @param string | null $type
+     * @param string|null $message
      */
-    final public function registerParam(string $section, string $name, ?string $type): void {
+    final public function registerParam(string $section, string $name, ?string $type, ?string $message = null): void {
         assert(in_array($section, ['optional', 'required', 'invalid']));
         assert($name !== '');
 
@@ -168,9 +172,15 @@ class ResponseBody extends ResponseCodes
             $type = 'unknown';
         }
 
+        // Not implemented
         $data = $this->missing[$section] ?? [];
         $data[$name] = $data[$name] ?? $type;
         $this->missing[$section] = $data;
+        if ($message !== null) {
+            $messages = $this->messages[$name] ?? [];
+            $messages[] = $message;
+            $this->messages[$name] = $messages;
+        }
     }
 
     /**

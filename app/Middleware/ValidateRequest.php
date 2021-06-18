@@ -10,16 +10,11 @@ use Willow\Models\User;
 
 class ValidateRequest
 {
-    private User $user;
-
-    public function __construct(User $user)
-    {
-        $this->user = $user;
+    public function __construct(private User $user) {
     }
 
     /**
      * Validation middleware
-     *
      * @param Request $request
      * @param RequestHandler $handler
      * @return ResponseInterface

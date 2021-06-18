@@ -4,45 +4,43 @@ declare(strict_types=1);
 namespace Willow\Models;
 
 use DateTime;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @property integer $Id
+ * @property integer $UserId
  * @property integer $ResidentId
  * @property integer $MedicineId
- * @property integer $UserId
- * @property string $Notes
- * @property integer $In
- * @property integer $Out
+ * @property string $Description
  * @property DateTime $Created
  * @property DateTime $Updated
  * @property DateTime $deleted_at
+ * @mixin Builder
  */
-class MedHistory extends ModelBase
+class Pillbox extends ModelBase
 {
     public const FIELDS = [
         'Id' => 'integer',
+        'UserId' => 'integer',
         'ResidentId' => 'integer',
         'MedicineId' => 'integer',
-        'UserId' => 'integer',
-        'Notes' => 'string',
-        'In' => 'integer',
-        'Out' => 'integer',
+        'Description' => 'string',
         'Created' => 'datetime',
         'Updated' => 'datetime',
         'deleted_at' => 'datetime'
     ];
 
-    protected $table = 'MedHistory';
+    protected $table = 'Pillbox';
 
     /**
      * Override Notes to null if empty string
      * @param string|null $value
      */
-    final public function setNotesAttribute(?string $value): void  {
+    final public function setDescriptionAttribute(?string $value): void  {
         if (empty($value)) {
-            $this->attributes['Notes'] = null;
+            $this->attributes['Description'] = null;
         } else {
-            $this->attributes['Notes'] = $value;
+            $this->attributes['Description'] = $value;
         }
     }
 }

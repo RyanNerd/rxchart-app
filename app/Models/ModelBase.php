@@ -32,15 +32,13 @@ abstract class ModelBase extends Model implements IModelBase
 
     /**
      * Set to true if the search action is allowed to NOT have any where type clauses Where, WhereBetween, etc.
-     *
      * @var bool
      */
     public bool $allowAll = false;
 
     /*
      * Return the name of the table for this model
-     *
-     * @return @string;
+     * @return string
      */
     final public function getTableName(): string {
         return $this->table;

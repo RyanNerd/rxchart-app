@@ -13,7 +13,7 @@ class MedHistoryController implements IController
      * Register routes and actions
      * @param RouteCollectorProxyInterface $group
      */
-    public function register(RouteCollectorProxyInterface $group): void
+    final public function register(RouteCollectorProxyInterface $group): void
     {
         $group->post('/medhistory/search', MedHistorySearchAction::class)
             ->add(MedHistorySearchValidator::class)

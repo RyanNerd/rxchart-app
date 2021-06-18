@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Willow\Models;
 
 use DateTime;
-use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @property integer $Id
@@ -22,8 +21,6 @@ use Illuminate\Database\Eloquent\Builder;
  * @property DateTime $Created
  * @property DateTime $Updated
  * @property DateTime $deleted_at
- *
- * @mixin Builder
  */
 class Medicine extends ModelBase
 {

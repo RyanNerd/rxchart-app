@@ -35,6 +35,11 @@ class AuthenticatePostValidator
             $responseBody->registerParam('required', 'password', 'string');
         }
 
+        // id can be part of the request but it MUST be null/empty
+        if (V::exists()->validate($parsedRequest['id']) && V::notEmpty()->validate($parsedRequest['id'])) {
+            $responseBody->registerParam('invalid', 'id', 'null');
+        }
+
         // If there are any missing required, or invalid data points then we short circuit and return invalid request.
         if ($responseBody->hasMissingRequiredOrInvalid()) {
             $responseBody = $responseBody
