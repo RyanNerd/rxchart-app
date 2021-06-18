@@ -5,8 +5,7 @@ namespace Willow\Controllers;
 
 abstract class ActionBase
 {
-    protected function sanitize(array &$data, array $modelFields): void
-    {
+    protected function sanitize(array &$data, array $modelFields): void {
         foreach ($data as $field => $value) {
             if (array_key_exists($field, $modelFields)) {
                 $dataType = $modelFields[$field];

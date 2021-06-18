@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+// phpcs:ignoreFile -- this is the entry point for the app and is where we should load all the dependencies
 use DI\ContainerBuilder;
 use League\CLImate\CLImate;
 use Willow\Main\App;

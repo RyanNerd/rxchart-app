@@ -12,7 +12,7 @@ abstract class RulesBase
      * @param int $maxLen
      * @return bool Return true if failed validation.
      */
-    final public static function checkMax(string $value, int $maxLen): bool {
+    final public static function checkMax(?string $value, int $maxLen): bool {
         return V::notEmpty()->validate($value) && !V::max($maxLen)->validate(strlen($value));
     }
 
@@ -20,7 +20,7 @@ abstract class RulesBase
      * @param string|null $value
      * @return bool Return false if failed validation.
      */
-    final static function checkEmoji(?string $value): bool {
+    final public static function checkEmoji(?string $value): bool {
         return V::notEmpty()->validate($value) && !V::notEmoji()->validate($value);
     }
 
@@ -28,7 +28,7 @@ abstract class RulesBase
      * @param mixed $value
      * @return bool Return false if failed validation
      */
-    final static function checkNotEmpty(mixed $value): bool {
+    final public static function checkNotEmpty(mixed $value): bool {
         return !V::notEmpty()->validate($value);
     }
 }

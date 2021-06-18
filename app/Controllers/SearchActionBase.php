@@ -21,8 +21,7 @@ class SearchActionBase extends ActionBase
      * @param Response $response
      * @return ResponseInterface
      */
-    public function __invoke(Request $request, Response $response): ResponseInterface
-    {
+    public function __invoke(Request $request, Response $response): ResponseInterface {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
         $model = clone $this->model;
@@ -34,7 +33,6 @@ class SearchActionBase extends ActionBase
         // Get the request to build the query
         $parsedBody = $responseBody->getParsedRequest();
 
-        // WHERE Section TODO: Additional where clauses such as WhereBetween
         // @see https://laravel.com/docs/6.x/queries#where-clauses
         $where = $parsedBody['where'] ?? [];
         foreach ($where as $item) {
@@ -44,7 +42,7 @@ class SearchActionBase extends ActionBase
             $model = $model->where($column, $comparison, $value);
         }
 
-        // ORDER_BY Section (optional) TODO: Validate
+        // ORDER_BY Section (optional)
         // @see https://laravel.com/docs/6.x/queries#ordering-grouping-limit-and-offset
         if (array_key_exists('order_by', $parsedBody)) {
             foreach ($parsedBody['order_by'] as $orderBy) {
@@ -52,12 +50,12 @@ class SearchActionBase extends ActionBase
             }
         }
 
-        // LIMIT Section (optional) TODO: Validate
+        // LIMIT Section (optional)
         if (array_key_exists('limit', $parsedBody)) {
             $model = $model->limit($parsedBody['limit']);
         }
 
-        // JOIN Section (optional) TODO: Validate
+        // JOIN Section (optional)
         // @see https://laravel.com/docs/6.x/queries#joins
         if (array_key_exists('join', $parsedBody)) {
             foreach ($parsedBody['join'] as $join) {

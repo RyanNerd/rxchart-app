@@ -10,8 +10,7 @@ use Willow\Middleware\ResponseBody;
 
 class ApiValidator
 {
-    public function __invoke(Request $request, RequestHandler $handler): ResponseInterface
-    {
+    public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
         if (!$responseBody->getIsAuthenticated()) {

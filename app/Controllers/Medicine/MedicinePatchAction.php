@@ -3,4 +3,6 @@ declare(strict_types=1);
 
 namespace Willow\Controllers\Medicine;
 
-class MedicinePatchAction extends MedicinePostAction {}
+class MedicinePatchAction extends MedicinePostAction
+{
+}

@@ -13,8 +13,7 @@ class PillboxItemController implements IController
      * Register routes and actions
      * @param RouteCollectorProxyInterface $group
      */
-    final public function register(RouteCollectorProxyInterface $group): void
-    {
+    final public function register(RouteCollectorProxyInterface $group): void {
         $group->post('/pillbox-item/search', PillboxItemSearchAction::class)
             ->add(PillboxItemSearchValidator::class)
             ->add(ApiValidator::class);

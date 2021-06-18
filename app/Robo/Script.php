@@ -17,14 +17,13 @@ class Script
      *
      * @param $event
      */
-    public static function postCreateProjectCmd(Event $event): void
-    {
+    public static function postCreateProjectCmd(Event $event): void {
         $args = $event->getArguments();
 
         // Figure out what directory was created most recently
         $time = 0;
         $projectName = 'your-project-name';
-        foreach(glob(__DIR__ . '/../../../*',GLOB_ONLYDIR) as $dir) {
+        foreach (glob(__DIR__ . '/../../../*', GLOB_ONLYDIR) as $dir) {
             $cTime = filectime($dir);
             if ($cTime !== false && $cTime > $time) {
                 $time = $cTime;
@@ -88,8 +87,7 @@ class Script
      *
      * @param CLImate|null $cli
      */
-    public static function fancyBanner(CLImate $cli = null): void
-    {
+    public static function fancyBanner(CLImate $cli = null): void {
         if ($cli === null) {
             $cli = new CLImate();
         }

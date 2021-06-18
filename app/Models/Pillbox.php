@@ -39,7 +39,7 @@ class Pillbox extends ModelBase
      * Override Notes to null if empty string
      * @param string|null $value
      */
-    final public function setDescriptionAttribute(?string $value): void  {
+    final public function setDescriptionAttribute(?string $value): void {
         if (empty($value)) {
             $this->attributes['Description'] = null;
         } else {

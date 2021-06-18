@@ -13,5 +13,6 @@ $dotEnv->required([
     'DB_PASSWORD',
     'DISPLAY_ERROR_DETAILS'
 ])->notEmpty();
+
 $dotEnv->required('DISPLAY_ERROR_DETAILS')->allowedValues(['true', 'false']);
-return  ['ENV' => $env];
+return ['ENV' => $env];

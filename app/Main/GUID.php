@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Willow\Main;
+// phpcs:ignoreFile -- Helper function that is indeed mostly code
 
-use JetBrains\PhpStorm\Pure;
+namespace Willow\Main;
 
 /**
  * Class GUID
@@ -11,12 +11,12 @@ use JetBrains\PhpStorm\Pure;
  */
 class GUID
 {
-    #[Pure] public static function v4(): string
-    {
+    final public static function v4(): string {
         return sprintf(
             '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
             // 32 bits for "time_low"
-            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
             // 16 bits for "time_mid"
             mt_rand(0, 0xffff),
             // 16 bits for "time_hi_and_version",
@@ -27,7 +27,9 @@ class GUID
             // two most significant bits holds zero and one for variant DCE1.1
             mt_rand(0, 0x3fff) | 0x8000,
             // 48 bits for "node"
-            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff)
         );
     }
 }

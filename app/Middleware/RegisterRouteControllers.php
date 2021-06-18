@@ -20,10 +20,10 @@ class RegisterRouteControllers
         private PillboxController $pillboxController,
         private PillboxItemController $pillboxItemController,
         private ResidentController $residentController
-    ) {}
+    ) {
+    }
 
-    public function __invoke(RouteCollectorProxy $collectorProxy): self
-    {
+    public function __invoke(RouteCollectorProxy $collectorProxy): self {
         // Register routes and actions for each controller
         $this->authenticateController->register($collectorProxy);
         $this->medHistoryController->register($collectorProxy);

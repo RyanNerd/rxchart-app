@@ -13,8 +13,7 @@ class MedicineController implements IController
      * Register routes and actions
      * @param RouteCollectorProxyInterface $group
      */
-    public function register(RouteCollectorProxyInterface $group): void
-    {
+    final public function register(RouteCollectorProxyInterface $group): void {
         $group->post('/medicine/search', MedicineSearchAction::class)
             ->add(MedicineSearchValidator::class)
             ->add(ApiValidator::class);

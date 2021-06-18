@@ -35,6 +35,9 @@ class ResponseBody extends ResponseCodes
     protected array $missing = [];
 
 
+    /**
+     * Primary key of User when authenticated
+     */
     protected ?int $userId = null;
 
     /**
@@ -46,7 +49,8 @@ class ResponseBody extends ResponseCodes
     }
 
     /**
-     * Generate the response
+     * Generate and return the response
+     * @return ResponseInterface
      */
     public function __invoke(): ResponseInterface {
         return $this->response([
@@ -75,12 +79,10 @@ class ResponseBody extends ResponseCodes
 
     /**
      * Set the parsed request array
-     *
      * @param array $parsedRequest
      * @return ResponseBody
      */
-    final public function setParsedRequest(array $parsedRequest): self
-    {
+    final public function setParsedRequest(array $parsedRequest): self {
         $clone = clone $this;
         $clone->parsedRequest = $parsedRequest;
         return $clone;
@@ -88,7 +90,6 @@ class ResponseBody extends ResponseCodes
 
     /**
      * Returned the parsed request
-     *
      * @return array
      */
     final public function getParsedRequest(): array {
@@ -97,7 +98,6 @@ class ResponseBody extends ResponseCodes
 
     /**
      * Indicate that the request is an administrator
-     *
      * @return ResponseBody
      */
     final public function setIsAdmin(): self {
@@ -108,7 +108,6 @@ class ResponseBody extends ResponseCodes
 
     /**
      * Indicate that the request is authenticated
-     *
      * @return ResponseBody
      */
     final public function setIsAuthenticated(): self {
@@ -119,25 +118,33 @@ class ResponseBody extends ResponseCodes
 
     /**
      * Returns true if the request is authenticated
-     *
      * @return bool
      */
     final public function getIsAuthenticated(): bool {
         return $this->isAuthenticated;
     }
 
+    /**
+     * Set the primary key of the User table when successfully authenticated
+     * @param int|null $userId
+     * @return $this
+     */
     final public function setUserId(?int $userId): self {
         $clone = clone $this;
         $clone->userId = $userId;
         return $clone;
     }
 
+    /**
+     * Returns the primary key in User when authenticated
+     * @return int
+     */
     final public function getUserId(): int {
         return $this->userId;
     }
-    /** trashed records
+
+    /**
      * Returns true if there are missing or required datapoints in the request
-     *
      * @return bool
      */
     final public function hasMissingRequiredOrInvalid(): bool {
@@ -146,10 +153,9 @@ class ResponseBody extends ResponseCodes
 
     /**
      * Register a parameter as optional, required or invalid.
-     *
      * @param string $section
      * @param string $name
-     * @param string | null $type
+     * @param string|null $type
      * @param string|null $message
      */
     final public function registerParam(string $section, string $name, ?string $type, ?string $message = null): void {
@@ -162,7 +168,6 @@ class ResponseBody extends ResponseCodes
 
         $data = $this->missing[$section] ?? [];
         $data[$name] = $data[$name] ?? $type;
-
         $this->missing[$section] = $data;
 
         if ($message !== null) {
@@ -172,7 +177,6 @@ class ResponseBody extends ResponseCodes
 
     /**
      * Set the response data.
-     *
      * @param array|null $data
      * @return ResponseBody
      */
@@ -184,7 +188,6 @@ class ResponseBody extends ResponseCodes
 
     /**
      * Set the response status code.
-     *
      * @param int $status
      * @return self
      */
@@ -196,7 +199,7 @@ class ResponseBody extends ResponseCodes
     }
 
     /**
-     * Set the response message
+     * Set the response messages
      * @param string $message
      * @return ResponseBody
      */
@@ -205,7 +208,6 @@ class ResponseBody extends ResponseCodes
 
         $messages = $this->messages;
         $messages[] = $message;
-
         $clone = clone $this;
         $clone->messages = $messages;
         return $clone;

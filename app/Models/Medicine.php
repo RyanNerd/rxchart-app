@@ -111,7 +111,7 @@ class Medicine extends ModelBase
      * Override FillDateYear field to null if empty string
      * @param string|null $value
      */
-    final function setFillDateYearAttribute(?string $value): void {
+    final public function setFillDateYearAttribute(?string $value): void {
         if (empty($value)) {
             $this->attributes['FillDateYear'] = null;
         } else {

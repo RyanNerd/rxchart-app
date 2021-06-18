@@ -15,8 +15,7 @@ class App
      * App constructor.
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container)
-    {
+    public function __construct(ContainerInterface $container) {
         // Get an instance of Slim\App
         AppFactory::setContainer($container);
         $app = AppFactory::create();

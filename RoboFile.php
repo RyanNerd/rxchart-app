@@ -8,6 +8,7 @@ use Willow\Robo\Plugin\Commands\RoboBase;
  *
  * @see http://robo.li/
  * @see https://robo.li/extending/#register-command-files-via-psr-4-autoloading
+ * phpcs:ignoreFile -- This is an intentionally empty class that is required by Robo
  */
 class RoboFile extends RoboBase
 {

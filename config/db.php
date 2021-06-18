@@ -5,7 +5,7 @@ use Psr\Container\ContainerInterface;
 use Illuminate\Database\Capsule\Manager;
 
 return [
-    'Eloquent' => function(ContainerInterface $c) {
+    'Eloquent' => function (ContainerInterface $c) {
         $eloquent = new Manager;
 
         $eloquent->addConnection([

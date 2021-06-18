@@ -13,8 +13,7 @@ class AuthenticatePostValidator
 {
     private const ALLOWED = ['username', 'password', 'id'];
 
-    public function __invoke(Request $request, RequestHandler $handler): ResponseInterface
-    {
+    public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
         $parsedRequest = $responseBody->getParsedRequest();

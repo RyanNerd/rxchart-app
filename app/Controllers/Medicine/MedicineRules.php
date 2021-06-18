@@ -14,8 +14,6 @@ class MedicineRules implements IRules
 
         $parsedRequest = $responseBody->getParsedRequest();
 
-        // todo: compare parsedRequest with modelFields
-
         foreach ($fields as $field => $type) {
             $value = $parsedRequest[$field];
             if ($type === 'string') {
