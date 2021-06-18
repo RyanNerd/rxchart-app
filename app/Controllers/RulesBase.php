@@ -17,7 +17,7 @@ abstract class RulesBase
     }
 
     /**
-     * @param string $value
+     * @param string|null $value
      * @return bool Return false if failed validation.
      */
     final static function checkEmoji(?string $value): bool {

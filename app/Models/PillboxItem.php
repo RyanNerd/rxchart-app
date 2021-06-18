@@ -19,6 +19,9 @@ use Illuminate\Database\Eloquent\Builder;
  */
 class PillboxItem extends ModelBase
 {
+    /**
+     * {@inheritdoc}
+     */
     public const FIELDS = [
         'Id' => 'integer',
         'UserId' => 'integer',

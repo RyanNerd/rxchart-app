@@ -17,7 +17,7 @@ class MedicineWriteValidator extends WriteValidatorBase
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected const MODEL_FIELDS = Medicine::FIELDS;
 }

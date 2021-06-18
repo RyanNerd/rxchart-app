@@ -9,7 +9,7 @@ use Willow\Models\Pillbox;
 class PillboxWriteValidator extends WriteValidatorBase
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected const MODEL_FIELDS = Pillbox::FIELDS;
 }

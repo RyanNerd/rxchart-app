@@ -21,6 +21,9 @@ use DateTime;
  */
 class Resident extends ModelBase
 {
+    /**
+     * {@inheritdoc}
+     */
     public const FIELDS = [
         'Id' => 'integer',
         'UserId' => 'integer',
@@ -39,8 +42,7 @@ class Resident extends ModelBase
     protected $table = 'Resident';
 
     /**
-     * @var bool
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public bool $allowAll = true;
 

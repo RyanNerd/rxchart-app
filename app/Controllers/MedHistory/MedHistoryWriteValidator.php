@@ -9,7 +9,7 @@ use Willow\Models\MedHistory;
 class MedHistoryWriteValidator extends WriteValidatorBase
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected const MODEL_FIELDS = MedHistory::FIELDS;
 }

@@ -20,6 +20,9 @@ use Illuminate\Database\Eloquent\Builder;
  */
 class User extends ModelBase
 {
+    /**
+     * {@inheritdoc}
+     */
     public const FIELDS = [
         'Id' => 'integer',
         'Organization' => 'string',

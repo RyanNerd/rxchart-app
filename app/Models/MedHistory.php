@@ -19,6 +19,9 @@ use DateTime;
  */
 class MedHistory extends ModelBase
 {
+    /**
+     * {@inheritdoc}
+     */
     public const FIELDS = [
         'Id' => 'integer',
         'ResidentId' => 'integer',

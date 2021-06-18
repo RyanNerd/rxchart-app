@@ -9,7 +9,7 @@ use Willow\Models\Resident;
 class ResidentWriteValidator extends WriteValidatorBase
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected const MODEL_FIELDS = Resident::FIELDS;
 }
