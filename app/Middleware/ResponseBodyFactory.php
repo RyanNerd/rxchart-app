@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Willow\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Psr7\Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Routing\RouteContext;
 

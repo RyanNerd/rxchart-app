@@ -5,6 +5,7 @@ namespace Willow\Main;
 
 use Psr\Container\ContainerInterface;
 use Slim\Factory\AppFactory;
+use Willow\Controllers\ApiValidator;
 use Willow\Middleware\RegisterRouteControllers;
 use Willow\Middleware\ResponseBodyFactory;
 use Willow\Middleware\ValidateRequest;
@@ -31,6 +32,7 @@ class App
 
         // Register the v1 group and add the middleware to the group.
         $app->group('/v1', RegisterRouteControllers::class)
+            ->add(ApiValidator::class)
             ->add(ValidateRequest::class) // Add middleware that validates the overall request.
             ->add(ResponseBodyFactory::class); // Add ResponseBody as a Request attribute
 

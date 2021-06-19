@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Willow\Controllers\Pillbox;
 
 use Slim\Interfaces\RouteCollectorProxyInterface;
-use Willow\Controllers\ApiValidator;
 use Willow\Controllers\IController;
 
 class PillboxController implements IController
@@ -15,14 +14,13 @@ class PillboxController implements IController
      */
     final public function register(RouteCollectorProxyInterface $group): void {
         $group->post('/pillbox/search', PillboxSearchAction::class)
-            ->add(PillboxSearchValidator::class)
-            ->add(ApiValidator::class);
-        $group->get('/pillbox/{id}', PillboxGetAction::class)
-            ->add(ApiValidator::class);
+            ->add(PillboxSearchValidator::class);
+
         $group->post('/pillbox', PillboxPostAction::class)
-            ->add(PillboxWriteValidator::class)
-            ->add(ApiValidator::class);
-        $group->delete('/pillbox/{id}', PillboxDeleteAction::class)
-            ->add(ApiValidator::class);
+            ->add(PillboxWriteValidator::class);
+
+        $group->get('/pillbox/{id}', PillboxGetAction::class);
+
+        $group->delete('/pillbox/{id}', PillboxDeleteAction::class);
     }
 }
