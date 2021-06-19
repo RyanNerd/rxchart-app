@@ -22,9 +22,6 @@ class MedicineController implements IController
         $group->post('/medicine', MedicinePostAction::class)
             ->add(MedicineWriteValidator::class)
             ->add(ApiValidator::class);
-        $group->patch('/medicine', MedicinePatchAction::class)
-            ->add(MedicineWriteValidator::class)
-            ->add(ApiValidator::class);
         $group->delete('/medicine/{id}', MedicineDeleteAction::class)
             ->add(ApiValidator::class);
     }

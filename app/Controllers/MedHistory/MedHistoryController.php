@@ -22,9 +22,6 @@ class MedHistoryController implements IController
         $group->post('/medhistory', MedHistoryPostAction::class)
             ->add(MedHistoryWriteValidator::class)
             ->add(ApiValidator::class);
-        $group->patch('/medhistory', MedHistoryPatchAction::class)
-            ->add(MedHistoryWriteValidator::class)
-            ->add(ApiValidator::class);
         $group->delete('/medhistory/{id}', MedHistoryDeleteAction::class)
             ->add(ApiValidator::class);
     }

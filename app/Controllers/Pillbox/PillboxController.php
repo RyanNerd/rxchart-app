@@ -22,9 +22,6 @@ class PillboxController implements IController
         $group->post('/pillbox', PillboxPostAction::class)
             ->add(PillboxWriteValidator::class)
             ->add(ApiValidator::class);
-        $group->patch('/pillbox', PillboxPatchAction::class)
-            ->add(PillboxWriteValidator::class)
-            ->add(ApiValidator::class);
         $group->delete('/pillbox/{id}', PillboxDeleteAction::class)
             ->add(ApiValidator::class);
     }
