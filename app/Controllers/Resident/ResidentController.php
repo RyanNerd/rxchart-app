@@ -19,9 +19,6 @@ class ResidentController implements IController
         $group->post('/resident', ResidentPostAction::class)
             ->add(ResidentWriteValidator::class);
 
-        $group->post('/resident/restore', ResidentRestoreAction::class)
-            ->add(ResidentRestoreValidator::class);
-
         $group->get('/resident/{id}', ResidentGetAction::class);
 
         $group->delete('/resident/{id}', ResidentDeleteAction::class);

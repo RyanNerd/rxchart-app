@@ -39,7 +39,6 @@ class ResidentPostAction extends WriteActionBase
 
         // Force UserScope and look for existing records including trashed records
         $residentModel = $residentModel
-            ->where('UserId', '=', $responseBody->getUserId())
             ->where('FirstName', '=', $parsedBody['FirstName'])
             ->where('LastName', '=', $parsedBody['LastName'])
             ->where('DOB_YEAR', '=', $parsedBody['DOB_YEAR'])
@@ -70,7 +69,8 @@ class ResidentPostAction extends WriteActionBase
             $responseBody = $responseBody
                 ->setData(null)
                 ->setStatus(ResponseBody::HTTP_CONFLICT)
-                ->setMessage('Duplicates not allowed');
+                ->setMessage('Duplicates not allowed')
+                ->setMessage('Resident.Id ' . $id . ' and ' . $residentModel->Id . ' are the same person');
             return $responseBody();
         }
 

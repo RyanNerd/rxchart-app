@@ -25,7 +25,7 @@ class ResponseBodyFactory
                         self::create(
                             array_merge(
                                 ['id' => RouteContext::fromRequest($request)->getRoute()->getArgument('id')],
-                                $request->getQueryParams() ?? [],
+                                $request->getQueryParams(),
                                 $request->getParsedBody() ?? []
                             )
                         )

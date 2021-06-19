@@ -37,6 +37,16 @@ abstract class ModelBase extends Model implements IModelBase
      */
     public bool $allowAll = false;
 
+    protected static function booted(): void {
+        // Scope all models to the authenticated UserId
+        static::addGlobalScope(new UserScope());
+
+        // Save the authenticated UserId value to the model
+        static::saving(function ($model) {
+            $model->UserId = UserScope::getUserId();
+        });
+    }
+
     /*
      * Return the name of the table for this model
      * @return string

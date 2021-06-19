@@ -9,6 +9,7 @@ use DateTime;
  * @property integer $Id
  * @property integer $ResidentId
  * @property integer $UserId
+ * @property integer $MedicineId
  * @property string $Drug
  * @property string $Strength
  * @property string $Barcode
@@ -18,6 +19,7 @@ use DateTime;
  * @property integer $FillDateMonth
  * @property integer $FillDateYear
  * @property boolean $OTC
+ * @property boolean $Pillbox
  * @property DateTime $Created
  * @property DateTime $Updated
  * @property DateTime $deleted_at
@@ -31,6 +33,7 @@ class Medicine extends ModelBase
         'Id' => 'integer',
         'ResidentId' => 'integer',
         'UserId' => 'integer',
+        'MedicineId' => 'integer',
         'Drug' => 'string',
         'Strength' => 'string',
         'Barcode' => 'string',
@@ -40,6 +43,7 @@ class Medicine extends ModelBase
         'FillDateDay' => 'tinyint',
         'FillDateYear' => 'integer',
         'OTC' => 'boolean',
+        'Pillbox' => 'boolean',
         'Created' => 'datetime',
         'Updated' => 'datetime',
         'deleted_at' => 'datetime'
@@ -80,6 +84,18 @@ class Medicine extends ModelBase
             $this->attributes['Directions'] = null;
         } else {
             $this->attributes['Directions'] = $value;
+        }
+    }
+
+    /**
+     * Override Notes field to null if empty string
+     * @param string|null $value
+     */
+    final public function setNotesAttribute(?string $value): void {
+        if (empty($value)) {
+            $this->attributes['Notes'] = null;
+        } else {
+            $this->attributes['Notes'] = $value;
         }
     }
 

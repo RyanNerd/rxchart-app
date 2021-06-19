@@ -6,8 +6,8 @@ namespace Willow\Controllers\Authenticate;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use Willow\Middleware\ResponseBody;
 use Respect\Validation\Validator as V;
+use Willow\Middleware\ResponseBody;
 
 class AuthenticatePostValidator
 {

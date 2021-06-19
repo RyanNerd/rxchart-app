@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Willow\Models\User;
+use Willow\Models\UserScope;
 
 class ValidateRequest
 {
@@ -28,7 +29,10 @@ class ValidateRequest
             $user = User::where('API_KEY', '=', $apiKey)->first();
 
             if ($user !== null && $user->API_KEY === $apiKey) {
-                // Make all valid authentications admin
+                // Set global scope for all models
+                UserScope::setUserId($user->Id);
+
+                // Let responseBody know we are golden
                 $responseBody = $responseBody
                     ->setUserId($user->Id)
                     ->setIsAdmin()

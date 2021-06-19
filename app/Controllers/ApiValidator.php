@@ -21,7 +21,6 @@ class ApiValidator
             }
         }
 
-
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
         if (!$responseBody->getIsAuthenticated()) {

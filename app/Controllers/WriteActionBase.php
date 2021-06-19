@@ -34,7 +34,6 @@ abstract class WriteActionBase extends ActionBase
         }
 
         // Replace each key value from the parsed request into the model and save.
-        $columns = array_keys($model::FIELDS);
         foreach ($body as $key => $value) {
             // Ignore Primary Key
             if ($key === $primaryKeyName) {
@@ -49,13 +48,10 @@ abstract class WriteActionBase extends ActionBase
             }
 
             // Only update fields listed in the model::FIELDS array
-            if (in_array($key, $columns, true)) {
+            if (in_array($key, array_keys($model::FIELDS), true)) {
                 $model->$key = $value;
             }
         }
-
-        // Force the UserId
-        $model->UserId = $responseBody->getUserId();
 
         // Call the beforeSave event hook
         $this->beforeSave($model);

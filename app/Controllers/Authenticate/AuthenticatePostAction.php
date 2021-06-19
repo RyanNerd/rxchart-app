@@ -63,7 +63,7 @@ class AuthenticatePostAction
         $user->Updated = new DateTime();
 
         // Did the user update fail?
-        if (!$user->save()) {
+        if (!$user->saveQuietly()) {
             // Save failed for some reason, so reject the request.
             $responseBody = $responseBody
                 ->setStatus(ResponseBody::HTTP_INTERNAL_SERVER_ERROR)

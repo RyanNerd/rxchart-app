@@ -8,9 +8,6 @@ use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
 
-/**
- * Class SearchActionBase
- */
 class SearchActionBase extends ActionBase
 {
     /**
@@ -22,9 +19,6 @@ class SearchActionBase extends ActionBase
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
         $model = clone $this->model;
-
-        // Force UserScope
-        $model = $model->where('UserId', '=', $responseBody->getUserId());
 
         // Get the request to build the query
         $parsedBody = $responseBody->getParsedRequest();
