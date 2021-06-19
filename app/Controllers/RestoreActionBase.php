@@ -7,15 +7,12 @@ use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
-use Willow\Models\ModelBase;
 
 /**
  * Class SearchActionBase
  */
 class RestoreActionBase extends ActionBase
 {
-    protected ModelBase $model;
-
     /**
      * @param Request $request
      * @param Response $response

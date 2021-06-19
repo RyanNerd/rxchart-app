@@ -10,12 +10,13 @@ use Slim\Psr7\Response;
 
 class ResponseBody extends ResponseCodes
 {
-    protected ?array $parsedRequest = null;
+    private static ?array $parsedRequest = null;
     protected bool $isAuthenticated = false;
     protected bool $isAdmin = false;
 
     /**
      * The response data
+     * @var null|array<array>
      */
     protected ?array $data = null;
 
@@ -25,7 +26,8 @@ class ResponseBody extends ResponseCodes
     protected int $status = 200;
 
     /**
-     * Response informational string[]
+     * Response messages
+     * @var array<string>
      */
     protected array $messages = [];
 
@@ -34,7 +36,6 @@ class ResponseBody extends ResponseCodes
      */
     protected array $missing = [];
 
-
     /**
      * Primary key of User when authenticated
      */
@@ -42,38 +43,29 @@ class ResponseBody extends ResponseCodes
 
     /**
      * ResponseBody constructor.
-     * @param StreamFactory $streamFactory
-     * @param Headers $headers
+     * @param array $parsedRequest
      */
-    public function __construct(private StreamFactory $streamFactory, private Headers $headers) {
+    public function __construct(array $parsedRequest) {
+        self::setParsedRequest($parsedRequest);
     }
 
     /**
-     * Generate and return the response
+     * Serialize the payload and Return a Response object
      * @return ResponseInterface
      */
     public function __invoke(): ResponseInterface {
-        return $this->response([
-            'authenticated' => $this->isAuthenticated,
-            'success' => ($this->status === 200),
-            'status' => $this->status,
-            'data' => $this->data,
-            'missing' => $this->missing,
-            'message' => $this->messages,
-            'timestamp' => time()
-        ]);
-    }
-
-    /**
-     * Serialize the $payload and Return a Response object
-     * @param array $payload
-     * @return Response
-     */
-    private function response(array $payload): Response {
         return new Response(
             $this->status,
-            $this->headers->addHeader('content-type', 'application\json'),
-            $this->streamFactory->createStream(json_encode($payload))
+            (new Headers(['content-type' => 'application/json'])),
+            (new StreamFactory())->createStream(json_encode([
+                'authenticated' => $this->isAuthenticated,
+                'success' => ($this->status === 200),
+                'status' => $this->status,
+                'data' => $this->data,
+                'missing' => $this->missing,
+                'message' => $this->messages,
+                'timestamp' => time()
+            ]))
         );
     }
 
@@ -82,10 +74,8 @@ class ResponseBody extends ResponseCodes
      * @param array $parsedRequest
      * @return ResponseBody
      */
-    final public function setParsedRequest(array $parsedRequest): self {
-        $clone = clone $this;
-        $clone->parsedRequest = $parsedRequest;
-        return $clone;
+    private function setParsedRequest(array $parsedRequest): void {
+        self::$parsedRequest = $parsedRequest;
     }
 
     /**
@@ -93,7 +83,7 @@ class ResponseBody extends ResponseCodes
      * @return array
      */
     final public function getParsedRequest(): array {
-        return $this->parsedRequest;
+        return self::$parsedRequest;
     }
 
     /**

@@ -7,9 +7,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Willow\Middleware\ResponseBody;
-use Willow\Models\ModelBase;
 
-class SearchValidatorBase
+class SearchValidatorBase extends ActionBase
 {
     protected const VALID_COMPARISON_STRINGS = [
         '=',
@@ -31,8 +30,6 @@ class SearchValidatorBase
         'with_trashed',
         'only_trashed'
     ];
-
-    protected ModelBase $model;
 
     /**
      * @param Request $request

@@ -7,12 +7,9 @@ use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
-use Willow\Models\ModelBase;
 
 class GetActionBase extends ActionBase
 {
-    protected ModelBase $model;
-
     /**
      * Handle GET request
      *
@@ -34,8 +31,7 @@ class GetActionBase extends ActionBase
             $status = ResponseBody::HTTP_NOT_FOUND;
         } else {
             // Remove any protected fields from the response
-            $data = $model->toArray();
-            $this->sanitize($data, $model::FIELDS);
+            $data = $model->attributesToArray();
             $status = ResponseBody::HTTP_OK;
         }
 

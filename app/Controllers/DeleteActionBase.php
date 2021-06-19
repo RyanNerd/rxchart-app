@@ -7,12 +7,9 @@ use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
-use Willow\Models\ModelBase;
 
-abstract class DeleteActionBase
+abstract class DeleteActionBase extends ActionBase
 {
-    protected ModelBase $model;
-
     /**
      * Handle DELETE request
      * @param Request $request

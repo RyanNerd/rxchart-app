@@ -11,8 +11,6 @@ use Willow\Models\ModelBase;
 
 abstract class WriteActionBase extends ActionBase
 {
-    protected ModelBase $model;
-
     public function __invoke(Request $request, Response $response): ResponseInterface {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
@@ -64,12 +62,8 @@ abstract class WriteActionBase extends ActionBase
 
         // Update the model on the database.
         if ($model->save()) {
-            // Remove any protected fields from the response
-            $modelArray = $model->toArray();
-            $this->sanitize($modelArray, $model::FIELDS);
-
             $responseBody = $responseBody
-                ->setData($modelArray)
+                ->setData($model->attributesToArray())
                 ->setStatus(ResponseBody::HTTP_OK);
         } else {
             // Unable to save for some reason so we return error status.
@@ -84,7 +78,6 @@ abstract class WriteActionBase extends ActionBase
 
     /**
      * Override this function if you need to make changes to the model prior to saving.
-     *
      * @param ModelBase $model
      */
     protected function beforeSave(ModelBase $model): void {

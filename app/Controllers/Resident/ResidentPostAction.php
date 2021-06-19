@@ -30,7 +30,6 @@ class ResidentPostAction extends WriteActionBase
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
         $residentModel = clone $this->model;
-        $modelColumns = $residentModel::FIELDS;
 
         // Get the request body
         $parsedBody = $responseBody->getParsedRequest();
@@ -58,11 +57,9 @@ class ResidentPostAction extends WriteActionBase
                 if ($residentModel->trashed()) {
                     // Undelete the record
                     if ($residentModel->restore()) {
-                        $data = $residentModel->toArray();
-                        $this->sanitize($data, $modelColumns);
                         // Return the response as the restored record.
                         $responseBody = $responseBody
-                            ->setData($data)
+                            ->setData($residentModel->attributesToArray())
                             ->setStatus(ResponseBody::HTTP_OK);
                         return $responseBody();
                     }
