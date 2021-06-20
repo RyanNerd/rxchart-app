@@ -5,6 +5,18 @@ namespace Willow\Models;
 
 use DateTime;
 
+#[ApplyModelRule(ModelDefaultRule::class)]
+#[ApplyModelRule(MedHistoryModelRule::class)]
+#[ApplyModelColumnAttribute('Id', 'int', null, ['PK', 'NN', 'AI'])]
+#[ApplyModelColumnAttribute('ResidentId', 'int', null, ['NN'])]
+#[ApplyModelColumnAttribute('MedicineId', 'int', null, ['NN'])]
+#[ApplyModelColumnAttribute('UserId', 'int', null, ['NN'])]
+#[ApplyModelColumnAttribute('Notes', 'string', 500)]
+#[ApplyModelColumnAttribute('In', 'tinyint', null, null, 'NULL')]
+#[ApplyModelColumnAttribute('Out', 'tinyint', null, null, 'NULL')]
+#[ApplyModelColumnAttribute('Created', 'DateTime', null, null, 'NULL')]
+#[ApplyModelColumnAttribute('Updated', 'DateTime', null, null, 'NULL')]
+#[ApplyModelColumnAttribute('deleted_at', 'DateTime', null, null, 'NULL')]
 /**
  * @property integer $Id
  * @property integer $ResidentId

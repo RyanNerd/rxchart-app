@@ -21,7 +21,7 @@
         "ext-json": "*",
         "ext-pdo": "*",
         "illuminate/database": "^v8.47.0",
-        "illuminate/events": "v8.47.0",
+        "illuminate/events": "^v8.47.0",
         "league/climate": "^3.7.0",
         "php": "^8.0",
         "php-di/php-di": "^6.3.3",
