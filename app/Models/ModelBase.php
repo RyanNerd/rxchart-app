@@ -21,6 +21,7 @@ abstract class ModelBase extends Model implements IModelBase
     /**
      * Array containing white list of fields for the model in the format ['fieldName' => 'type',...]
      * @example [LastName=>'string', DOB_YEAR=>'integer', ...]
+     * @todo: remove
      */
     public const FIELDS = [];
 

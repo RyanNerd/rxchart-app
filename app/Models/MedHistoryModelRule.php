@@ -9,33 +9,25 @@ class MedHistoryModelRule
 {
     /**
      * @param ResponseBody $responseBody
-     * @param array<[
-     *  'ColumnName'=>$v,
-     *  'Type' => $v,
-     *  'Length' => $v,
-     *  'Flags' => $v',
-     *  'Default' => $v]> $medHistoryColumnAttributes
+     * @param array
      * @return ResponseBody
      */
     public function __invoke(ResponseBody $responseBody, array $medHistoryColumnAttributes): ResponseBody {
         $parsedRequest = $responseBody->getParsedRequest();
-        foreach ($medHistoryColumnAttributes as $columnName => $fieldAttributes) {
-            if (key_exists($columnName, $parsedRequest)) {
-                $len = $fieldAttributes['Length'];
-                if ($fieldAttributes['Type'] === 'string' && $len !== null) {
-                    $value = $parsedRequest[$columnName];
-                    if ($value !== null) {
-                        if (strlen($value) > $len) {
-                            $responseBody
-                                ->registerParam(
-                                    'invalid',
-                                    $columnName,
-                                    'string',
-                                    "$columnName exceeded max length of $len"
-                                );
-                        }
-                    }
-                }
+
+        // Check that the In request parameter if it exists isn't negative
+        if (array_key_exists('In', $parsedRequest)) {
+            $value = $parsedRequest['In'];
+            if ($value < 0) {
+                $responseBody->registerParam('invalid', 'In', 'int', "Invalid value of $value given");
+            }
+        }
+
+        // Check that the Out request parameter if it exists isn't negative
+        if (array_key_exists('Out', $parsedRequest)) {
+            $value = $parsedRequest['Out'];
+            if ($value < 0) {
+                $responseBody->registerParam('invalid', 'Out', 'int', "Invalid value of $value given");
             }
         }
         return $responseBody;

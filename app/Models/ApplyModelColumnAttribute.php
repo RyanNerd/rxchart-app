@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Willow\Models;
 
 use Attribute;
+use JetBrains\PhpStorm\ArrayShape;
 
 #[Attribute(Attribute::IS_REPEATABLE|Attribute::TARGET_CLASS)]
 class ApplyModelColumnAttribute
@@ -38,6 +39,13 @@ class ApplyModelColumnAttribute
         assert(in_array($this->flags, self::VALID_FLAGS), 'Invalid ModelColumnAttribute.flags');
     }
 
+    #[ArrayShape([
+        'ColumnName' => "string",
+        'Type' => "string",
+        'Length' => "int|null",
+        'Flags' => "bool[]|null",
+        'Default' => "null|string"
+    ])]
     final public function getModelColumnAttribute(): array {
         return [
             'ColumnName' => $this->columnName,

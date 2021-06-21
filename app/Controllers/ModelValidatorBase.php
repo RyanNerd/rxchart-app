@@ -35,7 +35,6 @@ abstract class ModelValidatorBase
             /** @var ResponseBody $responseBody */
             $responseBody = $request->getAttribute('response_body');
 
-            /** @var  ['ColumnName']['ColumnName' => $v, 'Type' => $v, 'Length' => $v, 'Flags' => [$v], 'Default' => $v] $columnAttributes */
             $columnAttributes = [];
             $reflectionModelColumnAttributes = $reflectionClass->getAttributes(ApplyModelColumnAttribute::class);
             foreach ($reflectionModelColumnAttributes as $modelColumnAttribute) {
