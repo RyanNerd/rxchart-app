@@ -17,7 +17,6 @@ class MedicineController implements IController
             ->add(MedicineSearchValidator::class);
 
         $group->post('/medicine', MedicinePostAction::class)
-            ->add(MedicineWriteValidator::class)
             ->add(MedicineModelValidator::class);
 
         $group->get('/medicine/{id}', MedicineGetAction::class);

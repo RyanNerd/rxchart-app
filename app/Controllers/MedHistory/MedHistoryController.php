@@ -17,7 +17,6 @@ class MedHistoryController implements IController
             ->add(MedHistorySearchValidator::class);
 
         $group->post('/medhistory', MedHistoryPostAction::class)
-            ->add(MedHistoryWriteValidator::class)
             ->add(MedHistoryModelValidator::class);
 
         $group->get('/medhistory/{id}', MedHistoryGetAction::class);

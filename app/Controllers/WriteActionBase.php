@@ -7,7 +7,6 @@ use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
-use Willow\Models\ModelBase;
 
 abstract class WriteActionBase extends ActionBase
 {
@@ -33,6 +32,9 @@ abstract class WriteActionBase extends ActionBase
             }
         }
 
+        $columnAttributes = ModelValidatorBase::getColumnAttributes($this->model::class);
+        $columnNames = array_keys($columnAttributes);
+
         // Replace each key value from the parsed request into the model and save.
         foreach ($body as $key => $value) {
             // Ignore Primary Key
@@ -48,13 +50,10 @@ abstract class WriteActionBase extends ActionBase
             }
 
             // Only update fields listed in the model::FIELDS array
-            if (in_array($key, array_keys($model::FIELDS), true)) {
+            if (in_array($key, $columnNames, true)) {
                 $model->$key = $value;
             }
         }
-
-        // Call the beforeSave event hook
-        $this->beforeSave($model);
 
         // Update the model on the database.
         if ($model->save()) {
@@ -70,12 +69,5 @@ abstract class WriteActionBase extends ActionBase
         }
 
         return $responseBody();
-    }
-
-    /**
-     * Override this function if you need to make changes to the model prior to saving.
-     * @param ModelBase $model
-     */
-    protected function beforeSave(ModelBase $model): void {
     }
 }

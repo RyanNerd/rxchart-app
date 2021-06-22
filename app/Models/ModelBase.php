@@ -18,13 +18,6 @@ abstract class ModelBase extends Model implements IModelBase
 {
     use SoftDeletes;
 
-    /**
-     * Array containing white list of fields for the model in the format ['fieldName' => 'type',...]
-     * @example [LastName=>'string', DOB_YEAR=>'integer', ...]
-     * @todo: remove
-     */
-    public const FIELDS = [];
-
     // Override the created_at and updated_at column names
     public const UPDATED_AT = 'Updated';
     public const CREATED_AT = 'Created';

@@ -60,27 +60,19 @@ class SearchValidatorBase extends ActionBase
         // There's no way to preemptively determine if no where clause is allowed.
         $where = $parsedBody['where'] ?? [];
         foreach ($where as $item) {
-            $column = $item['column'] ?? '';
+            if (!array_key_exists('column', $item)) {
+                $responseBody->registerParam('required', 'where->column', 'string');
+            }
 
-            // Check the white listed columns for the model.
-            // If the column is not in the white list then register it as invalid.
-            if (!array_key_exists($column, $model::FIELDS)) {
-                $responseBody->registerParam('invalid', $column, 'column');
-            } else {
-                if (!array_key_exists('column', $item)) {
-                    $responseBody->registerParam('required', 'where->column', 'string');
-                }
-
-                if (!array_key_exists('value', $item)) {
-                    $responseBody->registerParam('required', 'where->value', 'string');
-                }
+            if (!array_key_exists('value', $item)) {
+                $responseBody->registerParam('required', 'where->value', 'string');
+            }
 
                 // Is a comparison item given?
-                if (array_key_exists('comparison', $item)) {
-                    // Make sure the comparison string is valid
-                    if (!in_array($item['comparison'], self::VALID_COMPARISON_STRINGS)) {
-                        $responseBody->registerParam('invalid', 'where->comparison', 'string');
-                    }
+            if (array_key_exists('comparison', $item)) {
+                // Make sure the comparison string is valid
+                if (!in_array($item['comparison'], self::VALID_COMPARISON_STRINGS)) {
+                    $responseBody->registerParam('invalid', 'where->comparison', 'string');
                 }
             }
         }

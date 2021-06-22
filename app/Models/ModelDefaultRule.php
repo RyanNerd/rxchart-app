@@ -42,6 +42,14 @@ class ModelDefaultRule
         return $responseBody;
     }
 
+    /**
+     * The expectation is that all column names will be present in the request,
+     * register a required response if any are missing.
+     * @param ResponseBody $responseBody
+     * @param array $modelColumnAttributes
+     * @param array $parsedRequest
+     * @return ResponseBody
+     */
     private function checkRequiredParameters(
         ResponseBody $responseBody,
         array $modelColumnAttributes,
@@ -50,6 +58,12 @@ class ModelDefaultRule
         $outLiars = array_diff_key($modelColumnAttributes, $parsedRequest);
         if (count($outLiars) > 0) {
             foreach ($outLiars as $columnName => $fieldAttributes) {
+                $flags = $fieldAttributes['Flags'];
+
+                // Ignore column exemptions
+                if ($flags === null || in_array('CE', $flags)) {
+                    continue;
+                }
                 $responseBody
                     ->registerParam('required', $columnName, $fieldAttributes['Type'], "$columnName is required");
             }
@@ -64,6 +78,12 @@ class ModelDefaultRule
     ) : ResponseBody {
         foreach ($modelColumnAttributes as $columnName => $fieldAttributes) {
             $flags = $fieldAttributes['Flags'];
+
+            // If there are no flags or if there's a column exception then skip
+            if ($flags === null || in_array('CE', $flags)) {
+                continue;
+            }
+
             // Do we have a Not Null flag?
             if (in_array('NN', $flags)) {
                 // Do we not have a Primary Key flag?
@@ -88,6 +108,7 @@ class ModelDefaultRule
      * Check that there are aren't any extraneous request parameters
      * @param ResponseBody $responseBody
      * @param array $modelColumnAttributes
+     * @param array $parsedRequest
      * @return ResponseBody
      */
     private function checkRequestHasNoUnexpectedParameters(

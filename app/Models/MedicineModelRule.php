@@ -17,9 +17,6 @@ class MedicineModelRule
 
         // If the request is a pillbox check that other parameters have valid values
         if (key_exists('Pillbox', $parsedRequest)) {
-            /**
-             * Pillbox checks
-             */
             // If the MedicineId request parameter exists it MUST be null.
             if (key_exists('MedicineId', $parsedRequest)) {
                 $medicineId =  $parsedRequest['MedicineId'];
@@ -33,7 +30,6 @@ class MedicineModelRule
                         );
                 }
             }
-
         }
         return $responseBody;
     }
