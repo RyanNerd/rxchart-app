@@ -50,7 +50,7 @@ class ApplyModelColumnAttribute
         'ColumnName' => "string",
         'Type' => "string",
         'Length' => "int|null",
-        'Flags' => "bool[]|null",
+        'Flags' => "string[]|null",
         'Default' => "null|string"
     ])]
     final public function getModelColumnAttribute(): array {
