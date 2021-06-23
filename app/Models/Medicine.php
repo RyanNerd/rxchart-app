@@ -5,7 +5,7 @@ namespace Willow\Models;
 
 use DateTime;
 
-#[ApplyModelRule(ModelDefaultRule::class)]
+#[ApplyModelRule(ModelDefaultRules::class)]
 #[ApplyModelColumnAttribute('Id', 'int', null, ['PK', 'NN', 'AI'])] // Medicine PK
 #[ApplyModelColumnAttribute('ResidentId', 'int', null)]             // Resident FK
 #[ApplyModelColumnAttribute('UserId', 'int', null, ['NN','CE'])]    // User FK

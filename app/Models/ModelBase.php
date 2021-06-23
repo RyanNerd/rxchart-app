@@ -3,18 +3,10 @@ declare(strict_types=1);
 
 namespace Willow\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-/**
- * Class ModelBase
- *
- * @mixin Builder
- * @mixin SoftDeletes
- * @property int $UserId
- */
-abstract class ModelBase extends Model implements IModelBase
+abstract class ModelBase extends Model
 {
     use SoftDeletes;
 

@@ -5,7 +5,7 @@ namespace Willow\Models;
 
 use Willow\Middleware\ResponseBody;
 
-class ModelDefaultRule
+class ModelDefaultRules
 {
     /**
      * Allowed request parameters that are not column names
