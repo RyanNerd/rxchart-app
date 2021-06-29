@@ -5,7 +5,12 @@ namespace Willow\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
 
+/**
+ * Class ModelBase
+ * @mixin Builder
+ */
 abstract class ModelBase extends Model
 {
     use SoftDeletes;
@@ -31,13 +36,5 @@ abstract class ModelBase extends Model
         static::saving(function ($model) {
             $model->UserId = UserScope::getUserId();
         });
-    }
-
-    /*
-     * Return the name of the table for this model
-     * @return string
-     */
-    final public function getTableName(): string {
-        return $this->table;
     }
 }

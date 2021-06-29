@@ -15,6 +15,10 @@ class ApplyModelRule
     public function __construct(private string $rule) {
     }
 
+    /**
+     * Return the the modelRule
+     * @return string
+     */
     final public function getModelRule(): string {
         return $this->rule;
     }

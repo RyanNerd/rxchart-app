@@ -12,13 +12,11 @@ use Willow\Middleware\ResponseBody;
 use Willow\Middleware\ResponseCodes;
 use Willow\Models\ApplyModelColumnAttribute;
 use Willow\Models\ApplyModelRule;
+use Willow\Models\ApplyOverride;
 
 abstract class ModelValidatorBase
 {
-    /**
-     * @override Override this property with the class name of the model to process.
-     * @var string
-     */
+    #[ApplyOverride('Override this property with the class name of the model to validate.')]
     protected string $modelClass;
 
     /**

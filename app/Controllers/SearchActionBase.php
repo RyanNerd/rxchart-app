@@ -45,19 +45,6 @@ class SearchActionBase extends ActionBase
             $model = $model->limit($parsedBody['limit']);
         }
 
-        // JOIN Section (optional)
-        // @see https://laravel.com/docs/6.x/queries#joins
-        if (array_key_exists('join', $parsedBody)) {
-            foreach ($parsedBody['join'] as $join) {
-                $table = $join['table'];
-                $first= $join['first'];
-                $operator = $join['operator'] ?? null;
-                $second = $join['second'];
-                $type = $join['type'] ?? 'inner';
-                $model = $model->join($table, $first, $operator, $second, $type, false);
-            }
-        }
-
         // TRASHED Section [SOFT DELETES]
         // withTrashed
         if (array_key_exists('with_trashed', $parsedBody)) {
