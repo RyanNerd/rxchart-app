@@ -22,12 +22,6 @@ abstract class ModelBase extends Model
     // Override the primary key name
     protected $primaryKey = 'Id';
 
-    /**
-     * Set to true if the search action is allowed to NOT have any where type clauses Where, WhereBetween, etc.
-     * @var bool
-     */
-    public bool $allowAll = false;
-
     protected static function booted(): void {
         // Scope all models to the authenticated UserId
         static::addGlobalScope(new UserScope());

@@ -36,11 +36,6 @@ class Resident extends ModelBase
     protected $table = 'Resident';
 
     /**
-     * {@inheritdoc}
-     */
-    public bool $allowAll = true;
-
-    /**
      * Override Notes to null if empty string
      * @param string|null $value
      */
