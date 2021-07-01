@@ -6,6 +6,7 @@ namespace Willow\Controllers;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
+use Throwable;
 use Willow\Middleware\ResponseBody;
 
 abstract class WriteActionBase extends ActionBase
@@ -56,18 +57,19 @@ abstract class WriteActionBase extends ActionBase
         }
 
         // Update the model on the database.
-        if ($model->save()) {
-            $responseBody = $responseBody
-                ->setData($model->attributesToArray())
-                ->setStatus(ResponseBody::HTTP_OK);
-        } else {
+        try {
+            if ($model->save()) {
+                $responseBody = $responseBody
+                    ->setData($model->attributesToArray())
+                    ->setStatus(ResponseBody::HTTP_OK);
+            }
+        } catch (Throwable $exception) {
             // Unable to save for some reason so we return error status.
             $responseBody = $responseBody
                 ->setData(null)
                 ->setStatus(ResponseBody::HTTP_INTERNAL_SERVER_ERROR)
-                ->setMessage('Unable to save changes to ' . $model->getTable());
+                ->setMessage('Unable to save changes to ' . $model->getTable())->setMessage($exception->getMessage());
         }
-
         return $responseBody();
     }
 }
