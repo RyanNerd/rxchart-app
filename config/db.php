@@ -7,16 +7,16 @@ use Illuminate\Events\Dispatcher;
 use Illuminate\Container\Container;
 
 return [
-    'Eloquent' => function (ContainerInterface $c) {
+    'Eloquent' => function () {
         $eloquent = new Manager;
 
         $eloquent->addConnection([
             'driver'    => 'mysql',
-            'host'      => $c->get('ENV')['DB_HOST'],
-            'port'      => $c->get('ENV')['DB_PORT'],
-            'database'  => $c->get('ENV')['DB_NAME'],
-            'username'  => $c->get('ENV')['DB_USER'],
-            'password'  => $c->get('ENV')['DB_PASSWORD'],
+            'host'      => $_ENV['DB_HOST'],
+            'port'      => $_ENV['DB_PORT'],
+            'database'  => $_ENV['DB_NAME'],
+            'username'  => $_ENV['DB_USER'],
+            'password'  => $_ENV['DB_PASSWORD'],
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => ''

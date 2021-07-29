@@ -25,7 +25,7 @@ class App
         $app->addRoutingMiddleware();
         $app->addBodyParsingMiddleware();
         $app->addErrorMiddleware(
-            $container->get('ENV')['DISPLAY_ERROR_DETAILS'] === 'true',
+            $_ENV['DISPLAY_ERROR_DETAILS'] === 'true',
             true,
             true
         );

@@ -1,8 +1,10 @@
--- MySQL dump 10.13  Distrib 8.0.25, for Linux (x86_64)
+CREATE DATABASE  IF NOT EXISTS `RxChart` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `RxChart`;
+-- MySQL dump 10.13  Distrib 8.0.26, for Linux (x86_64)
 --
 -- Host: localhost    Database: RxChart
 -- ------------------------------------------------------
--- Server version	8.0.25-0ubuntu0.20.04.1
+-- Server version	8.0.26
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -40,7 +42,7 @@ CREATE TABLE `MedHistory` (
   CONSTRAINT `fk_MedHistory_Medicine` FOREIGN KEY (`MedicineId`) REFERENCES `Medicine` (`Id`),
   CONSTRAINT `fk_MedHistory_Resident` FOREIGN KEY (`ResidentId`) REFERENCES `Resident` (`Id`),
   CONSTRAINT `fk_MedHistory_User` FOREIGN KEY (`UserId`) REFERENCES `User` (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -54,7 +56,9 @@ CREATE TABLE `Medicine` (
   `Id` int NOT NULL AUTO_INCREMENT,
   `ResidentId` int DEFAULT NULL,
   `UserId` int NOT NULL,
+  `MedicineId` int DEFAULT NULL COMMENT 'Self referencing record when not null indicates it is a child of a pillbox parent record',
   `Drug` varchar(100) NOT NULL,
+  `OtherNames` varchar(100) DEFAULT NULL COMMENT 'Other names that the Drug may go by',
   `Strength` varchar(20) DEFAULT NULL,
   `Barcode` varchar(150) DEFAULT NULL,
   `Directions` varchar(300) DEFAULT NULL,
@@ -63,6 +67,8 @@ CREATE TABLE `Medicine` (
   `FillDateYear` int DEFAULT NULL,
   `Notes` varchar(500) DEFAULT NULL,
   `OTC` tinyint DEFAULT '0',
+  `Pillbox` tinyint DEFAULT '0' COMMENT 'When true it indicates that this record is a parent pillbox and  If a pillbox the MedicineId MUST be NULL',
+  `Quantity` tinyint DEFAULT NULL COMMENT 'When a child of pillbox (MedicineId !== null) this indicates how many of the medicine is in the pillbox - typically 1 if populated.',
   `Created` timestamp NULL DEFAULT NULL,
   `Updated` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
@@ -70,9 +76,11 @@ CREATE TABLE `Medicine` (
   KEY `Medicine_Barcode` (`Barcode`),
   KEY `fk_Medicine_Resident_idx` (`ResidentId`),
   KEY `fk_Medicine_User` (`UserId`),
+  KEY `fk_Pillbox_idx` (`MedicineId`),
   CONSTRAINT `fk_Medicine_Resident` FOREIGN KEY (`ResidentId`) REFERENCES `Resident` (`Id`),
-  CONSTRAINT `fk_Medicine_User` FOREIGN KEY (`UserId`) REFERENCES `User` (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `fk_Medicine_User` FOREIGN KEY (`UserId`) REFERENCES `User` (`Id`),
+  CONSTRAINT `fk_Pillbox` FOREIGN KEY (`MedicineId`) REFERENCES `Medicine` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,7 +107,7 @@ CREATE TABLE `Resident` (
   UNIQUE KEY `unique_Resident` (`UserId`,`LastName`,`FirstName`,`DOB_YEAR`,`DOB_MONTH`,`DOB_DAY`),
   KEY `fk_Resident_User` (`UserId`),
   CONSTRAINT `fk_Resident_User` FOREIGN KEY (`UserId`) REFERENCES `User` (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -119,7 +127,7 @@ CREATE TABLE `User` (
   `deleted_at` timestamp NULL DEFAULT NULL,
   `UserName` varchar(30) DEFAULT NULL,
   UNIQUE KEY `User_Id_IDX` (`Id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -131,4 +139,4 @@ CREATE TABLE `User` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-06-12 12:40:19
+-- Dump completed on 2021-07-29  4:47:54

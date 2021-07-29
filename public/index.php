@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 // phpcs:ignoreFile -- this is the entry point for the app and is where we should load all the dependencies
 use DI\ContainerBuilder;
+use Dotenv\Dotenv;
 use League\CLImate\CLImate;
 use Willow\Main\App;
 
@@ -29,11 +30,22 @@ try {
         exit();
     }
 
+    // Load and validate the .env file
+    $dotEnv = Dotenv::createImmutable(__DIR__ . '/../');
+    $dotEnv->load();
+    $dotEnv->required([
+        'DB_HOST',
+        'DB_PORT',
+        'DB_NAME',
+        'DB_USER',
+        'DB_PASSWORD',
+        'DISPLAY_ERROR_DETAILS'
+    ])->notEmpty();
+    $dotEnv->required('DISPLAY_ERROR_DETAILS')->allowedValues(['true', 'false']);
+
     // Establish DI
     $builder = new ContainerBuilder();
-    $builder
-        ->addDefinitions(__DIR__ . '/../config/_env.php')
-        ->addDefinitions(__DIR__ . '/../config/db.php');
+    $builder->addDefinitions(__DIR__ . '/../config/db.php');
     $container = $builder->build();
 
     // Instantiate the Eloquent ORM
