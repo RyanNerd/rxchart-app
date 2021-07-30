@@ -24,6 +24,10 @@ class ValidateRequest
         // Get the API key from the request
         $apiKey = $responseBody->getParsedRequest()['api_key'] ?? null;
 
+        if ($apiKey === null && !empty($_ENV['API_OVERRIDE'] ?? null)) {
+            $apiKey = $_ENV['API_OVERRIDE'];
+        }
+
         // Is there an API key?
         if ($apiKey !== null) {
             $user = User::where('API_KEY', '=', $apiKey)->first();

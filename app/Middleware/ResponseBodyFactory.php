@@ -17,6 +17,7 @@ class ResponseBodyFactory
      * @return ResponseInterface
      */
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
+        $arguments = RouteContext::fromRequest($request)->getRoute()->getArguments();
         return $handler
             ->handle(
                 $request
@@ -24,7 +25,7 @@ class ResponseBodyFactory
                         'response_body',
                         self::create(
                             array_merge(
-                                ['id' => RouteContext::fromRequest($request)->getRoute()->getArgument('id')],
+                                $arguments,
                                 $request->getQueryParams(),
                                 $request->getParsedBody() ?? []
                             )
