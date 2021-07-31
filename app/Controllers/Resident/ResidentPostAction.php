@@ -9,12 +9,13 @@ use Slim\Psr7\Response;
 use Willow\Controllers\WriteActionBase;
 use Willow\Middleware\ResponseBody;
 use Willow\Models\Resident;
-use Willow\Models\ModelBase;
 
 class ResidentPostAction extends WriteActionBase
 {
-    protected ModelBase|Resident $model;
-
+    /**
+     * ResidentPostAction constructor.
+     * @param Resident $model
+     */
     public function __construct(Resident $model) {
         $this->model = $model;
     }
@@ -29,7 +30,6 @@ class ResidentPostAction extends WriteActionBase
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
         $residentModel = clone $this->model;
-        $modelColumns = $residentModel::FIELDS;
 
         // Get the request body
         $parsedBody = $responseBody->getParsedRequest();
@@ -39,7 +39,6 @@ class ResidentPostAction extends WriteActionBase
 
         // Force UserScope and look for existing records including trashed records
         $residentModel = $residentModel
-            ->where('UserId', '=', $responseBody->getUserId())
             ->where('FirstName', '=', $parsedBody['FirstName'])
             ->where('LastName', '=', $parsedBody['LastName'])
             ->where('DOB_YEAR', '=', $parsedBody['DOB_YEAR'])
@@ -57,11 +56,9 @@ class ResidentPostAction extends WriteActionBase
                 if ($residentModel->trashed()) {
                     // Undelete the record
                     if ($residentModel->restore()) {
-                        $data = $residentModel->toArray();
-                        $this->sanitize($data, $modelColumns);
                         // Return the response as the restored record.
                         $responseBody = $responseBody
-                            ->setData($data)
+                            ->setData($residentModel->attributesToArray())
                             ->setStatus(ResponseBody::HTTP_OK);
                         return $responseBody();
                     }
@@ -72,7 +69,8 @@ class ResidentPostAction extends WriteActionBase
             $responseBody = $responseBody
                 ->setData(null)
                 ->setStatus(ResponseBody::HTTP_CONFLICT)
-                ->setMessage('Duplicates not allowed');
+                ->setMessage('Duplicates not allowed')
+                ->setMessage('Resident.Id ' . $id . ' and ' . $residentModel->Id . ' are the same person');
             return $responseBody();
         }
 

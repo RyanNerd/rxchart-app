@@ -8,10 +8,10 @@ use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
 
-class GetActionBase extends ActionBase
+abstract class DeleteActionBase extends ActionBase
 {
     /**
-     * Handle GET request
+     * Handle DELETE request
      * @param Request $request
      * @param Response $response
      * @param array $args
@@ -20,23 +20,18 @@ class GetActionBase extends ActionBase
     public function __invoke(Request $request, Response $response, array $args): ResponseInterface {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
+        $model = $this->model;
 
-        // Load the model with the given id (PK)
-        $model = $this->model->find($args['id']);
-
-        // If the record is not found then 404 error, otherwise status is 200.
-        if ($model === null) {
-            $data = null;
-            $status = ResponseBody::HTTP_NOT_FOUND;
-        } else {
-            // Remove any protected fields from the response
-            $data = $model->attributesToArray();
+        // Destroy the model given the id.
+        if ($model->destroy($args['id']) === 1) {
             $status = ResponseBody::HTTP_OK;
+        } else {
+            $status = ResponseBody::HTTP_NOT_FOUND;
         }
 
         // Set the status and data of the ResponseBody
         $responseBody = $responseBody
-            ->setData($data)
+            ->setData(null)
             ->setStatus($status);
 
         // Return the response as JSON

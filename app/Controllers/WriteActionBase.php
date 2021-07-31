@@ -6,15 +6,12 @@ namespace Willow\Controllers;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
+use Throwable;
 use Willow\Middleware\ResponseBody;
-use Willow\Models\ModelBase;
 
 abstract class WriteActionBase extends ActionBase
 {
-    protected ModelBase $model;
-
-    public function __invoke(Request $request, Response $response): ResponseInterface
-    {
+    public function __invoke(Request $request, Response $response): ResponseInterface {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
         $body = $responseBody->getParsedRequest();
@@ -36,8 +33,10 @@ abstract class WriteActionBase extends ActionBase
             }
         }
 
+        $columnAttributes = ModelValidatorBase::getColumnAttributes($this->model::class);
+        $columnNames = array_keys($columnAttributes);
+
         // Replace each key value from the parsed request into the model and save.
-        $columns = array_keys($model::FIELDS);
         foreach ($body as $key => $value) {
             // Ignore Primary Key
             if ($key === $primaryKeyName) {
@@ -52,41 +51,25 @@ abstract class WriteActionBase extends ActionBase
             }
 
             // Only update fields listed in the model::FIELDS array
-            if (in_array($key, $columns, true)) {
+            if (in_array($key, $columnNames, true)) {
                 $model->$key = $value;
             }
         }
 
-        // Force the UserId
-        $model->UserId = $responseBody->getUserId();
-
-        // Call the beforeSave event hook
-        $this->beforeSave($model);
-
         // Update the model on the database.
-        if ($model->save()) {
-            // Remove any protected fields from the response
-            $modelArray = $model->toArray();
-            $this->sanitize($modelArray, $model::FIELDS);
-
-            $responseBody = $responseBody
-                ->setData($modelArray)
-                ->setStatus(ResponseBody::HTTP_OK);
-        } else {
+        try {
+            if ($model->save()) {
+                $responseBody = $responseBody
+                    ->setData($model->attributesToArray())
+                    ->setStatus(ResponseBody::HTTP_OK);
+            }
+        } catch (Throwable $exception) {
             // Unable to save for some reason so we return error status.
             $responseBody = $responseBody
                 ->setData(null)
                 ->setStatus(ResponseBody::HTTP_INTERNAL_SERVER_ERROR)
-                ->setMessage('Unable to save changes to ' . $model->getTableName());
+                ->setMessage('Unable to save changes to ' . $model->getTable())->setMessage($exception->getMessage());
         }
-
         return $responseBody();
     }
-
-    /**
-     * Override this function if you need to make changes to the model prior to saving.
-     *
-     * @param ModelBase $model
-     */
-    protected function beforeSave(ModelBase $model): void {}
 }

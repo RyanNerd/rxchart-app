@@ -14,14 +14,11 @@ use Willow\Models\User;
 
 class AuthenticatePostAction
 {
-    protected User $userModel;
-
     /**
      * AuthenticatePostAction constructor.
      * @param User $userModel
      */
-    public function __construct(User $userModel) {
-        $this->userModel = $userModel;
+    public function __construct(private User $userModel) {
     }
 
     /**
@@ -66,7 +63,7 @@ class AuthenticatePostAction
         $user->Updated = new DateTime();
 
         // Did the user update fail?
-        if (!$user->save()) {
+        if (!$user->saveQuietly()) {
             // Save failed for some reason, so reject the request.
             $responseBody = $responseBody
                 ->setStatus(ResponseBody::HTTP_INTERNAL_SERVER_ERROR)

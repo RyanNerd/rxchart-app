@@ -10,103 +10,84 @@ use Slim\Psr7\Response;
 
 class ResponseBody extends ResponseCodes
 {
-    protected ?array $parsedRequest = null;
+    private static ?array $parsedRequest = null;
     protected bool $isAuthenticated = false;
     protected bool $isAdmin = false;
 
     /**
      * The response data
-     *
-     * @var array | null
+     * @var null|array<array>
      */
     protected ?array $data = null;
 
     /**
      * HTTP status code
-     *
-     * @var int
      */
     protected int $status = 200;
 
     /**
-     * Response informational string
-     *
-     * @var string
+     * Response messages
+     * @var array<string>
      */
-    protected string $message = '';
+    protected array $messages = [];
 
     /**
      * Missing parameters
-     *
-     * @var array
      */
     protected array $missing = [];
 
+    /**
+     * Primary key of User when authenticated
+     */
     protected ?int $userId = null;
-
-    protected ?StreamFactory $streamFactory;
 
     /**
      * ResponseBody constructor.
-     * @param StreamFactory $streamFactory
+     * @param array $parsedRequest
      */
-    public function __construct(StreamFactory $streamFactory) {
-        $this->streamFactory = $streamFactory;
+    public function __construct(array $parsedRequest) {
+        self::setParsedRequest($parsedRequest);
     }
 
     /**
-     * Generate the response
+     * Serialize the payload and Return a Response object
+     * @return ResponseInterface
      */
     public function __invoke(): ResponseInterface {
-        return $this->response([
-            'authenticated' => $this->isAuthenticated,
-            'success' => ($this->status === 200),
-            'status' => $this->status,
-            'data' => $this->data,
-            'missing' => $this->missing,
-            'message' => $this->message,
-            'timestamp' => time()
-        ]);
-    }
-
-    /**
-     * Serialize the $payload and Return a Response object
-     * @param array $payload
-     * @return Response
-     */
-    private function response(array $payload): Response {
         return new Response(
             $this->status,
-            new Headers(['content-type' => 'application\json']),
-            $this->streamFactory->createStream(json_encode($payload))
+            (new Headers(['content-type' => 'application/json'])),
+            (new StreamFactory())->createStream(json_encode([
+                'authenticated' => $this->isAuthenticated,
+                'success' => ($this->status === 200),
+                'status' => $this->status,
+                'data' => $this->data,
+                'missing' => $this->missing,
+                'message' => $this->messages,
+                'timestamp' => time()
+            ]))
         );
     }
 
     /**
      * Set the parsed request array
-     *
      * @param array $parsedRequest
      * @return ResponseBody
      */
-    final public function setParsedRequest(array $parsedRequest): self
-    {
-        $clone = clone $this;
-        $clone->parsedRequest = $parsedRequest;
-        return $clone;
+    private function setParsedRequest(array $parsedRequest): void {
+        self::$parsedRequest = $parsedRequest;
     }
 
     /**
      * Returned the parsed request
-     *
      * @return array
      */
     final public function getParsedRequest(): array {
-        return $this->parsedRequest;
+        return self::$parsedRequest;
     }
 
     /**
      * Indicate that the request is an administrator
-     *
      * @return ResponseBody
      */
     final public function setIsAdmin(): self {
@@ -117,7 +98,6 @@ class ResponseBody extends ResponseCodes
 
     /**
      * Indicate that the request is authenticated
-     *
      * @return ResponseBody
      */
     final public function setIsAuthenticated(): self {
@@ -128,25 +108,33 @@ class ResponseBody extends ResponseCodes
 
     /**
      * Returns true if the request is authenticated
-     *
      * @return bool
      */
     final public function getIsAuthenticated(): bool {
         return $this->isAuthenticated;
     }
 
+    /**
+     * Set the primary key of the User table when successfully authenticated
+     * @param int|null $userId
+     * @return $this
+     */
     final public function setUserId(?int $userId): self {
         $clone = clone $this;
         $clone->userId = $userId;
         return $clone;
     }
 
+    /**
+     * Returns the primary key in User when authenticated
+     * @return int
+     */
     final public function getUserId(): int {
         return $this->userId;
     }
-    /** trashed records
+
+    /**
      * Returns true if there are missing or required datapoints in the request
-     *
      * @return bool
      */
     final public function hasMissingRequiredOrInvalid(): bool {
@@ -155,12 +143,12 @@ class ResponseBody extends ResponseCodes
 
     /**
      * Register a parameter as optional, required or invalid.
-     *
      * @param string $section
      * @param string $name
-     * @param string | null $type
+     * @param string|null $type
+     * @param string|null $message
      */
-    final public function registerParam(string $section, string $name, ?string $type): void {
+    final public function registerParam(string $section, string $name, ?string $type, ?string $message = null): void {
         assert(in_array($section, ['optional', 'required', 'invalid']));
         assert($name !== '');
 
@@ -171,11 +159,14 @@ class ResponseBody extends ResponseCodes
         $data = $this->missing[$section] ?? [];
         $data[$name] = $data[$name] ?? $type;
         $this->missing[$section] = $data;
+
+        if ($message !== null) {
+            $this->messages[] = $message;
+        }
     }
 
     /**
      * Set the response data.
-     *
      * @param array|null $data
      * @return ResponseBody
      */
@@ -187,7 +178,6 @@ class ResponseBody extends ResponseCodes
 
     /**
      * Set the response status code.
-     *
      * @param int $status
      * @return self
      */
@@ -199,15 +189,21 @@ class ResponseBody extends ResponseCodes
     }
 
     /**
-     * Set the response message
-     *
-     * @param string $message
+     * Set the response messages
+-     * @param string|array $message
      * @return ResponseBody
      */
-    final public function setMessage(string $message): self {
-        assert($message !== '');
+    final public function setMessage(string|array $message): self {
+        if (is_string($message)) {
+            assert($message !== '');
+            $message = [$message];
+        }
+        $messages = ($this->messages);
+        foreach ($message as $msg) {
+            $messages[] = $msg;
+        }
         $clone = clone $this;
-        $clone->message = $message;
+        $clone->messages = $messages;
         return $clone;
     }
 }

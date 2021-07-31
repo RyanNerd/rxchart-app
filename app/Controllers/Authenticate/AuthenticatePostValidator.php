@@ -6,15 +6,14 @@ namespace Willow\Controllers\Authenticate;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use Willow\Middleware\ResponseBody;
 use Respect\Validation\Validator as V;
+use Willow\Middleware\ResponseBody;
 
 class AuthenticatePostValidator
 {
     private const ALLOWED = ['username', 'password', 'id'];
 
-    public function __invoke(Request $request, RequestHandler $handler): ResponseInterface
-    {
+    public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
         $parsedRequest = $responseBody->getParsedRequest();
@@ -33,6 +32,11 @@ class AuthenticatePostValidator
         // Password is required
         if (!V::key('password')->validate($parsedRequest) || !V::notEmpty()->validate($parsedRequest['password'])) {
             $responseBody->registerParam('required', 'password', 'string');
+        }
+
+        // id can be part of the request but it MUST be null/empty
+        if (V::exists()->validate($parsedRequest['id']) && V::notEmpty()->validate($parsedRequest['id'])) {
+            $responseBody->registerParam('invalid', 'id', 'null');
         }
 
         // If there are any missing required, or invalid data points then we short circuit and return invalid request.

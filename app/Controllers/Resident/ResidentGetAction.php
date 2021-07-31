@@ -5,19 +5,14 @@ namespace Willow\Controllers\Resident;
 
 use Willow\Controllers\GetActionBase;
 use Willow\Models\Resident;
-use Willow\Models\ModelBase;
 
 class ResidentGetAction extends GetActionBase
 {
-    protected ModelBase|Resident $model;
-
     /**
-     * Get the model via Dependency Injection and save it as a property.
-     *
+     * ResidentGetAction constructor.
      * @param Resident $model
      */
-    public function __construct(Resident $model)
-    {
+    public function __construct(Resident $model) {
         $this->model = $model;
     }
 }

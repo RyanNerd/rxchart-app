@@ -6,12 +6,21 @@ namespace Willow\Controllers;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
+use Slim\Routing\RouteContext;
 use Willow\Middleware\ResponseBody;
 
 class ApiValidator
 {
-    public function __invoke(Request $request, RequestHandler $handler): ResponseInterface
-    {
+    public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
+
+        // If we are trying to authenticate [get an API_KEY] then carry on.
+        if (!array_key_exists('api_key', $request->getQueryParams())) {
+            $route = RouteContext::fromRequest($request)->getRoute();
+            if (substr($route->getPattern(), -13) === '/authenticate' && $route->getMethods()[0] === 'POST') {
+                return $handler->handle($request);
+            }
+        }
+
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
         if (!$responseBody->getIsAuthenticated()) {
