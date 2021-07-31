@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-// This is the entry point for the app and is where we should load all the dependencies
+// This is the entry point for the app and is where we load all the dependencies
 use DI\ContainerBuilder;
 use Dotenv\Dotenv;
 use Willow\Main\App;
@@ -17,14 +17,14 @@ try {
         ob_start();
     }
 
-    // Allow for all origins and credentials. Also allow GET, POST, PATCH, OPTIONS, and DELETE request verbs
+    // Allow for all origins and credentials. Also allow GET, POST, OPTIONS, and DELETE request verbs
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Credentials: true');
     // phpcs:ignore -- ignore a really long valid header string
     header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
-    header('Access-Control-Allow-Methods: GET, POST, PATCH, OPTIONS, DELETE');
+    header('Access-Control-Allow-Methods: GET, POST, OPTIONS, DELETE');
 
-    // If this is a pre-flight request (the request method is OPTIONS)? Then flush the output buffer and exit.
+    // If this is a pre-flight request (the request method is OPTIONS) then flush the output buffer and exit.
     if ($requestMethod === 'OPTIONS') {
         ob_end_flush();
         exit();
