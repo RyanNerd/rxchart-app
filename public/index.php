@@ -55,10 +55,23 @@ try {
     // Launch the App
     new App($container);
 } catch (Throwable $throwable) {
-    echo '********** ERROR **********' . PHP_EOL;
-    echo 'Message: ' . $throwable->getMessage() . PHP_EOL;
-    echo 'File:' . $throwable->getFile() . PHP_EOL;
-    echo 'Line:' . $throwable->getLine();
-    echo '********** ERROR **********' . PHP_EOL . PHP_EOL;
+    ob_start();
+    header('Content-Type: text/html; charset=UTF-8');
+    http_response_code(500);
+    if ($_ENV['DISPLAY_ERROR_DETAILS'] ?? '' === 'true') {
+        $message = $throwable->getMessage();
+        $file = $throwable->getFile();
+        $line = $throwable->getLine();
+        echo <<<EOS
+        ********** ERROR **********</br>
+        Message: $message</br>
+        File:' $file </br>
+        Line:' $line </br>
+        ********** ERROR **********</br>
+EOS;
+    } else {
+        echo 'An error occurred. Check the server log for details.';
+    }
+    ob_end_flush();
     exit();
 }
