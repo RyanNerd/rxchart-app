@@ -11,6 +11,7 @@ use DateTime;
 #[ApplyModelColumnAttribute('UserId', 'int', null, ['NN','CE'])]    // User FK
 #[ApplyModelColumnAttribute('MedicineId', 'int', null)]             // Pillbox parent self referencing FK
 #[ApplyModelColumnAttribute('Drug', 'string', 100, ['NN'])]         // Medicine Name
+#[ApplyModelColumnAttribute('OtherNames', 'string', 100)]           // Other names for the medicine
 #[ApplyModelColumnAttribute('Strength', 'string', 20)]              // Medicine strength e.g. '20mg'
 #[ApplyModelColumnAttribute('Barcode', 'string', 150)]              // Barcode
 #[ApplyModelColumnAttribute('Directions', 'string', 300)]           // Directions e.g. 'Take one tablet by mouth daily'
