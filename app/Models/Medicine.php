@@ -19,6 +19,7 @@ use DateTime;
 #[ApplyModelColumnAttribute('FillDateDay', 'int')]                  // Day value for when the drug was filled mm/DD/yyyy
 #[ApplyModelColumnAttribute('FillDateMonth', 'int')]                // Month value when the drug was filled MM/dd/yyyy
 #[ApplyModelColumnAttribute('FillDateYear', 'int')]                 // Year value when the drug was filled mm/dd/YYYY
+#[ApplyModelColumnAttribute('Active', 'bool', null, ['NN'], '1')]   // Indicates if drug is active, appears in dropdown
 #[ApplyModelColumnAttribute('OTC', 'bool', null, null, '0')]        // Is set to true (1) if drug is OTC
 #[ApplyModelColumnAttribute('Pillbox', 'bool', null, null, '0')]    // Is set to true (1) if parent Pillbox record
 #[ApplyModelColumnAttribute('Quantity', 'int', 254)]                // For Pillbox items (child Medicine records)
@@ -31,6 +32,7 @@ use DateTime;
  * @property integer $UserId            // User FK
  * @property integer $MedicineId        // Pillbox self referening FK
  * @property string $Drug               // Medicine name
+ * @property string $OtherNames         // Other names for the medicine
  * @property string $Strength           // Medicine strength e.g. 10mg
  * @property string $Barcode            // Barcode
  * @property string $Directions         // Directions e.g. Take one tablet at bedtime
@@ -38,6 +40,7 @@ use DateTime;
  * @property integer $FillDateDay       // Day value for when the drug was filled mm/DD/yyyy
  * @property integer $FillDateMonth     // Month value when the drug was filled MM/dd/yyyy
  * @property integer $FillDateYear      // Year value when the drug was filled mm/dd/YYYY
+ * @property boolean $Active            // Is set to true (1) if the drug should show in the medicine dropdown
  * @property boolean $OTC               // Is set to true (1) if drug is OTC
  * @property boolean $Pillbox           // Is set to true (1) if parent Pillbox record
  * @property integer $Quantity          // For Pillbox items (child Medicine records)
@@ -58,6 +61,18 @@ class Medicine extends ModelBase
             $this->attributes['Strength'] = null;
         } else {
             $this->attributes['Strength'] = $value;
+        }
+    }
+
+    /**
+     * Override OtherNames field to null if empty string
+     * @param string|null $value
+     */
+    final public function setOtherNamesAttribute(?string $value): void {
+        if (empty($value)) {
+            $this->attributes['OtherNames'] = null;
+        } else {
+            $this->attributes['OtherNames'] = $value;
         }
     }
 
