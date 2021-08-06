@@ -66,6 +66,7 @@ CREATE TABLE `Medicine` (
   `FillDateDay` tinyint DEFAULT NULL,
   `FillDateYear` int DEFAULT NULL,
   `Notes` varchar(500) DEFAULT NULL,
+  `Active` tinyint NOT NULL DEFAULT '1',
   `OTC` tinyint DEFAULT '0',
   `Pillbox` tinyint DEFAULT '0' COMMENT 'When true it indicates that this record is a parent pillbox and  If a pillbox the MedicineId MUST be NULL',
   `Quantity` tinyint DEFAULT NULL COMMENT 'When a child of pillbox (MedicineId !== null) this indicates how many of the medicine is in the pillbox - typically 1 if populated.',
@@ -139,4 +140,4 @@ CREATE TABLE `User` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-07-29  4:47:54
+-- Dump completed on 2021-08-06  1:03:51
