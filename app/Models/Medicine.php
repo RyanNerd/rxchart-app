@@ -27,7 +27,6 @@ use DateTime;
  * @property integer $Id                // Medicine PK
  * @property integer $ResidentId        // Resident FK
  * @property integer $UserId            // User FK
- * @property integer $MedicineId        // Pillbox self referening FK
  * @property string $Drug               // Medicine name
  * @property string $OtherNames         // Other names for the medicine
  * @property string $Strength           // Medicine strength e.g. 10mg
