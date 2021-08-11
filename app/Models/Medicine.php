@@ -27,7 +27,7 @@ use DateTime;
  * @property integer $Id                // Medicine PK
  * @property integer $ResidentId        // Resident FK
  * @property integer $UserId            // User FK
-  * @property string $Drug               // Medicine name
+ * @property string $Drug               // Medicine name
  * @property string $OtherNames         // Other names for the medicine
  * @property string $Strength           // Medicine strength e.g. 10mg
  * @property string $Barcode            // Barcode
