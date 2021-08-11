@@ -1,0 +1,10 @@
+CREATE TABLE `RxChart`.`Pillbox` (
+     `Id` INT NOT NULL AUTO_INCREMENT,
+     `ResidentId` VARCHAR(45) NOT NULL,
+     `Name` VARCHAR(45) NOT NULL,
+     `Notes` VARCHAR(300) NULL,
+     `Created` TIMESTAMP NULL DEFAULT NULL,
+     `Updated` TIMESTAMP NULL DEFAULT NULL,
+     `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+     PRIMARY KEY (`Id`)
+);
