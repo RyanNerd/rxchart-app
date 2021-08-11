@@ -9,7 +9,6 @@ use DateTime;
 #[ApplyModelColumnAttribute('Id', 'int', null, ['PK', 'NN', 'AI'])] // Medicine PK
 #[ApplyModelColumnAttribute('ResidentId', 'int', null)]             // Resident FK
 #[ApplyModelColumnAttribute('UserId', 'int', null, ['NN','CE'])]    // User FK
-#[ApplyModelColumnAttribute('MedicineId', 'int', null)]             // Pillbox parent self referencing FK
 #[ApplyModelColumnAttribute('Drug', 'string', 100, ['NN'])]         // Medicine Name
 #[ApplyModelColumnAttribute('OtherNames', 'string', 100)]           // Other names for the medicine
 #[ApplyModelColumnAttribute('Strength', 'string', 20)]              // Medicine strength e.g. '20mg'
@@ -21,8 +20,6 @@ use DateTime;
 #[ApplyModelColumnAttribute('FillDateYear', 'int')]                 // Year value when the drug was filled mm/dd/YYYY
 #[ApplyModelColumnAttribute('Active', 'bool', null, ['NN'], '1')]   // Indicates if drug is active, appears in dropdown
 #[ApplyModelColumnAttribute('OTC', 'bool', null, null, '0')]        // Is set to true (1) if drug is OTC
-#[ApplyModelColumnAttribute('Pillbox', 'bool', null, null, '0')]    // Is set to true (1) if parent Pillbox record
-#[ApplyModelColumnAttribute('Quantity', 'int', 254)]                // For Pillbox items (child Medicine records)
 #[ApplyModelColumnAttribute('Created', 'DateTime', null, ['CE'], 'NULL')]
 #[ApplyModelColumnAttribute('Updated', 'DateTime', null, ['CE'], 'NULL')]
 #[ApplyModelColumnAttribute('deleted_at', 'DateTime', null, ['CE'], 'NULL')]
@@ -30,8 +27,7 @@ use DateTime;
  * @property integer $Id                // Medicine PK
  * @property integer $ResidentId        // Resident FK
  * @property integer $UserId            // User FK
- * @property integer $MedicineId        // Pillbox self referening FK
- * @property string $Drug               // Medicine name
+  * @property string $Drug               // Medicine name
  * @property string $OtherNames         // Other names for the medicine
  * @property string $Strength           // Medicine strength e.g. 10mg
  * @property string $Barcode            // Barcode
@@ -42,8 +38,6 @@ use DateTime;
  * @property integer $FillDateYear      // Year value when the drug was filled mm/dd/YYYY
  * @property boolean $Active            // Is set to true (1) if the drug should show in the medicine dropdown
  * @property boolean $OTC               // Is set to true (1) if drug is OTC
- * @property boolean $Pillbox           // Is set to true (1) if parent Pillbox record
- * @property integer $Quantity          // For Pillbox items (child Medicine records)
  * @property DateTime $Created
  * @property DateTime $Updated
  * @property DateTime $deleted_at
