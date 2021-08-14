@@ -21,7 +21,6 @@ class MedHistoryController implements IController
 
         $group->get('/medhistory/{id}', MedHistoryGetAction::class);
 
-
         $group->delete('/medhistory/{id}', MedHistoryDeleteAction::class);
     }
 }
