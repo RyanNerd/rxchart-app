@@ -9,6 +9,7 @@ use DateTime;
 #[ApplyModelColumnAttribute('Id', 'int', null, ['PK', 'NN', 'AI'])]
 #[ApplyModelColumnAttribute('ResidentId', 'int', null, ['NN'])]
 #[ApplyModelColumnAttribute('PillboxId', 'int', null, ['NN'])]
+#[ApplyModelColumnAttribute('MedicineId', 'int', null, ['NN'])]
 #[ApplyModelColumnAttribute('UserId', 'int', null, ['NN','CE'])]
 #[ApplyModelColumnAttribute('Quantity', 'int', 254, null, 'NULL')]
 #[ApplyModelColumnAttribute('Created', 'DateTime', null, ['CE'], 'NULL')]
@@ -18,6 +19,7 @@ use DateTime;
  * @property integer $Id            // PK
  * @property integer $ResidentId    // Resident FK
  * @property integer $PillboxId     // Pillbox FK
+ * @property integer $MedicineId    // Medicine FK
  * @property integer $UserId        // User FK
  * @property integer $Quantity      // Number of pills or doses
  * @property DateTime $Created
