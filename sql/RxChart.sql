@@ -56,7 +56,6 @@ CREATE TABLE `Medicine` (
   `Id` int NOT NULL AUTO_INCREMENT,
   `ResidentId` int DEFAULT NULL,
   `UserId` int NOT NULL,
-  `MedicineId` int DEFAULT NULL COMMENT 'Self referencing record when not null indicates it is a child of a pillbox parent record',
   `Drug` varchar(100) NOT NULL,
   `OtherNames` varchar(100) DEFAULT NULL COMMENT 'Other names that the Drug may go by',
   `Strength` varchar(20) DEFAULT NULL,
@@ -68,8 +67,6 @@ CREATE TABLE `Medicine` (
   `Notes` varchar(500) DEFAULT NULL,
   `Active` tinyint NOT NULL DEFAULT '1',
   `OTC` tinyint DEFAULT '0',
-  `Pillbox` tinyint DEFAULT '0' COMMENT 'When true it indicates that this record is a parent pillbox and  If a pillbox the MedicineId MUST be NULL',
-  `Quantity` tinyint DEFAULT NULL COMMENT 'When a child of pillbox (MedicineId !== null) this indicates how many of the medicine is in the pillbox - typically 1 if populated.',
   `Created` timestamp NULL DEFAULT NULL,
   `Updated` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
@@ -77,10 +74,61 @@ CREATE TABLE `Medicine` (
   KEY `Medicine_Barcode` (`Barcode`),
   KEY `fk_Medicine_Resident_idx` (`ResidentId`),
   KEY `fk_Medicine_User` (`UserId`),
-  KEY `fk_Pillbox_idx` (`MedicineId`),
   CONSTRAINT `fk_Medicine_Resident` FOREIGN KEY (`ResidentId`) REFERENCES `Resident` (`Id`),
-  CONSTRAINT `fk_Medicine_User` FOREIGN KEY (`UserId`) REFERENCES `User` (`Id`),
-  CONSTRAINT `fk_Pillbox` FOREIGN KEY (`MedicineId`) REFERENCES `Medicine` (`Id`)
+  CONSTRAINT `fk_Medicine_User` FOREIGN KEY (`UserId`) REFERENCES `User` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `Pillbox`
+--
+
+DROP TABLE IF EXISTS `Pillbox`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Pillbox` (
+  `Id` int NOT NULL AUTO_INCREMENT,
+  `UserId` int NOT NULL,
+  `ResidentId` int NOT NULL,
+  `Name` varchar(45) NOT NULL,
+  `Notes` varchar(300) DEFAULT NULL,
+  `Created` timestamp NULL DEFAULT NULL,
+  `Updated` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `fk_Pillbox_User` (`UserId`),
+  KEY `fk_Pillbox_Resident_idx` (`ResidentId`),
+  CONSTRAINT `fk_Pillbox_Resident` FOREIGN KEY (`ResidentId`) REFERENCES `Resident` (`Id`),
+  CONSTRAINT `fk_Pillbox_User` FOREIGN KEY (`UserId`) REFERENCES `User` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `PillboxItem`
+--
+
+DROP TABLE IF EXISTS `PillboxItem`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `PillboxItem` (
+  `Id` int NOT NULL AUTO_INCREMENT,
+  `UserId` int NOT NULL,
+  `PillboxId` int NOT NULL,
+  `ResidentId` int NOT NULL,
+  `MedicineId` int NOT NULL,
+  `Quantity` tinyint NOT NULL DEFAULT '1',
+  `Created` timestamp NULL DEFAULT NULL,
+  `Updated` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `fk_PillboxItem_User` (`UserId`),
+  KEY `fk_PillboxItem_Pillbox_idx` (`PillboxId`),
+  KEY `fk_PillboxItem_Resident_idx` (`ResidentId`),
+  KEY `fk_PillboxItem_Medicine_idx` (`MedicineId`),
+  CONSTRAINT `fk_PillboxItem_Medicine` FOREIGN KEY (`MedicineId`) REFERENCES `Medicine` (`Id`),
+  CONSTRAINT `fk_PillboxItem_Pillbox` FOREIGN KEY (`PillboxId`) REFERENCES `Pillbox` (`Id`),
+  CONSTRAINT `fk_PillboxItem_Resident` FOREIGN KEY (`ResidentId`) REFERENCES `Resident` (`Id`),
+  CONSTRAINT `fk_PillboxItem_User` FOREIGN KEY (`UserId`) REFERENCES `User` (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -140,4 +188,4 @@ CREATE TABLE `User` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-08-06  1:03:51
+-- Dump completed on 2021-09-30 20:36:20
