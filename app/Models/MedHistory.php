@@ -10,6 +10,7 @@ use DateTime;
 #[ApplyModelColumnAttribute('Id', 'int', null, ['PK', 'NN', 'AI'])]
 #[ApplyModelColumnAttribute('ResidentId', 'int', null, ['NN'])]
 #[ApplyModelColumnAttribute('MedicineId', 'int', null, ['NN'])]
+#[ApplyModelColumnAttribute('PillboxItemId', 'int', null)]
 #[ApplyModelColumnAttribute('UserId', 'int', null, ['NN','CE'])]
 #[ApplyModelColumnAttribute('Notes', 'string', 500)]
 #[ApplyModelColumnAttribute('In', 'int', 254, null, 'NULL')]
@@ -18,13 +19,14 @@ use DateTime;
 #[ApplyModelColumnAttribute('Updated', 'DateTime', null, ['CE'], 'NULL')]
 #[ApplyModelColumnAttribute('deleted_at', 'DateTime', null, ['CE'], 'NULL')]
 /**
- * @property integer $Id            // PK
- * @property integer $ResidentId    // Resident FK
- * @property integer $MedicineId    // Medicine FK
- * @property integer $UserId        // User FK
- * @property string $Notes          // Amount taken or detials about the drug taken
- * @property integer $In            // Number of pills returned
- * @property integer $Out           // Number of pills taken out
+ * @property integer  $Id            // PK
+ * @property integer  $ResidentId    // Resident FK
+ * @property integer  $MedicineId    // Medicine FK
+ * @property integer  $PillboxItemId // PillboxItem FK (can be null)
+ * @property integer  $UserId        // User FK
+ * @property string   $Notes         // Amount taken or details about the drug taken
+ * @property integer  $In            // Number of pills returned
+ * @property integer  $Out           // Number of pills taken out
  * @property DateTime $Created
  * @property DateTime $Updated
  * @property DateTime $deleted_at
