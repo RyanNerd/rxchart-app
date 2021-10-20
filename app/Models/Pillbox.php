@@ -39,5 +39,4 @@ class Pillbox extends ModelBase
             $this->attributes['Notes'] = $value;
         }
     }
-
 }
