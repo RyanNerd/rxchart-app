@@ -22,5 +22,7 @@ class PillboxController implements IController
         $group->get('/pillbox/{id}', PillboxGetAction::class);
 
         $group->delete('/pillbox/{id}', PillboxDeleteAction::class);
+
+        $group->post('/pillbox/log', PillboxLogAction::class);
     }
 }
