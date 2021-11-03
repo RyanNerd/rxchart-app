@@ -33,6 +33,7 @@
         "vlucas/phpdotenv": "^v4.2.0"
     },
     "require-dev": {
+        "phpstan/phpstan": "^0.12.99",
         "squizlabs/php_codesniffer": "3.*"
     },
     "scripts": {

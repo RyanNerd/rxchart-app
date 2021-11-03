@@ -67,6 +67,7 @@ abstract class ModelValidatorBase
         return self::$modelReflectionClass;
     }
 
+    /** @phpstan-ignore-next-line */
     #[ArrayShape(
         [
             'ColumnName' => [

@@ -25,11 +25,12 @@ class ResidentPostAction extends WriteActionBase
      * @param Request $request
      * @param Response $response
      * @return ResponseInterface
+     * @throws \JsonException
      */
     public function __invoke(Request $request, Response $response): ResponseInterface {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
-        $residentModel = clone $this->model;
+        $residentModel = clone $this->model::withTrashed();
 
         // Get the request body
         $parsedBody = $responseBody->getParsedRequest();
@@ -45,7 +46,6 @@ class ResidentPostAction extends WriteActionBase
             ->where('DOB_MONTH', '=', $parsedBody['DOB_MONTH'])
             ->where('DOB_DAY', '=', $parsedBody['DOB_DAY'])
             ->where('Id', '<>', $id)
-            ->withTrashed()
             ->first();
 
         // Did we get any results (dupes)?

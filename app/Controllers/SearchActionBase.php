@@ -26,10 +26,10 @@ class SearchActionBase extends ActionBase
         foreach ($parsedBody as $key => $value) {
             switch ($key) {
                 case 'withTrashed':
-                    $model = $model->withTrashed();
+                    $model = $model::withTrashed();
                     break;
                 case 'onlyTrashed':
-                    $model = $model->onlyTrashed();
+                    $model = $model::onlyTrashed();
                     break;
                 case 'id':      // Ignore id
                     break;      // continue

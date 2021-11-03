@@ -9,7 +9,7 @@ class MedHistoryModelRule
 {
     /**
      * @param ResponseBody $responseBody
-     * @param array
+     * @param array $medHistoryColumnAttributes
      * @return ResponseBody
      */
     public function __invoke(ResponseBody $responseBody, array $medHistoryColumnAttributes): ResponseBody {

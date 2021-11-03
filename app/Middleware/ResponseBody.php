@@ -46,7 +46,7 @@ class ResponseBody extends ResponseCodes
      * @param array $parsedRequest
      */
     public function __construct(array $parsedRequest) {
-        self::setParsedRequest($parsedRequest);
+        $this->setParsedRequest($parsedRequest);
     }
 
     /**
@@ -65,14 +65,13 @@ class ResponseBody extends ResponseCodes
                 'missing' => $this->missing,
                 'message' => $this->messages,
                 'timestamp' => time()
-            ]))
+            ], JSON_THROW_ON_ERROR))
         );
     }
 
     /**
      * Set the parsed request array
      * @param array $parsedRequest
-     * @return ResponseBody
      */
     private function setParsedRequest(array $parsedRequest): void {
         self::$parsedRequest = $parsedRequest;

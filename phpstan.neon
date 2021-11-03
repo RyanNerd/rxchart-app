@@ -1,0 +1,20 @@
+parameters:
+  ignoreErrors:
+    -
+      message: '#Access to an undefined property [a-zA-Z0-9\\_]+::\$Quantity#'
+      path: app/Controllers/Pillbox/PillboxLogAction.php
+    -
+      message: '#Access to an undefined property [a-zA-Z0-9\\_]+::\$MedicineId#'
+      path: app/Controllers/Pillbox/PillboxLogAction.php
+    -
+      message: '#Access to an undefined property [a-zA-Z0-9\\_]+::\$Id#'
+      path: app/Controllers/Pillbox/PillboxLogAction.php
+    -
+      message: '#Access to an undefined property [a-zA-Z0-9\\_]+::\$PillboxItemId#'
+      path: app/Controllers/Pillbox/PillboxLogAction.php
+    -
+      message: '#Access to an undefined property [a-zA-Z0-9\\_]+::\$ResidentId#'
+      path: app/Controllers/Pillbox/PillboxLogAction.php
+    -
+      message: '#Access to an undefined property [a-zA-Z0-9\\_]+::\$Notes#'
+      path: app/Controllers/Pillbox/PillboxLogAction.php

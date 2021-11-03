@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Willow\Models;
 
 use DateTime;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[ApplyModelColumnAttribute('Id', 'int', null, ['PK', 'NN', 'AI'])]
 #[ApplyModelColumnAttribute('UserId', 'int', null, ['NN', 'CE'])]
@@ -30,6 +31,7 @@ use DateTime;
  * @property DateTime $Created
  * @property DateTime $Updated
  * @property DateTime $deleted_at
+ * @mixin SoftDeletes
  */
 class Resident extends ModelBase
 {

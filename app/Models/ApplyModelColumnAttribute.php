@@ -46,6 +46,7 @@ class ApplyModelColumnAttribute
         assert(in_array($this->flags, self::VALID_FLAGS), 'Invalid ModelColumnAttribute.flags');
     }
 
+    /** @phpstan-ignore-next-line */
     #[ArrayShape([
         'ColumnName' => "string",
         'Type' => "string",
