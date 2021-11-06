@@ -1,16 +1,24 @@
 <?php
+/** @noinspection PhpMultipleClassDeclarationsInspection */
 declare(strict_types=1);
 
 namespace Willow\Controllers;
 
+use JsonException;
 use Psr\Http\Message\ResponseInterface;
+use ReflectionException;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Throwable;
 use Willow\Middleware\ResponseBody;
+use Willow\Middleware\ResponseCodes;
 
 abstract class WriteActionBase extends ActionBase
 {
+    /**
+     * @throws ReflectionException
+     * @throws JsonException
+     */
     public function __invoke(Request $request, Response $response): ResponseInterface {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
@@ -28,7 +36,7 @@ abstract class WriteActionBase extends ActionBase
             if ($model === null) {
                 $responseBody = $responseBody
                     ->setData(null)
-                    ->setStatus(ResponseBody::HTTP_NOT_FOUND);
+                    ->setStatus(ResponseCodes::HTTP_NOT_FOUND);
                 return $responseBody();
             }
         }
@@ -61,13 +69,13 @@ abstract class WriteActionBase extends ActionBase
             if ($model->save()) {
                 $responseBody = $responseBody
                     ->setData($model->attributesToArray())
-                    ->setStatus(ResponseBody::HTTP_OK);
+                    ->setStatus(ResponseCodes::HTTP_OK);
             }
         } catch (Throwable $exception) {
-            // Unable to save for some reason so we return error status.
+            // Unable to save for some reason, so we return error status.
             $responseBody = $responseBody
                 ->setData(null)
-                ->setStatus(ResponseBody::HTTP_INTERNAL_SERVER_ERROR)
+                ->setStatus(ResponseCodes::HTTP_INTERNAL_SERVER_ERROR)
                 ->setMessage('Unable to save changes to ' . $model->getTable())->setMessage($exception->getMessage());
         }
         return $responseBody();

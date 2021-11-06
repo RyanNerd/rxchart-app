@@ -26,7 +26,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $Nickname       // Client's nickname
  * @property integer $DOB_YEAR      // Client's birth year
  * @property integer $DOB_MONTH     // Client's birth month
- * @property integer $DOB_DAY       // Client's birth day
+ * @property integer $DOB_DAY       // Client's birthday
  * @property string $Notes          // Details about the client
  * @property DateTime $Created
  * @property DateTime $Updated

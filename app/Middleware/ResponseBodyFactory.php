@@ -17,6 +17,7 @@ class ResponseBodyFactory
      * @return ResponseInterface
      */
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
+        /** @noinspection NullPointerExceptionInspection */
         $arguments = RouteContext::fromRequest($request)->getRoute()->getArguments();
         return $handler
             ->handle(

@@ -1,4 +1,5 @@
 <?php
+/** @noinspection PhpMultipleClassDeclarationsInspection */
 declare(strict_types=1);
 
 namespace Willow\Models;
@@ -24,7 +25,7 @@ class ApplyModelColumnAttribute
         'AI',       // Auto Incrementing
         'G',        // Generated
         'CE',       // This is our own custom flag indicating a Column Exemption for some validation checks
-        'HIDDEN',   // This is our own custom flag indicating that the column is HIdden (informational)
+        'HIDDEN',   // This is our own custom flag indicating that the column is Hidden (informational)
         null
     ];
 
@@ -43,7 +44,7 @@ class ApplyModelColumnAttribute
         private ?array $flags = null,
         private ?string $default = null
     ) {
-        assert(in_array($this->flags, self::VALID_FLAGS), 'Invalid ModelColumnAttribute.flags');
+        assert(in_array($this->flags, self::VALID_FLAGS, true), 'Invalid ModelColumnAttribute.flags');
     }
 
     /** @phpstan-ignore-next-line */

@@ -30,7 +30,7 @@ class ValidateRequest
 
         // Is there an API key?
         if ($apiKey !== null) {
-            $user = User::where('API_KEY', '=', $apiKey)->first();
+            $user = (new User)->where('API_KEY', '=', $apiKey)->first();
 
             if ($user !== null && $user->API_KEY === $apiKey) {
                 // Set global scope for all models

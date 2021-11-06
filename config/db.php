@@ -12,7 +12,7 @@ return [
     IlluminateContainer::class => new IlluminateContainer,
     Dispatcher::class => autowire(Dispatcher::class)->constructor(get(IlluminateContainer::class)),
     'Eloquent' =>
-        function (ContainerInterface $c) {
+        static function (ContainerInterface $c) {
             $eloquent = new Manager($c->get(IlluminateContainer::class));
             $eloquent->addConnection([
                 'driver'    => 'mysql',

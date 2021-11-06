@@ -1,12 +1,15 @@
 <?php
+/** @noinspection PhpMultipleClassDeclarationsInspection */
 declare(strict_types=1);
 
 namespace Willow\Controllers;
 
+use JsonException;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
+use Willow\Middleware\ResponseCodes;
 
 class GetActionBase extends ActionBase
 {
@@ -16,6 +19,7 @@ class GetActionBase extends ActionBase
      * @param Response $response
      * @param array $args
      * @return ResponseInterface
+     * @throws JsonException
      */
     public function __invoke(Request $request, Response $response, array $args): ResponseInterface {
         /** @var ResponseBody $responseBody */
@@ -27,11 +31,11 @@ class GetActionBase extends ActionBase
         // If the record is not found then 404 error, otherwise status is 200.
         if ($model === null) {
             $data = null;
-            $status = ResponseBody::HTTP_NOT_FOUND;
+            $status = ResponseCodes::HTTP_NOT_FOUND;
         } else {
             // Remove any protected fields from the response
             $data = $model->attributesToArray();
-            $status = ResponseBody::HTTP_OK;
+            $status = ResponseCodes::HTTP_OK;
         }
 
         // Set the status and data of the ResponseBody

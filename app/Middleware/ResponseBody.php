@@ -1,8 +1,10 @@
 <?php
+/** @noinspection PhpMultipleClassDeclarationsInspection */
 declare(strict_types=1);
 
 namespace Willow\Middleware;
 
+use JsonException;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Factory\StreamFactory;
 use Slim\Psr7\Headers;
@@ -52,6 +54,7 @@ class ResponseBody extends ResponseCodes
     /**
      * Serialize the payload and Return a Response object
      * @return ResponseInterface
+     * @throws JsonException
      */
     public function __invoke(): ResponseInterface {
         return new Response(
@@ -189,7 +192,7 @@ class ResponseBody extends ResponseCodes
 
     /**
      * Set the response messages
--     * @param string|array $message
+     * @param string|array $message
      * @return ResponseBody
      */
     final public function setMessage(string|array $message): self {

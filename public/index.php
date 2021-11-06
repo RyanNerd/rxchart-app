@@ -9,7 +9,7 @@ use Willow\Main\App;
 require __DIR__ . '/../vendor/autoload.php';
 
 try {
-    // We're always handling CORS so we check the request method up front for OPTIONS and short circuit Slim
+    // We're always handling CORS, so we check the request method up front for OPTIONS and short circuit Slim
     $requestMethod = $_SERVER['REQUEST_METHOD'];
 
     // Is this a pre-flight request (the request method is OPTIONS)? Then start output buffering.

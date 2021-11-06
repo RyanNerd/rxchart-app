@@ -15,9 +15,9 @@ use DateTime;
 #[ApplyModelColumnAttribute('Barcode', 'string', 150)]              // Barcode
 #[ApplyModelColumnAttribute('Directions', 'string', 300)]           // Directions e.g. 'Take one tablet by mouth daily'
 #[ApplyModelColumnAttribute('Notes', 'string', 500)]                // Additional information about the drug
-#[ApplyModelColumnAttribute('FillDateDay', 'int')]                  // Day value for when the drug was filled mm/DD/yyyy
-#[ApplyModelColumnAttribute('FillDateMonth', 'int')]                // Month value when the drug was filled MM/dd/yyyy
-#[ApplyModelColumnAttribute('FillDateYear', 'int')]                 // Year value when the drug was filled mm/dd/YYYY
+#[ApplyModelColumnAttribute('FillDateDay', 'int')]                  // Day when the drug was filled mm/DD/yyyy
+#[ApplyModelColumnAttribute('FillDateMonth', 'int')]                // Month when the drug was filled MM/dd/yyyy
+#[ApplyModelColumnAttribute('FillDateYear', 'int')]                 // Year when the drug was filled mm/dd/YYYY
 #[ApplyModelColumnAttribute('Active', 'bool', null, ['NN'], '1')]   // Indicates if drug is active, appears in dropdown
 #[ApplyModelColumnAttribute('OTC', 'bool', null, null, '0')]        // Is set to true (1) if drug is OTC
 #[ApplyModelColumnAttribute('Created', 'DateTime', null, ['CE'], 'NULL')]

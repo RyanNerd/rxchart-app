@@ -1,4 +1,5 @@
 <?php
+/** @noinspection PhpMultipleClassDeclarationsInspection */
 declare(strict_types=1);
 
 namespace Willow\Models;
@@ -16,7 +17,7 @@ class ApplyModelRule
     }
 
     /**
-     * Return the the modelRule
+     * Return the modelRule
      * @return string
      */
     final public function getModelRule(): string {

@@ -10,6 +10,7 @@ use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Main\GUID;
 use Willow\Middleware\ResponseBody;
+use Willow\Middleware\ResponseCodes;
 use Willow\Models\User;
 
 class AuthenticatePostAction
@@ -32,14 +33,14 @@ class AuthenticatePostAction
         $responseBody = $request->getAttribute('response_body');
         $body = $responseBody->getParsedRequest();
 
-        // Find the record matching username in the the User table
+        // Find the record matching username in the User table
         $userName = $body['username'];
         $user = $this->userModel->where('UserName', '=', $userName)->first();
 
         // Is the user not found or is the password not valid?
         if ($user === null || !password_verify($body['password'], $user->PasswordHash)) {
             $responseBody = $responseBody
-                ->setStatus(ResponseBody::HTTP_UNAUTHORIZED)
+                ->setStatus(ResponseCodes::HTTP_UNAUTHORIZED)
                 ->setData(null)
                 ->setMessage('Not authorized');
             return $responseBody();
@@ -66,7 +67,7 @@ class AuthenticatePostAction
         if (!$user->saveQuietly()) {
             // Save failed for some reason, so reject the request.
             $responseBody = $responseBody
-                ->setStatus(ResponseBody::HTTP_INTERNAL_SERVER_ERROR)
+                ->setStatus(ResponseCodes::HTTP_INTERNAL_SERVER_ERROR)
                 ->setData(null)
                 ->setMessage('Unable to set new API_KEY');
             return $responseBody();
@@ -75,7 +76,7 @@ class AuthenticatePostAction
         // Request is valid and authenticated!
         $responseBody = $responseBody
             ->setIsAuthenticated()
-            ->setStatus(ResponseBody::HTTP_OK)
+            ->setStatus(ResponseCodes::HTTP_OK)
             ->setData([
                 'apiKey' => $user->API_KEY,
                 'organization' => $user->Organization

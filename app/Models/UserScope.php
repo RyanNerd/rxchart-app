@@ -19,7 +19,7 @@ class UserScope implements Scope
      */
     final public function apply(Builder $builder, Model $model): void {
         if (self::$userId !== null && $model->getTable() !== 'User') {
-            $builder->where('UserId', '=', static::$userId);
+            $builder->where('UserId', '=', self::$userId);
         }
     }
 

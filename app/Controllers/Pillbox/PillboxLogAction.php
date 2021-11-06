@@ -1,12 +1,15 @@
 <?php
+/** @noinspection PhpMultipleClassDeclarationsInspection */
 declare(strict_types=1);
 
 namespace Willow\Controllers\Pillbox;
 
+use JsonException;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
+use Willow\Middleware\ResponseCodes;
 use Willow\Models\MedHistory;
 use Willow\Models\Medicine;
 use Willow\Models\PillboxItem;
@@ -25,6 +28,7 @@ class PillboxLogAction
      * @param Request $request
      * @param Response $response
      * @return ResponseInterface
+     * @throws JsonException
      */
     public function __invoke(Request $request, Response $response): ResponseInterface {
         /** @var ResponseBody $responseBody */
@@ -49,29 +53,27 @@ class PillboxLogAction
                     $id = $pillboxItem->Id;
                     // Look up the related Medicine record, proceed with processing only if found.
                     $medicineModel = $this->medicine->find($medicineId);
-                    if ($medicineModel) {
-                        // We only log active medications
-                        if ($medicineModel->Active) {
-                            $medHistoryModel = clone $this->medHistory;
-                            $medHistoryModel->PillboxItemId = $id;
-                            $medHistoryModel->ResidentId = $pillboxItem->ResidentId;
-                            $medHistoryModel->MedicineId = $medicineId;
-                            $medHistoryModel->Notes = (string)$quantity;
+                    // We only log active medications
+                    if ($medicineModel && $medicineModel->Active) {
+                        $medHistoryModel = clone $this->medHistory;
+                        $medHistoryModel->PillboxItemId = $id;
+                        $medHistoryModel->ResidentId = $pillboxItem->ResidentId;
+                        $medHistoryModel->MedicineId = $medicineId;
+                        $medHistoryModel->Notes = (string)$quantity;
 
-                            // If the drug was logged successfully then add the model to the $drugLog array,
-                            // otherwise return an error response
-                            if ($medHistoryModel->save()) {
-                                $drugLog[] = $medHistoryModel->toArray();
-                            } else {
-                                $responseBody = $responseBody->setData(null);
-                                $responseBody = $responseBody->setStatus(ResponseBody::HTTP_INTERNAL_SERVER_ERROR);
-                                $responseBody =
-                                    $responseBody->
-                                    setMessage(
-                                        "Pillbox MedHistory insert failure. PillboxId: $pillboxId PillboxItemId: $id"
-                                    );
-                                return $responseBody();
-                            }
+                        // If the drug was logged successfully then add the model to the $drugLog array,
+                        // otherwise return an error response
+                        if ($medHistoryModel->save()) {
+                            $drugLog[] = $medHistoryModel->toArray();
+                        } else {
+                            $responseBody = $responseBody->setData(null);
+                            $responseBody = $responseBody->setStatus(ResponseCodes::HTTP_INTERNAL_SERVER_ERROR);
+                            $responseBody =
+                                $responseBody->
+                                setMessage(
+                                    "Pillbox MedHistory insert failure. PillboxId: $pillboxId PillboxItemId: $id"
+                                );
+                            return $responseBody();
                         }
                     }
                 }
@@ -80,7 +82,7 @@ class PillboxLogAction
 
         // All drugs logged are sent back as a response (empty array is a valid response).
         $responseBody = $responseBody->setData($drugLog);
-        $responseBody = $responseBody->setStatus(ResponseBody::HTTP_OK);
+        $responseBody = $responseBody->setStatus(ResponseCodes::HTTP_OK);
         return $responseBody();
     }
 }

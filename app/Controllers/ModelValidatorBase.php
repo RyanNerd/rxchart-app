@@ -1,12 +1,15 @@
 <?php
+/** @noinspection PhpMultipleClassDeclarationsInspection */
 declare(strict_types=1);
 
 namespace Willow\Controllers;
 
 use JetBrains\PhpStorm\ArrayShape;
+use JsonException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use ReflectionClass;
+use ReflectionException;
 use Slim\Psr7\Request;
 use Willow\Middleware\ResponseBody;
 use Willow\Middleware\ResponseCodes;
@@ -34,7 +37,7 @@ abstract class ModelValidatorBase
      * @param Request $request
      * @param RequestHandler $handler
      * @return ResponseInterface
-     * @throws \ReflectionException
+     * @throws ReflectionException|JsonException
      */
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
         $modelRuleAttributes = self::getModelReflectionClass($this->modelClass)->getAttributes(ApplyModelRule::class);
@@ -58,7 +61,7 @@ abstract class ModelValidatorBase
      * If the static variable $modelReflectionClass is null then set it, otherwise return self::$modelReflectionClass
      * @param string $modelClass
      * @return ReflectionClass
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function getModelReflectionClass(string $modelClass): ReflectionClass {
         if (self::$modelReflectionClass === null) {
@@ -67,7 +70,9 @@ abstract class ModelValidatorBase
         return self::$modelReflectionClass;
     }
 
-    /** @phpstan-ignore-next-line */
+    /** @phpstan-ignore-next-line
+     * @throws ReflectionException
+     */
     #[ArrayShape(
         [
             'ColumnName' => [

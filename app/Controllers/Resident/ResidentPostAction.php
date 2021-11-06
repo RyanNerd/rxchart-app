@@ -1,13 +1,17 @@
 <?php
+/** @noinspection PhpMultipleClassDeclarationsInspection */
 declare(strict_types=1);
 
 namespace Willow\Controllers\Resident;
 
+use JsonException;
 use Psr\Http\Message\ResponseInterface;
+use ReflectionException;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Controllers\WriteActionBase;
 use Willow\Middleware\ResponseBody;
+use Willow\Middleware\ResponseCodes;
 use Willow\Models\Resident;
 
 class ResidentPostAction extends WriteActionBase
@@ -25,7 +29,7 @@ class ResidentPostAction extends WriteActionBase
      * @param Request $request
      * @param Response $response
      * @return ResponseInterface
-     * @throws \JsonException
+     * @throws JsonException|ReflectionException
      */
     public function __invoke(Request $request, Response $response): ResponseInterface {
         /** @var ResponseBody $responseBody */
@@ -39,6 +43,7 @@ class ResidentPostAction extends WriteActionBase
         $id = $parsedBody['Id'] ?? null;
 
         // Force UserScope and look for existing records including trashed records
+        /** @noinspection NullPointerExceptionInspection */
         $residentModel = $residentModel
             ->where('FirstName', '=', $parsedBody['FirstName'])
             ->where('LastName', '=', $parsedBody['LastName'])
@@ -51,24 +56,20 @@ class ResidentPostAction extends WriteActionBase
         // Did we get any results (dupes)?
         if ($residentModel !== null) {
             // Are we adding a new record?
-            if ($id === null) {
-                // Is the client deactivated (trashed)?
-                if ($residentModel->trashed()) {
-                    // Undelete the record
-                    if ($residentModel->restore()) {
-                        // Return the response as the restored record.
-                        $responseBody = $responseBody
-                            ->setData($residentModel->attributesToArray())
-                            ->setStatus(ResponseBody::HTTP_OK);
-                        return $responseBody();
-                    }
-                }
+            // Is the client deactivated (trashed)?
+            // Undelete the record
+            if (($id === null) && $residentModel->trashed() && $residentModel->restore()) {
+                // Return the response as the restored record.
+                $responseBody = $responseBody
+                    ->setData($residentModel->attributesToArray())
+                    ->setStatus(ResponseCodes::HTTP_OK);
+                return $responseBody();
             }
 
             // Prevent inserting duplicate clients
             $responseBody = $responseBody
                 ->setData(null)
-                ->setStatus(ResponseBody::HTTP_CONFLICT)
+                ->setStatus(ResponseCodes::HTTP_CONFLICT)
                 ->setMessage('Duplicates not allowed')
                 ->setMessage('Resident.Id ' . $id . ' and ' . $residentModel->Id . ' are the same person');
             return $responseBody();

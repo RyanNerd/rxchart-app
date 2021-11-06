@@ -1,12 +1,15 @@
 <?php
+/** @noinspection PhpMultipleClassDeclarationsInspection */
 declare(strict_types=1);
 
 namespace Willow\Controllers;
 
+use JsonException;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
+use Willow\Middleware\ResponseCodes;
 
 class SearchActionBase extends ActionBase
 {
@@ -14,6 +17,7 @@ class SearchActionBase extends ActionBase
      * @param Request $request
      * @param Response $response
      * @return ResponseInterface
+     * @throws JsonException
      * @link https://laravel.com/docs/8.x/queries
      */
     public function __invoke(Request $request, Response $response): ResponseInterface {
@@ -48,7 +52,7 @@ class SearchActionBase extends ActionBase
                         // Invalid parameters
                         $responseBody = $responseBody
                             ->setData(null)
-                            ->setStatus(ResponseBody::HTTP_BAD_REQUEST)
+                            ->setStatus(ResponseCodes::HTTP_BAD_REQUEST)
                             ->setMessage('invalid parameters for: ' . $key);
                         return $responseBody();
                     }
@@ -61,10 +65,10 @@ class SearchActionBase extends ActionBase
         // Did we get any results?
         if ($models !== null && count($models) > 0) {
             $data = $models->toArray();
-            $status = ResponseBody::HTTP_OK;
+            $status = ResponseCodes::HTTP_OK;
         } else {
             $data = null;
-            $status = ResponseBody::HTTP_NOT_FOUND;
+            $status = ResponseCodes::HTTP_NOT_FOUND;
         }
 
         $responseBody = $responseBody

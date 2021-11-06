@@ -1,25 +1,31 @@
 <?php
+/** @noinspection PhpMultipleClassDeclarationsInspection */
 declare(strict_types=1);
 
 namespace Willow\Controllers\Authenticate;
 
+use JsonException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Respect\Validation\Validator as V;
 use Willow\Middleware\ResponseBody;
+use Willow\Middleware\ResponseCodes;
 
 class AuthenticatePostValidator
 {
     private const ALLOWED = ['username', 'password', 'id'];
 
+    /**
+     * @throws JsonException
+     */
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
         $parsedRequest = $responseBody->getParsedRequest();
 
         foreach ($parsedRequest as $item => $value) {
-            if (!in_array($item, self::ALLOWED)) {
+            if (!in_array($item, self::ALLOWED, true)) {
                 $responseBody->registerParam('invalid', $item, null);
             }
         }
@@ -34,7 +40,7 @@ class AuthenticatePostValidator
             $responseBody->registerParam('required', 'password', 'string');
         }
 
-        // id can be part of the request but it MUST be null/empty
+        // id can be part of the request, but it MUST be null/empty
         if (V::exists()->validate($parsedRequest['id']) && V::notEmpty()->validate($parsedRequest['id'])) {
             $responseBody->registerParam('invalid', 'id', 'null');
         }
@@ -42,7 +48,7 @@ class AuthenticatePostValidator
         // If there are any missing required, or invalid data points then we short circuit and return invalid request.
         if ($responseBody->hasMissingRequiredOrInvalid()) {
             $responseBody = $responseBody
-                ->setStatus(ResponseBody::HTTP_BAD_REQUEST)
+                ->setStatus(ResponseCodes::HTTP_BAD_REQUEST)
                 ->setMessage('Missing or invalid request');
             return $responseBody();
         }

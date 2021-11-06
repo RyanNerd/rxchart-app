@@ -1,12 +1,15 @@
 <?php
+/** @noinspection PhpMultipleClassDeclarationsInspection */
 declare(strict_types=1);
 
 namespace Willow\Controllers;
 
+use JsonException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Willow\Middleware\ResponseBody;
+use Willow\Middleware\ResponseCodes;
 
 class SearchValidatorBase extends ActionBase
 {
@@ -58,6 +61,7 @@ class SearchValidatorBase extends ActionBase
      * @param Request $request
      * @param RequestHandler $handler
      * @return ResponseInterface
+     * @throws JsonException
      */
     public function __invoke(Request $request, RequestHandler $handler): ResponseInterface {
         /** @var ResponseBody $responseBody */
@@ -66,7 +70,7 @@ class SearchValidatorBase extends ActionBase
         $parsedKeys = array_keys($parsedBody);
 
         foreach ($parsedKeys as $key) {
-            if (!in_array($key, self::ALLOWED_PARAMETER_KEYS)) {
+            if (!in_array($key, self::ALLOWED_PARAMETER_KEYS, true)) {
                 $responseBody->registerParam('invalid', $key, null);
             }
         }
@@ -75,7 +79,7 @@ class SearchValidatorBase extends ActionBase
         if ($responseBody->hasMissingRequiredOrInvalid()) {
             $responseBody = $responseBody
                 ->setData(null)
-                ->setStatus(ResponseBody::HTTP_BAD_REQUEST)
+                ->setStatus(ResponseCodes::HTTP_BAD_REQUEST)
                 ->setMessage('Invalid search criteria');
             return $responseBody();
         }

@@ -37,9 +37,7 @@ class ModelDefaultRules
             $this->checkRequestHasNoUnexpectedParameters(($responseBody), $modelColumnAttributes, $parsedRequest);
 
         // Max length
-        $responseBody
-            = $this->checkRequestMaxLength(($responseBody), $modelColumnAttributes);
-        return $responseBody;
+        return $this->checkRequestMaxLength(($responseBody), $modelColumnAttributes);
     }
 
     /**
@@ -61,7 +59,7 @@ class ModelDefaultRules
                 $flags = $fieldAttributes['Flags'];
 
                 // Ignore column exemptions
-                if ($flags === null || in_array('CE', $flags)) {
+                if ($flags === null || in_array('CE', $flags, true)) {
                     continue;
                 }
                 $responseBody
@@ -80,24 +78,22 @@ class ModelDefaultRules
             $flags = $fieldAttributes['Flags'];
 
             // If there are no flags or if there's a column exception then skip
-            if ($flags === null || in_array('CE', $flags)) {
+            if ($flags === null || in_array('CE', $flags, true)) {
                 continue;
             }
 
             // Do we have a Not Null flag?
-            if (in_array('NN', $flags)) {
-                // Do we not have a Primary Key flag?
-                if (!in_array('PK', $flags)) {
-                    $value = $parsedRequest[$columnName];
-                    if ($value === null) {
-                        $responseBody
-                            ->registerParam(
-                                'invalid',
-                                $columnName,
-                                $fieldAttributes['Type'],
-                                "$columnName cannot be null, $value given"
-                            );
-                    }
+            // Do we not have a Primary Key flag?
+            if (in_array('NN', $flags, true) && !in_array('PK', $flags, true)) {
+                $value = $parsedRequest[$columnName];
+                if ($value === null) {
+                    $responseBody
+                        ->registerParam(
+                            'invalid',
+                            $columnName,
+                            $fieldAttributes['Type'],
+                            "$columnName cannot be null, $value given"
+                        );
                 }
             }
         }
@@ -105,7 +101,7 @@ class ModelDefaultRules
     }
 
     /**
-     * Check that there are aren't any extraneous request parameters
+     * Check that there aren't any extraneous request parameters
      * @param ResponseBody $responseBody
      * @param array $modelColumnAttributes
      * @param array $parsedRequest
@@ -122,7 +118,7 @@ class ModelDefaultRules
             // For each request parameter (key)
             foreach ($outLiars as $oLiar => $v) {
                 // Is the key in the WHITE_LIST? If not register that the requested parameter/key is invalid.
-                if (!in_array($oLiar, self::WHITE_LIST)) {
+                if (!in_array($oLiar, self::WHITE_LIST, true)) {
                     $responseBody->registerParam('invalid', $oLiar, null, "Unrecognized parameter: $oLiar");
                 }
             }
@@ -131,7 +127,7 @@ class ModelDefaultRules
     }
 
     /**
-     * For any column attribute value for length check that the request parmeter value is under the length
+     * For any column attribute value for length check that the request parameter value is under the length
      * @param ResponseBody $responseBody
      * @param array $modelColumnAttributes
      * @return ResponseBody
@@ -140,7 +136,7 @@ class ModelDefaultRules
         $parsedRequest = $responseBody->getParsedRequest();
         foreach ($modelColumnAttributes as $columnName => $fieldAttributes) {
             // Does the parameter exist in the request?
-            if (key_exists($columnName, $parsedRequest)) {
+            if (array_key_exists($columnName, $parsedRequest)) {
                 // Get the max length from the column attribute
                 $len = $fieldAttributes['Length'];
                 // Is the max length not null?
@@ -152,31 +148,27 @@ class ModelDefaultRules
                         $columnType = $fieldAttributes['Type'];
 
                         // If the column type is string then compare the length of the string to the max length
-                        if ($columnType === 'string') {
-                            // Does the request value exceed the maximum value?
-                            if (strlen($value) > $len) {
-                                $responseBody
-                                    ->registerParam(
-                                        'invalid',
-                                        $columnName,
-                                        'string',
-                                        "$columnName exceeded max length of $len"
-                                    );
-                            }
+                        // Does the request value exceed the maximum value?
+                        if (($columnType === 'string') && strlen($value) > $len) {
+                            $responseBody
+                                ->registerParam(
+                                    'invalid',
+                                    $columnName,
+                                    'string',
+                                    "$columnName exceeded max length of $len"
+                                );
                         }
 
                         // If the column type is int then compare the actual request value to the max length
-                        if ($columnType === 'int') {
-                            // Does the request value exceed the max length?
-                            if ($value > $len) {
-                                $responseBody
-                                    ->registerParam(
-                                        'invalid',
-                                        $columnName,
-                                        'int',
-                                        "$columnName exceeded max length of $len"
-                                    );
-                            }
+                        // Does the request value exceed the max length?
+                        if (($columnType === 'int') && $value > $len) {
+                            $responseBody
+                                ->registerParam(
+                                    'invalid',
+                                    $columnName,
+                                    'int',
+                                    "$columnName exceeded max length of $len"
+                                );
                         }
                     }
                 }
