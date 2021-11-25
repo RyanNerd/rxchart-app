@@ -47,6 +47,13 @@ class Medicine extends ModelBase
     protected $table = 'Medicine';
 
     /**
+     * Override Drug field with trim()
+     * @param string $value
+     */
+    final public function setDrugAttribute(string $value): void {
+        $this->attributes['Drug'] = trim($value);
+    }
+    /**
      * Override Strength field to null if empty string
      * @param string|null $value
      */
