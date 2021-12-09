@@ -23,17 +23,24 @@ class SearchActionBase extends ActionBase
     public function __invoke(Request $request, Response $response): ResponseInterface {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
-        $model = clone $this->model;
 
         // Get the request to build the query
         $parsedBody = $responseBody->getParsedRequest();
+
+        // Special handling for withTrashed and onlyTrashed
+        if (array_key_exists('withTrashed', $parsedBody)) {
+            $model = $this->model::withTrashed(true);
+        } elseif (array_key_exists('onlyTrashed', $parsedBody)) {
+            $model = $this->model::onlyTrashed();
+        } else {
+            $model = $this->model;
+        }
+        $model = $model->clone();
+
         foreach ($parsedBody as $key => $value) {
             switch ($key) {
-                case 'withTrashed':
-                    $model = $model::withTrashed();
-                    break;
                 case 'onlyTrashed':
-                    $model = $model::onlyTrashed();
+                case 'withTrashed':
                     break;
                 case 'id':      // Ignore id
                     break;      // continue
