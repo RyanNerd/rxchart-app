@@ -41,7 +41,7 @@
         "cs": ["phpcs --standard=phpcs.xml ."],
         "sniff": ["phpcs --standard=phpcs.xml "],
         "fix": ["phpcbf --standard=phpcs.xml "],
-        "phpstan": ["vendor/bin/phpstan analyze app --level 5"]
+        "phpstan": ["vendor/bin/phpstan analyze app --level 5 -c phpstan.neon"]
     },
     "autoload": {
         "psr-4": {
