@@ -40,7 +40,8 @@
     "scripts": {
         "cs": ["phpcs --standard=phpcs.xml ."],
         "sniff": ["phpcs --standard=phpcs.xml "],
-        "fix": ["phpcbf --standard=phpcs.xml "]
+        "fix": ["phpcbf --standard=phpcs.xml "],
+        "phpstan": ["vendor/bin/phpstan analyze app --level 5"]
     },
     "autoload": {
         "psr-4": {

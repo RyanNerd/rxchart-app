@@ -34,7 +34,7 @@ class ApplyModelColumnAttribute
      * @param string $columnName
      * @param string $datatype
      * @param int|null $length
-     * @param bool[]|null $flags
+     * @param string[]|null $flags
      * @param string|null $default
      */
     public function __construct(
