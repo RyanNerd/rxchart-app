@@ -5,7 +5,6 @@ namespace Willow\Middleware;
 
 use Slim\Routing\RouteCollectorProxy;
 use Willow\Controllers\Authenticate\AuthenticateController;
-use Willow\Controllers\Eloquent\EloquentController;
 use Willow\Controllers\MedHistory\MedHistoryController;
 use Willow\Controllers\Medicine\MedicineController;
 use Willow\Controllers\Pillbox\PillboxController;
@@ -20,8 +19,7 @@ class RegisterRouteControllers
         private MedicineController $medicineController,
         private PillboxController $pillboxController,
         private PillboxItemController $pillboxItemController,
-        private ResidentController $residentController,
-        private EloquentController $eloquentController
+        private ResidentController $residentController
     ) {
     }
 
@@ -33,7 +31,6 @@ class RegisterRouteControllers
         $this->pillboxController->register($collectorProxy);
         $this->pillboxItemController->register($collectorProxy);
         $this->residentController->register($collectorProxy);
-        $this->eloquentController->register($collectorProxy);
         return $this;
     }
 }
