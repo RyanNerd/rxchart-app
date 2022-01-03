@@ -1,16 +1,16 @@
 <?php
-/** @noinspection PhpMultipleClassDeclarationsInspection */
 declare(strict_types=1);
 
 namespace Willow\Controllers;
 
 use JsonException;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Psr7\Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Routing\RouteContext;
 use Willow\Middleware\ResponseBody;
 use Willow\Middleware\ResponseCodes;
+use Willow\Models\Pin;
 
 class ApiValidator
 {
@@ -22,8 +22,16 @@ class ApiValidator
         // If we are trying to authenticate [get an API_KEY] then carry on.
         if (!array_key_exists('api_key', $request->getQueryParams())) {
             $route = RouteContext::fromRequest($request)->getRoute();
-            if ($route && $route->getMethods()[0] === 'POST' && str_ends_with($route->getPattern(), '/authenticate')) {
-                return $handler->handle($request);
+            if ($route && $route->getMethods()[0] === 'POST') {
+                $pattern = $route->getPattern();
+
+                if (str_ends_with($pattern, '/pin/authenticate')) {
+                    return $handler->handle($request);
+                }
+
+                if (str_ends_with($pattern, '/authenticate')) {
+                    return $handler->handle($request);
+                }
             }
         }
 

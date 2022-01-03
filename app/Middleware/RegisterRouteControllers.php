@@ -9,6 +9,7 @@ use Willow\Controllers\MedHistory\MedHistoryController;
 use Willow\Controllers\Medicine\MedicineController;
 use Willow\Controllers\Pillbox\PillboxController;
 use Willow\Controllers\PillboxItem\PillboxItemController;
+use Willow\Controllers\Pin\PinController;
 use Willow\Controllers\Resident\ResidentController;
 
 class RegisterRouteControllers
@@ -19,7 +20,8 @@ class RegisterRouteControllers
         private MedicineController $medicineController,
         private PillboxController $pillboxController,
         private PillboxItemController $pillboxItemController,
-        private ResidentController $residentController
+        private ResidentController $residentController,
+        private PinController $pinController
     ) {
     }
 
@@ -31,6 +33,7 @@ class RegisterRouteControllers
         $this->pillboxController->register($collectorProxy);
         $this->pillboxItemController->register($collectorProxy);
         $this->residentController->register($collectorProxy);
+        $this->pinController->register($collectorProxy);
         return $this;
     }
 }

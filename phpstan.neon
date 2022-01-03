@@ -19,3 +19,5 @@ parameters:
       message: '#Access to an undefined property [a-zA-Z0-9\\_]+::\$Notes#'
       path: app/Controllers/Pillbox/PillboxLogAction.php
 
+  universalObjectCratesClasses:
+    - Willow\Models\Pin

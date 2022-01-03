@@ -1,19 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace Willow\Controllers\Authenticate;
+namespace Willow\Controllers\Pin;
 
 use JsonException;
 use Psr\Http\Message\ResponseInterface;
-use Slim\Psr7\Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Respect\Validation\Validator as V;
+use Slim\Psr7\Request;
 use Willow\Middleware\ResponseBody;
 use Willow\Middleware\ResponseCodes;
 
-class AuthenticatePostValidator
+class PinAuthenticateValidator
 {
-    private const ALLOWED = ['username', 'password', 'id'];
+    private const ALLOWED = ['pin_value', 'id'];
 
     /**
      * @throws JsonException
@@ -29,14 +29,9 @@ class AuthenticatePostValidator
             }
         }
 
-        // User is required
-        if (!V::key('username')->validate($parsedRequest) || !V::notEmpty()->validate($parsedRequest['username'])) {
-            $responseBody->registerParam('required', 'username', 'string');
-        }
-
-        // Password is required
-        if (!V::key('password')->validate($parsedRequest) || !V::notEmpty()->validate($parsedRequest['password'])) {
-            $responseBody->registerParam('required', 'password', 'string');
+        // pin_value is required
+        if (!V::key('pin_value')->validate($parsedRequest) || !V::notEmpty()->validate($parsedRequest['pin_value'])) {
+            $responseBody->registerParam('required', 'pin_value', 'string');
         }
 
         // id can be part of the request, but it MUST be null/empty
