@@ -13,7 +13,7 @@ use Willow\Middleware\ResponseCodes;
 
 class PinAuthenticateValidator
 {
-    private const ALLOWED = ['pin_value', 'id'];
+    private const ALLOWED = ['pin_value'];
 
     /**
      * @throws JsonException
@@ -32,11 +32,6 @@ class PinAuthenticateValidator
         // pin_value is required
         if (!V::key('pin_value')->validate($parsedRequest) || !V::notEmpty()->validate($parsedRequest['pin_value'])) {
             $responseBody->registerParam('required', 'pin_value', 'string');
-        }
-
-        // id can be part of the request, but it MUST be null/empty
-        if (V::exists()->validate($parsedRequest['id']) && V::notEmpty()->validate($parsedRequest['id'])) {
-            $responseBody->registerParam('invalid', 'id', 'null');
         }
 
         // If there are any missing required, or invalid data points then we short circuit and return invalid request.

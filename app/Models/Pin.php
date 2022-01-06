@@ -15,11 +15,11 @@ use DateTime;
 #[ApplyModelColumnAttribute('Updated', 'DateTime', null, ['CE'], 'NULL')]
 #[ApplyModelColumnAttribute('deleted_at', 'DateTime', null, ['CE'], 'NULL')]
 /**
- * @property integer  $Id           // Pin PK
- * @property integer  $ResidentId   // Resident FK
- * @property integer  $UserId       // User FK
- * @property string   $PinValue     // Generated pin value
- * @property string   $Image        // The image string (e.g. data:image/png;base64
+ * @property integer $Id            // Primary Key
+ * @property string $ResidentId     // Resident FK
+ * @property string $UserId         // User FK       // Username
+ * @property string $PinValue       // The six character pin value
+ * @property string $Image          // The image string (e.g. "data:image/png;base64...")
  * @property DateTime $Created
  * @property DateTime $Updated
  * @property DateTime $deleted_at
