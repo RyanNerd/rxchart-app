@@ -24,7 +24,7 @@ class PinGenerateAction
     }
 
     /**
-     * Handle DELETE request
+     * Handle Generate request
      * @param Request $request
      * @param Response $response
      * @param array $args
@@ -39,16 +39,13 @@ class PinGenerateAction
         $clientId = $parsedRequest['client_id'];
 
         $pinModel = clone $this->pin;
-        while (true) {
+        do {
             $pinValue = random_int(10 ** (self::DIGIT_COUNT - 1), (10 ** self::DIGIT_COUNT) -1);
             $pinExists = $this->pin
                 ->where('ResidentId', '=', $clientId)
                 ->where('PinValue', '=', $pinValue)
-                ->get();
-            if (count($pinExists) === 0) {
-                break;
-            }
-        }
+                ->first();
+        } while ($pinExists !== null);
 
         $pinModel->ResidentId = $clientId;
         $pinModel->PinValue = $pinValue;
