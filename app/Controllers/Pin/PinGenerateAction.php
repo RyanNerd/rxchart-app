@@ -58,7 +58,12 @@ class PinGenerateAction
             $pinArray = str_split((string)$pinValue);
             $responseBody = $responseBody
                 ->setStatus(ResponseCodes::HTTP_OK)
-                ->setData(["client_id" => $clientId, "pin" => $pinValue, "pin_array" => $pinArray]);
+                ->setData([
+                    "pin_id" => $pinModel->Id,
+                    "client_id" => $clientId,
+                    "pin" => $pinValue,
+                    "pin_array" => $pinArray
+                ]);
         }
         return $responseBody();
     }
