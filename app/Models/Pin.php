@@ -10,7 +10,7 @@ use DateTime;
 #[ApplyModelColumnAttribute('ResidentId', 'int', null)]             // Resident FK
 #[ApplyModelColumnAttribute('UserId', 'int', null, ['NN','CE'])]    // User FK
 #[ApplyModelColumnAttribute('PinValue', 'string', 6)]               // The generated PIN
-#[ApplyModelColumnAttribute('Image', 'string', 6000)]               // Image as a blob
+#[ApplyModelColumnAttribute('Image', 'string',null)]              // Image as a blob
 #[ApplyModelColumnAttribute('Created', 'DateTime', null, ['CE'], 'NULL')]
 #[ApplyModelColumnAttribute('Updated', 'DateTime', null, ['CE'], 'NULL')]
 #[ApplyModelColumnAttribute('deleted_at', 'DateTime', null, ['CE'], 'NULL')]

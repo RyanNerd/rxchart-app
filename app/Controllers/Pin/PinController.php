@@ -16,7 +16,7 @@ class PinController implements IController
         $group->post('/pin/search', PinSearchAction::class)
             ->add(PinSearchValidator::class);
 
-        $group->post('/pin', PinUpdateAction::class)
+        $group->post('/pin/update', PinUpdateAction::class)
             ->add(PinModelValidator::class);
 
         $group->get('/pin/{id}', PinGetAction::class);
