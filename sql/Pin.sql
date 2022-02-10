@@ -8,6 +8,7 @@ CREATE TABLE `Pin` (
     `Updated` timestamp NULL DEFAULT NULL,
     `deleted_at` timestamp NULL DEFAULT NULL,
     PRIMARY KEY (`Id`),
+    UNIQUE KEY `unique_pin` (`ResidentId`,`UserId`,`PinValue`),
     KEY `fk_Pin_User` (`UserId`),
     KEY `fk_Pin_Resident` (`ResidentId`),
     CONSTRAINT `fk_Pin_Resident` FOREIGN KEY (`ResidentId`) REFERENCES `Resident` (`Id`),
