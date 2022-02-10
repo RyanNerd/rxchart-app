@@ -1,5 +1,4 @@
 <?php
-/** @noinspection PhpMultipleClassDeclarationsInspection */
 declare(strict_types=1);
 
 namespace Willow\Controllers;
@@ -76,7 +75,8 @@ abstract class WriteActionBase extends ActionBase
             $responseBody = $responseBody
                 ->setData(null)
                 ->setStatus(ResponseCodes::HTTP_INTERNAL_SERVER_ERROR)
-                ->setMessage('Unable to save changes to ' . $model->getTable())->setMessage($exception->getMessage());
+                ->setMessage('Unable to save changes to ' . $model->getTable())
+                ->setMessage($exception->getMessage());
         }
         return $responseBody();
     }

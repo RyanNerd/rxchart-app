@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Willow\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Psr7\Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Willow\Models\User;
 use Willow\Models\UserScope;
@@ -23,10 +23,6 @@ class ValidateRequest
 
         // Get the API key from the request
         $apiKey = $responseBody->getParsedRequest()['api_key'] ?? null;
-
-        if ($apiKey === null && !empty($_ENV['API_OVERRIDE'] ?? null)) {
-            $apiKey = $_ENV['API_OVERRIDE'];
-        }
 
         // Is there an API key?
         if ($apiKey !== null) {
