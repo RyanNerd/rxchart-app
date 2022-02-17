@@ -5,12 +5,11 @@ namespace Willow\Controllers;
 
 use JsonException;
 use Psr\Http\Message\ResponseInterface;
-use Slim\Psr7\Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
+use Slim\Psr7\Request;
 use Slim\Routing\RouteContext;
 use Willow\Middleware\ResponseBody;
 use Willow\Middleware\ResponseCodes;
-use Willow\Models\Pin;
 
 class ApiValidator
 {

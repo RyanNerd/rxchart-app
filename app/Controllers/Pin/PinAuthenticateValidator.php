@@ -23,15 +23,33 @@ class PinAuthenticateValidator
         $responseBody = $request->getAttribute('response_body');
         $parsedRequest = $responseBody->getParsedRequest();
 
+        // Reject any items that are not allowed
         foreach ($parsedRequest as $item => $value) {
             if (!in_array($item, self::ALLOWED, true)) {
-                $responseBody->registerParam('invalid', $item, null);
+                $responseBody->registerParam('invalid', $item, null, 'invalid parameter ' . $item);
             }
         }
 
-        // pin_value is required
-        if (!V::key('pin_value')->validate($parsedRequest) || !V::notEmpty()->validate($parsedRequest['pin_value'])) {
+        $pinValue = $parsedRequest['pin_value'] ?? '';
+
+        // pin_value is required and can't be empty
+        if (!V::key('pin_value')->validate($parsedRequest) || !V::notEmpty()->validate($pinValue)) {
             $responseBody->registerParam('required', 'pin_value', 'string');
+        }
+
+        // pin_value must be exactly six characters in length
+        if (!V::length(6, 6)->validate($pinValue)) {
+            $responseBody->registerParam(
+                'invalid',
+                'pin_value',
+                'string',
+                'pin_value must be six characters in length'
+            );
+        }
+
+        // pin_value must be a string only containing digits
+        if (!V::digit()->validate($parsedRequest['pin_value'])) {
+            $responseBody->registerParam('invalid', 'pin_value', 'string');
         }
 
         // If there are any missing required, or invalid data points then we short circuit and return invalid request.
