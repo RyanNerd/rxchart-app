@@ -28,7 +28,8 @@ class ResponseBodyFactory
                             array_merge(
                                 $arguments,
                                 $request->getQueryParams(),
-                                $request->getParsedBody() ?? []
+                                $request->getParsedBody() ?? [],
+                                ['uploaded_files' => $request->getUploadedFiles()]
                             )
                         )
                     )
