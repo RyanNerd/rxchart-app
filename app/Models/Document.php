@@ -18,12 +18,12 @@ use DateTime;
 #[ApplyModelColumnAttribute('Updated', 'DateTime', null, ['CE'], 'NULL')]
 #[ApplyModelColumnAttribute('deleted_at', 'DateTime', null, ['CE'], 'NULL')]
 /**
- * @property integer $Id            // Primary Key
- * @property string $ResidentId     // Resident FK
- * @property string $UserId         // User FK
+ * @property int $Id            // Primary Key
+ * @property int $ResidentId     // Resident FK
+ * @property int $UserId         // User FK
  * @property string $FileName       // The file name including the extention
  * @property string $MediaType      // The mime type
- * @property integer $Size          // Size of the file in bytes
+ * @property int $Size          // Size of the file in bytes
  * @property string $Description    // A description of the file
  * @property string $Image          // File image as a blob
  * @property DateTime $Created

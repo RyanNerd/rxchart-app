@@ -11,6 +11,7 @@ use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
 use Willow\Middleware\ResponseCodes;
 use Willow\Models\Pin;
+use Willow\Models\PinRepresentation;
 
 class PinGenerateAction
 {
@@ -38,9 +39,10 @@ class PinGenerateAction
         $parsedRequest = $responseBody->getParsedRequest();
         $clientId = $parsedRequest['client_id'];
 
+        /** @var Pin|PinRepresentation $pinModel */
         $pinModel = clone $this->pin;
         do {
-            $pinValue = random_int(10 ** (self::DIGIT_COUNT - 1), (10 ** self::DIGIT_COUNT) -1);
+            $pinValue = (string)random_int(10 ** (self::DIGIT_COUNT - 1), (10 ** self::DIGIT_COUNT) -1);
             $pinExists = $this->pin
                 ->where('ResidentId', '=', $clientId)
                 ->where('PinValue', '=', $pinValue)

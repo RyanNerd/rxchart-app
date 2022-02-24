@@ -9,6 +9,7 @@ use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
 use Willow\Middleware\ResponseCodes;
 use Willow\Models\Document;
+use Willow\Models\DocumentRepresentation;
 
 class DocumentUploadAction
 {
@@ -36,6 +37,7 @@ class DocumentUploadAction
         $file = $files['single_file'];
         $clientId = $parsedRequest['client_id'];
 
+        /** @var Document|DocumentRepresentation $document */
         $document = clone $this->document;
         $document->ResidentId = $clientId;
         $document->Size = $file->getSize();
