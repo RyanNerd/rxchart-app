@@ -21,3 +21,4 @@ parameters:
 
   universalObjectCratesClasses:
     - Willow\Models\Pin
+    - Willow\Models\Document

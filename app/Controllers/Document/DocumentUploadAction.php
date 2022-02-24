@@ -12,8 +12,7 @@ use Willow\Models\Document;
 
 class DocumentUploadAction
 {
-    public function __construct(private Document $document)
-    {
+    public function __construct(private Document $document) {
     }
 
     /**
@@ -25,9 +24,15 @@ class DocumentUploadAction
     public function __invoke(Request $request, Response $response): ResponseInterface {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
+
         $parsedRequest = $responseBody->getParsedRequest();
-        /** @var  $files UploadedFileInterface[] */
+
+        /**
+         * @var $files UploadedFileInterface[]
+         * @phpstan-ignore-next-line
+         */
         $files = $parsedRequest['uploaded_files'];
+
         $file = $files['single_file'];
         $clientId = $parsedRequest['client_id'];
 

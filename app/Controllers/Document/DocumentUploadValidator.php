@@ -10,6 +10,7 @@ use Slim\Psr7\Request;
 use Willow\Middleware\ResponseBody;
 use Willow\Middleware\ResponseCodes;
 use JsonException;
+use Respect\Validation\Validator as V;
 
 class DocumentUploadValidator
 {
@@ -23,10 +24,14 @@ class DocumentUploadValidator
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
         $parsedRequest = $responseBody->getParsedRequest();
-        /** @var $files UploadedFileInterface[] */
+
+        /**
+         * @var $files UploadedFileInterface[]
+         * @phpstan-ignore-next-line
+         */
         $files = $parsedRequest['uploaded_files'] ?? [];
 
-        // Only 1 file uploaded
+        // Only 1 file allowed to be uploaded
         if (count($files) !== 1) {
             $responseBody->registerParam('required', 'uploaded_files', 'array', 'There must be only one uploaded file');
         }
@@ -44,10 +49,14 @@ class DocumentUploadValidator
             $responseBody->registerParam('invalid', 'single_file', 'file', 'File size exceeds maximum allowed');
         }
 
-        // client_id is required
+        // client_id is required and must be an integer
         $clientId = $parsedRequest['client_id'] ?? null;
-        if ($clientId === null) {
+        if (!V::notEmpty()->validate($clientId)) {
             $responseBody->registerParam('required', 'client_id', 'integer', 'client_id is empty or invalid');
+        } else {
+            if (!V::intType()->intVal()->validate($clientId)) {
+                $responseBody->registerParam('invalid', 'client_id', 'integer');
+            }
         }
 
         // If there are any invalid or missing required then send bad request response
