@@ -13,7 +13,7 @@ use Willow\Middleware\ResponseCodes;
 
 class PinAuthenticateValidator
 {
-    private const ALLOWED = ['pin_value'];
+    private const ALLOWED = ['pin_value', 'uploaded_files'];
 
     /**
      * @throws JsonException
