@@ -11,13 +11,13 @@ use Willow\Controllers\Pillbox\PillboxController;
 use Willow\Controllers\PillboxItem\PillboxItemController;
 use Willow\Controllers\Pin\PinController;
 use Willow\Controllers\Resident\ResidentController;
-use Willow\Controllers\Document\DocumentController;
+use Willow\Controllers\File\FileController;
 
 class RegisterRouteControllers
 {
     public function __construct(
         private AuthenticateController $authenticateController,
-        private DocumentController     $documentController,
+        private FileController         $fileController,
         private MedHistoryController   $medHistoryController,
         private MedicineController     $medicineController,
         private PillboxController      $pillboxController,
@@ -30,7 +30,7 @@ class RegisterRouteControllers
     public function __invoke(RouteCollectorProxy $collectorProxy): self {
         // Register routes and actions for each controller
         $this->authenticateController->register($collectorProxy);
-        $this->documentController->register($collectorProxy);
+        $this->fileController->register($collectorProxy);
         $this->medHistoryController->register($collectorProxy);
         $this->medicineController->register($collectorProxy);
         $this->pillboxController->register($collectorProxy);

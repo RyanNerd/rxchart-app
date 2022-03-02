@@ -1,5 +1,5 @@
 <?php
-namespace Willow\Controllers\Document;
+namespace Willow\Controllers\File;
 
 use JsonException;
 use Psr\Http\Message\ResponseInterface;
@@ -8,12 +8,12 @@ use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
 use Willow\Middleware\ResponseCodes;
-use Willow\Models\Document;
-use Willow\Models\DocumentRepresentation;
+use Willow\Models\File;
+use Willow\Models\FileRepresentation;
 
-class DocumentUploadAction
+class FileUploadAction
 {
-    public function __construct(private Document $document) {
+    public function __construct(private File $file) {
     }
 
     /**
@@ -37,8 +37,8 @@ class DocumentUploadAction
         $file = $files['single_file'];
         $clientId = $parsedRequest['client_id'];
 
-        /** @var Document|DocumentRepresentation $document */
-        $document = clone $this->document;
+        /** @var File|FileRepresentation $document */
+        $document = clone $this->file;
         $document->ResidentId = $clientId;
         $document->Size = $file->getSize();
         $document->FileName = $file->getClientFilename() ?? 'unknown';

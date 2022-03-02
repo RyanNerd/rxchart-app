@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Willow\Controllers\Document;
+namespace Willow\Controllers\File;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UploadedFileInterface;
@@ -12,7 +12,7 @@ use Willow\Middleware\ResponseCodes;
 use JsonException;
 use Respect\Validation\Validator as V;
 
-class DocumentUploadValidator
+class FileValidator
 {
     /**
      * @param Request $request
@@ -54,8 +54,8 @@ class DocumentUploadValidator
         if (!V::notEmpty()->validate($clientId)) {
             $responseBody->registerParam('required', 'client_id', 'integer', 'client_id is empty or invalid');
         } else {
-            if (!V::intType()->intVal()->validate($clientId)) {
-                $responseBody->registerParam('invalid', 'client_id', 'integer');
+            if (!V::intVal()->validate($clientId)) {
+                $responseBody->registerParam('invalid', 'client_id', 'integer', 'client_id must be an integer');
             }
         }
 

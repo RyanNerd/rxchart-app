@@ -5,7 +5,7 @@ namespace Willow\Models;
 
 use DateTime;
 
-class DocumentRepresentation
+class FileRepresentation
 {
     public int $Id;                     // Primary Key
     public int $ResidentId;             // Resident FK

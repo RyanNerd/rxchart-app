@@ -10,6 +10,7 @@ use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
 use Willow\Middleware\ResponseCodes;
+use Willow\Models\File;
 use Willow\Models\MedHistory;
 use Willow\Models\Medicine;
 use Willow\Models\Pillbox;
@@ -19,11 +20,12 @@ use Willow\Models\Resident;
 class ClientLoadAction
 {
     public function __construct(
-        private Resident $client,
-        private Medicine $medicine,
-        private MedHistory $medHistory,
-        private Pillbox $pillbox,
-        private PillboxItem $pillboxItem
+        private File        $file,
+        private MedHistory  $medHistory,
+        private Medicine    $medicine,
+        private Pillbox     $pillbox,
+        private PillboxItem $pillboxItem,
+        private Resident    $client
     ) {
     }
 
@@ -49,6 +51,11 @@ class ClientLoadAction
             $status = ResponseCodes::HTTP_OK;
             $data = [
                 'clientInfo' => $client->attributesToArray(),
+                'fileList' => $this->file
+                    ->where('ResidentId', '=', $clientId)
+                    ->orderBy('Updated', 'asc')
+                    ->get(['Id', 'ResidentId', 'FileName','MediaType', 'Size', 'Created', 'Updated'])
+                    ->toArray(),
                 'medicineList' => $this->medicine
                     ->where('ResidentId', '=', $clientId)
                     ->orderBy('Drug', 'asc')

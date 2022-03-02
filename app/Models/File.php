@@ -30,8 +30,8 @@ use DateTime;
  * @property DateTime $Updated
  * @property DateTime $deleted_at
  */
-class Document extends ModelBase
+class File extends ModelBase
 {
-    protected $table = 'Document';
+    protected $table = 'File';
 }
 
