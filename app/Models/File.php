@@ -33,6 +33,19 @@ use DateTime;
 class File extends ModelBase
 {
     protected $hidden = ['Image'];
+
     protected $table = 'File';
+
+    /**
+     * Override Description field to null if empty string
+     * @param string|null $value
+     */
+    final public function setDescriptionAttribute(?string $value): void {
+        if (empty($value)) {
+            $this->attributes['Description'] = null;
+        } else {
+            $this->attributes['Description'] = $value;
+        }
+    }
 }
 
