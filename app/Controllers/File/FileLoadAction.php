@@ -14,10 +14,10 @@ use Willow\Models\File;
 class FileLoadAction
 {
     /**
-     * FileGetAction constructor.
-     * @param File $document
+     * FileLoadAction - helper action to quickly rehydrate just the File records for a client
+     * @param File $file File model
      */
-    public function __construct(private File $document) {
+    public function __construct(private File $file) {
     }
 
     /**
@@ -33,9 +33,10 @@ class FileLoadAction
         $responseBody = $request->getAttribute('response_body');
 
         // Load all models for the given client_id
-        $document = $this->document->clone();
-        $documents = $document
+        $file = $this->file->clone();
+        $documents = $file
             ->where('ResidentId', '=', $args['client_id'])
+            ->orderBy('Updated', 'desc')
             ->get(['Id', 'ResidentId', 'FileName','MediaType', 'Size', 'Created', 'Updated']);
 
         // If the record is not found then 404 error, otherwise status is 200.

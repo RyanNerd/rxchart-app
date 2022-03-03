@@ -18,7 +18,7 @@ class FileController implements IController
 
         $group->get('/file/{id}', FileGetAction::class);
 
-        $group->post('/file', FIleUpdateAction::class);
+        $group->post('/file', FileUpdateAction::class);
 
         $group->delete('/file/{id}', FileDeleteAction::class);
 

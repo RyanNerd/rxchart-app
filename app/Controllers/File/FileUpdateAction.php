@@ -6,7 +6,7 @@ namespace Willow\Controllers\File;
 use Willow\Controllers\WriteActionBase;
 use Willow\Models\File;
 
-class FIleUpdateAction extends WriteActionBase
+class FileUpdateAction extends WriteActionBase
 {
     /**
      * FIleUpdateAction constructor.

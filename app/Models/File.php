@@ -13,7 +13,7 @@ use DateTime;
 #[ApplyModelColumnAttribute('MediaType', 'string', 65)]             // The mime type
 #[ApplyModelColumnAttribute('Size', 'int', null)]                   // The size of the file in bytes
 #[ApplyModelColumnAttribute('Description', 'string', 65)]           // A description of the file
-#[ApplyModelColumnAttribute('Image', 'string', null)]               // File image as a blob
+#[ApplyModelColumnAttribute('Image', 'string', null, ['HIDDEN'])]   // File image as a blob
 #[ApplyModelColumnAttribute('Created', 'DateTime', null, ['CE'], 'NULL')]
 #[ApplyModelColumnAttribute('Updated', 'DateTime', null, ['CE'], 'NULL')]
 #[ApplyModelColumnAttribute('deleted_at', 'DateTime', null, ['CE'], 'NULL')]
@@ -32,6 +32,7 @@ use DateTime;
  */
 class File extends ModelBase
 {
+    protected $hidden = ['Image'];
     protected $table = 'File';
 }
 
