@@ -37,7 +37,7 @@ class FileLoadAction
         $documents = $file
             ->where('ResidentId', '=', $args['client_id'])
             ->orderBy('Updated', 'desc')
-            ->get(['Id', 'ResidentId', 'FileName','MediaType', 'Size', 'Created', 'Updated']);
+            ->get(['Id', 'ResidentId', 'FileName', 'Description', 'MediaType', 'Size', 'Created', 'Updated']);
 
         // If the record is not found then 404 error, otherwise status is 200.
         if ($documents !== null && count($documents) > 0) {

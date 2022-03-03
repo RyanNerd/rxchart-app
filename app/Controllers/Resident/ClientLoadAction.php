@@ -54,7 +54,7 @@ class ClientLoadAction
                 'fileList' => $this->file
                     ->where('ResidentId', '=', $clientId)
                     ->orderBy('Updated', 'desc')
-                    ->get(['Id', 'ResidentId', 'FileName','MediaType', 'Size', 'Created', 'Updated'])
+                    ->get(['Id', 'ResidentId', 'FileName', 'Description', 'MediaType', 'Size', 'Created', 'Updated'])
                     ->toArray(),
                 'medicineList' => $this->medicine
                     ->where('ResidentId', '=', $clientId)
