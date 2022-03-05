@@ -14,7 +14,7 @@ class FileController implements IController
      */
     final public function register(RouteCollectorProxyInterface $group): void {
         $group->post('/file/upload/{client_id}', FileUploadAction::class)
-            ->add(FileValidator::class);
+            ->add(FileUploadValidator::class);
 
         $group->get('/file/download/{id}', FileDownloadAction::class);
 

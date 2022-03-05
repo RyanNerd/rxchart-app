@@ -12,7 +12,7 @@ use Willow\Middleware\ResponseCodes;
 use JsonException;
 use Respect\Validation\Validator as V;
 
-class FileValidator
+class FileUploadValidator
 {
     /**
      * @param Request $request
