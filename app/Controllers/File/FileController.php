@@ -16,6 +16,8 @@ class FileController implements IController
         $group->post('/file/upload/{client_id}', FileUploadAction::class)
             ->add(FileValidator::class);
 
+        $group->get('/file/download/{id}', FileDownloadAction::class);
+
         $group->get('/file/{id}', FileGetAction::class);
 
         $group->post('/file', FileUpdateAction::class);
