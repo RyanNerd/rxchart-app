@@ -56,6 +56,14 @@
         </properties>
     </rule>
 
+    <!-- Maximum Line Length -->
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="120"/>
+            <property name="absoluteLineLimit" value="0"/>
+        </properties>
+    </rule>
+
     <!-- No # comments -->
     <rule ref="PEAR.Commenting.InlineComment"/>
 

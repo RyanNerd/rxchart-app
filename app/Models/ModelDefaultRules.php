@@ -10,7 +10,7 @@ class ModelDefaultRules
     /**
      * Allowed request parameters that are not column names
      */
-    private const WHITE_LIST = ['id', 'api_key'];
+    private const WHITE_LIST = ['id', 'api_key', 'uploaded_files'];
 
     /**
      * @param ResponseBody $responseBody

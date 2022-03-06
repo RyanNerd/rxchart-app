@@ -15,6 +15,7 @@ class SearchValidatorBase extends ActionBase
     private const ALLOWED_PARAMETER_KEYS = [
         'api_key',
         'id',
+        'uploaded_files',
         'crossJoin',
         'distinct',
         'first',

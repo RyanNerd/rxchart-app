@@ -13,7 +13,7 @@ use Willow\Middleware\ResponseCodes;
 
 class AuthenticatePostValidator
 {
-    private const ALLOWED = ['username', 'password', 'id'];
+    private const ALLOWED = ['username', 'password', 'id', 'uploaded_files'];
 
     /**
      * @throws JsonException
@@ -40,7 +40,7 @@ class AuthenticatePostValidator
         }
 
         // id can be part of the request, but it MUST be null/empty
-        if (V::exists()->validate($parsedRequest['id']) && V::notEmpty()->validate($parsedRequest['id'])) {
+        if (V::key('id')->validate($parsedRequest) && V::notEmpty()->validate($parsedRequest['id'])) {
             $responseBody->registerParam('invalid', 'id', 'null');
         }
 

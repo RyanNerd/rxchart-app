@@ -53,6 +53,7 @@ class Medicine extends ModelBase
     final public function setDrugAttribute(string $value): void {
         $this->attributes['Drug'] = trim($value);
     }
+
     /**
      * Override Strength field to null if empty string
      * @param string|null $value

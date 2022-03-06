@@ -27,7 +27,7 @@ abstract class ModelBase extends Model
         static::addGlobalScope(new UserScope());
 
         // Save the authenticated UserId value to the model
-        static::saving(function ($model) {
+        static::saving(static function ($model) {
             $model->UserId = UserScope::getUserId();
         });
     }

@@ -10,8 +10,10 @@ use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
 use Willow\Middleware\ResponseCodes;
 use Willow\Models\MedHistory;
+use Willow\Models\MedHistoryRepresentation;
 use Willow\Models\Medicine;
 use Willow\Models\PillboxItem;
+use Willow\Models\PillboxItemRepresentation;
 
 class PillboxLogAction
 {
@@ -36,7 +38,7 @@ class PillboxLogAction
         $pillboxId = $body['pillbox_id'];   // Pillbox PK
 
         /**
-         * @var PillboxItem[] $pillboxItems
+         * @var PillboxItem[]|PillboxItemRepresentation[] $pillboxItems
          * Get a collection of PillboxItems for the given pillboxId
          */
         $pillboxItems = $this->pillboxItem->where('PillboxId', '=', $pillboxId)->get();
@@ -54,6 +56,9 @@ class PillboxLogAction
                     $medicineModel = $this->medicine->find($medicineId);
                     // We only log active medications
                     if ($medicineModel && $medicineModel->Active) {
+                        /**
+                         * @var MedHistoryRepresentation|MedHistory $medHistoryModel
+                         */
                         $medHistoryModel = clone $this->medHistory;
                         $medHistoryModel->PillboxItemId = $id;
                         $medHistoryModel->ResidentId = $pillboxItem->ResidentId;
