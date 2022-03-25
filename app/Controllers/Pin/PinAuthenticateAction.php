@@ -18,8 +18,12 @@ use Willow\Models\User;
 
 class PinAuthenticateAction
 {
-    public function __construct(private Pin $pin, private User $user, private Resident $resident, private Medicine $medicine) {
-    }
+    public function __construct(
+        private Pin $pin,
+        private User $user,
+        private Resident $resident,
+        private MedHistory $medHistory,
+        private Medicine $medicine) {}
 
     /**
      * @param Request $request
@@ -77,9 +81,8 @@ class PinAuthenticateAction
 
         // Load MedHistory for the client for today only
         $medHistory = $this
-            ->resident
-            ->find($clientModel->Id)
-            ->medLog()
+            ->medHistory
+            ->where('ResidentId', $clientModel->Id)
             ->where('Out', '>', 0)
             ->whereDate('Updated', '=', Carbon::now())
             ->get(['Id', 'MedicineId', 'Updated', 'Notes', 'Out']);

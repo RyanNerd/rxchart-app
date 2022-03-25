@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Willow\Models;
 
 use DateTime;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[ApplyModelColumnAttribute('Id', 'int', null, ['PK', 'NN', 'AI'])]
@@ -37,11 +36,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Resident extends ModelBase
 {
     protected $table = 'Resident';
-
-    public function drugLog(): HasMany
-    {
-        return $this->hasMany(MedHistory::class, 'Id', 'MedHistoryId');
-    }
 
     /**
      * Override Notes to null if empty string
