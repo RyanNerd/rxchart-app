@@ -3,20 +3,27 @@ declare(strict_types=1);
 
 namespace Willow\Controllers\Pin;
 
+use Carbon\Carbon;
 use JsonException;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
 use Willow\Middleware\ResponseCodes;
+use Willow\Models\MedHistory;
+use Willow\Models\Medicine;
 use Willow\Models\Pin;
 use Willow\Models\Resident;
 use Willow\Models\User;
 
 class PinAuthenticateAction
 {
-    public function __construct(private Pin $pin, private User $user, private Resident $resident) {
-    }
+    public function __construct(
+        private Pin $pin,
+        private User $user,
+        private Resident $resident,
+        private MedHistory $medHistory,
+        private Medicine $medicine) {}
 
     /**
      * @param Request $request
@@ -72,12 +79,43 @@ class PinAuthenticateAction
             return $responseBody();
         }
 
+        // Load MedHistory for the client for today only
+        $medHistory = $this
+            ->medHistory
+            ->where('ResidentId', $clientModel->Id)
+            ->where('Out', '>', 0)
+            ->whereDate('Updated', '=', Carbon::now())
+            ->get(['Id', 'MedicineId', 'Updated', 'Notes', 'Out']);
+
+        // If there's not any logged checked out drugs then respond with a 404 status
+        if (count($medHistory) === 0) {
+            $responseBody = $responseBody
+                ->setStatus(ResponseCodes::HTTP_NOT_FOUND)
+                ->setData(null)
+                ->setMessage('MedHistory records not found');
+            return $responseBody();
+        }
+
+        // Build out the checkout medication list
+        $medCheckoutList = [];
+        foreach ($medHistory as $medLog) {
+            $medicine = $this->medicine->find($medLog->MedicineId);
+            $medCheckoutList[] = [
+                'Id' => $medLog->Id,
+                'Drug' => $medicine->Drug ?? 'Unknown',
+                'Updated' => $medLog->Updated,
+                'Notes' => $medLog->Notes,
+                'Out' => $medLog->Out
+            ];
+        }
+
         // Build out the return payload
         $data = [
             'api_key' => $userModel->API_KEY,
             'organization' => $userModel->Organization,
             'client_info' => ['first_name' => $clientModel->FirstName, 'last_name' => $clientModel->LastName],
-            'pin_info' => $pinModel->toArray()
+            'pin_info' => $pinModel->toArray(),
+            'med_checkout' => $medCheckoutList
         ];
 
         // Respond with a 200 status and the payload

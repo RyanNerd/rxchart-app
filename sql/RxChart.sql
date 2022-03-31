@@ -1,12 +1,10 @@
-# noinspection SyntaxErrorForFile
-
 CREATE DATABASE  IF NOT EXISTS `RxChart` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `RxChart`;
--- MySQL dump 10.13  Distrib 8.0.27, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.28, for Linux (x86_64)
 --
 -- Host: localhost    Database: RxChart
 -- ------------------------------------------------------
--- Server version	8.0.27
+-- Server version	8.0.28
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -18,6 +16,33 @@ USE `RxChart`;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `File`
+--
+
+DROP TABLE IF EXISTS `File`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `File` (
+  `Id` int NOT NULL AUTO_INCREMENT,
+  `ResidentId` int NOT NULL,
+  `UserId` int NOT NULL,
+  `FileName` varchar(65) NOT NULL,
+  `MediaType` varchar(65) DEFAULT NULL,
+  `Size` int DEFAULT NULL,
+  `Description` varchar(100) DEFAULT NULL,
+  `Image` longblob,
+  `Created` timestamp NULL DEFAULT NULL,
+  `Updated` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `fk_File_User_idx` (`UserId`),
+  KEY `fk_File_Resident_idx` (`ResidentId`),
+  CONSTRAINT `fk_File_Resident` FOREIGN KEY (`ResidentId`) REFERENCES `Resident` (`Id`),
+  CONSTRAINT `fk_File_User` FOREIGN KEY (`UserId`) REFERENCES `User` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `MedHistory`
@@ -139,6 +164,31 @@ CREATE TABLE `PillboxItem` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `Pin`
+--
+
+DROP TABLE IF EXISTS `Pin`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Pin` (
+  `Id` int NOT NULL AUTO_INCREMENT,
+  `ResidentId` int NOT NULL,
+  `UserId` int NOT NULL,
+  `PinValue` char(6) NOT NULL,
+  `Image` longblob,
+  `Created` timestamp NULL DEFAULT NULL,
+  `Updated` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `unique_pin` (`ResidentId`,`UserId`,`PinValue`),
+  KEY `fk_Pin_User` (`UserId`),
+  KEY `fk_Pin_Resident` (`ResidentId`),
+  CONSTRAINT `fk_Pin_Resident` FOREIGN KEY (`ResidentId`) REFERENCES `Resident` (`Id`),
+  CONSTRAINT `fk_Pin_User` FOREIGN KEY (`UserId`) REFERENCES `User` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `Resident`
 --
 
@@ -194,4 +244,4 @@ CREATE TABLE `User` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-10-30  6:39:23
+-- Dump completed on 2022-03-31  1:09:18
