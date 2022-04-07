@@ -1,0 +1,2 @@
+ALTER TABLE `RxChart`.`Resident`
+    ADD COLUMN `HMIS` VARCHAR(12) NULL AFTER `Notes`;

@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 #[ApplyModelColumnAttribute('DOB_MONTH', 'int')]
 #[ApplyModelColumnAttribute('DOB_DAY', 'int')]
 #[ApplyModelColumnAttribute('Notes', 'string')]
+#[ApplyModelColumnAttribute('HMIS', 'string')]
 #[ApplyModelColumnAttribute('Created', 'DateTime', null, ['CE'], 'NULL')]
 #[ApplyModelColumnAttribute('Updated', 'DateTime', null, ['CE'], 'NULL')]
 #[ApplyModelColumnAttribute('deleted_at', 'DateTime', null, ['CE'], 'NULL')]
@@ -28,6 +29,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property integer $DOB_MONTH     // Client's birth month
  * @property integer $DOB_DAY       // Client's birthday
  * @property string $Notes          // Details about the client
+ * @property string $HMIS           // HMIS number
  * @property DateTime $Created
  * @property DateTime $Updated
  * @property DateTime $deleted_at
@@ -58,6 +60,18 @@ class Resident extends ModelBase
             $this->attributes['Nickname'] = null;
         } else {
             $this->attributes['Nickname'] = $value;
+        }
+    }
+
+    /**
+     * Override HMIS to null if empty string
+     * @param string|null $value
+     */
+    final public function setHMISAttribute(?string $value): void {
+        if (empty($value)) {
+            $this->attributes['HMIS'] = null;
+        } else {
+            $this->attributes['HMIS'] = $value;
         }
     }
 }
