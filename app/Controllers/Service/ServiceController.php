@@ -16,5 +16,13 @@ class ServiceController implements IController
         $group->get('/service/{id}', ServiceGetAction::class);
 
         $group->get('/service-load', ServiceLoadAction::class);
+
+        $group->post('/service', ServiceUpdateAction::class)
+            ->add(ServiceModelValidator::class);
+
+        $group->delete('/service/{id}', ServiceDeleteAction::class);
+
+        $group->post('/service/search', ServiceSearchAction::class)
+            ->add(ServiceSearchValidator::class);
     }
 }
