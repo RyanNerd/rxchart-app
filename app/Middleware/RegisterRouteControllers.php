@@ -12,6 +12,7 @@ use Willow\Controllers\PillboxItem\PillboxItemController;
 use Willow\Controllers\Pin\PinController;
 use Willow\Controllers\Resident\ResidentController;
 use Willow\Controllers\File\FileController;
+use Willow\Controllers\Service\ServiceController;
 
 class RegisterRouteControllers
 {
@@ -23,7 +24,8 @@ class RegisterRouteControllers
         private PillboxController      $pillboxController,
         private PillboxItemController  $pillboxItemController,
         private PinController          $pinController,
-        private ResidentController     $residentController
+        private ResidentController     $residentController,
+        private ServiceController      $serviceController
     ) {
     }
 
@@ -37,6 +39,7 @@ class RegisterRouteControllers
         $this->pillboxItemController->register($collectorProxy);
         $this->pinController->register($collectorProxy);
         $this->residentController->register($collectorProxy);
+        $this->serviceController->register($collectorProxy);
         return $this;
     }
 }
