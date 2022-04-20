@@ -15,7 +15,7 @@ class ServiceController implements IController
     final public function register(RouteCollectorProxyInterface $group): void {
         $group->get('/service/{id}', ServiceGetAction::class);
 
-        $group->get('/service/load/{id}', ServiceLoadAction::class);
+        $group->get('/service-load', ServiceLoadAction::class);
 
         $group->post('/service', ServiceUpdateAction::class)
             ->add(ServiceModelValidator::class);
