@@ -12,6 +12,7 @@ use DateTime;
 #[ApplyModelColumnAttribute('UserId', 'int', null, ['NN','CE'])]
 #[ApplyModelColumnAttribute('HmisId', 'string', 15)]
 #[ApplyModelColumnAttribute('Notes', 'string', 150, null, 'NULL')]
+#[ApplyModelColumnAttribute('Recorded', 'DateTime', null, [], 'NULL')]
 #[ApplyModelColumnAttribute('Created', 'DateTime', null, ['CE'], 'NULL')]
 #[ApplyModelColumnAttribute('Updated', 'DateTime', null, ['CE'], 'NULL')]
 #[ApplyModelColumnAttribute('deleted_at', 'DateTime', null, ['CE'], 'NULL')]
@@ -22,6 +23,7 @@ use DateTime;
  * @property integer $UserId        // User FK
  * @property string  $HmisId        // HMIS #
  * @property string  $Notes         // Notes
+ * @property DateTime $Recorded     // Date imported into HMIS
  * @property DateTime $Created
  * @property DateTime $Updated
  * @property DateTime $deleted_at

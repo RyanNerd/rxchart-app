@@ -5,14 +5,15 @@ namespace Willow\Middleware;
 
 use Slim\Routing\RouteCollectorProxy;
 use Willow\Controllers\Authenticate\AuthenticateController;
+use Willow\Controllers\File\FileController;
 use Willow\Controllers\MedHistory\MedHistoryController;
 use Willow\Controllers\Medicine\MedicineController;
 use Willow\Controllers\Pillbox\PillboxController;
 use Willow\Controllers\PillboxItem\PillboxItemController;
 use Willow\Controllers\Pin\PinController;
 use Willow\Controllers\Resident\ResidentController;
-use Willow\Controllers\File\FileController;
 use Willow\Controllers\Service\ServiceController;
+use Willow\Controllers\ServiceLog\ServiceLogController;
 
 class RegisterRouteControllers
 {
@@ -25,7 +26,8 @@ class RegisterRouteControllers
         private PillboxItemController  $pillboxItemController,
         private PinController          $pinController,
         private ResidentController     $residentController,
-        private ServiceController      $serviceController
+        private ServiceController      $serviceController,
+        private ServiceLogController $serviceLogController
     ) {
     }
 
@@ -40,6 +42,7 @@ class RegisterRouteControllers
         $this->pinController->register($collectorProxy);
         $this->residentController->register($collectorProxy);
         $this->serviceController->register($collectorProxy);
+        $this->serviceLogController->register($collectorProxy);
         return $this;
     }
 }
