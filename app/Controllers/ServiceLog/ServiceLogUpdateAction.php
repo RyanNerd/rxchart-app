@@ -9,8 +9,8 @@ use Willow\Models\ServiceLog;
 class ServiceLogUpdateAction extends WriteActionBase
 {
     /**
-     * ServiceUpdateAction constructor.
-     * @param ServiceLog $service
+     * ServiceLogUpdateAction constructor.
+     * @param ServiceLog $serviceLog
      */
     public function __construct(ServiceLog $serviceLog) {
         $this->model = $serviceLog;
