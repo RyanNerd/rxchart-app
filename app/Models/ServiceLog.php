@@ -12,7 +12,7 @@ use DateTime;
 #[ApplyModelColumnAttribute('UserId', 'int', null, ['NN','CE'])]
 #[ApplyModelColumnAttribute('HmisId', 'string', 15)]
 #[ApplyModelColumnAttribute('Notes', 'string', 150, null, 'NULL')]
-#[ApplyModelColumnAttribute('Recorded', 'DateTime', null, [], 'NULL')]
+#[ApplyModelColumnAttribute('Recorded', 'DateTime')]
 #[ApplyModelColumnAttribute('Created', 'DateTime', null, ['CE'], 'NULL')]
 #[ApplyModelColumnAttribute('Updated', 'DateTime', null, ['CE'], 'NULL')]
 #[ApplyModelColumnAttribute('deleted_at', 'DateTime', null, ['CE'], 'NULL')]
