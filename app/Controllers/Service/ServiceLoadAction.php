@@ -28,7 +28,7 @@ class ServiceLoadAction
         $responseBody = $request->getAttribute('response_body');
 
         // Load all records
-        $services = $this->service->all();
+        $services = $this->service->orderBy('ServiceName')->get();
 
         // If the record is not found then 404 error, otherwise status is 200.
         if ($services->count() === 0) {

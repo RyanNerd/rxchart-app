@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Willow\Controllers\ServiceLog;
 
+use Carbon\Carbon;
 use JsonException;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;
@@ -29,8 +30,12 @@ class ServiceLogLoadAction
         $parsedRequest = $responseBody->getParsedRequest();
         $clientId = $parsedRequest['id'];
 
-        // Load all records
-        $services = $this->serviceLog->where('ResidentId', '=', $clientId)->get();
+        // Load all records or if the query parameter today=yes then just load records for today
+        $services = $this->serviceLog->where('ResidentId', '=', $clientId);
+        if (array_key_exists('today', $args) && $args['today'] === 'yes') {
+            $services = $services->where('Updated', '=', Carbon::now());
+        }
+        $services = $services->get();
 
         // If the record is not found then 404 error, otherwise status is 200.
         if ($services->count() === 0) {
