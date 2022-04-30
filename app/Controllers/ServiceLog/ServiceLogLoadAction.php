@@ -32,10 +32,10 @@ class ServiceLogLoadAction
 
         // Load all records or if the query parameter today=yes then just load records for today
         $services = $this->serviceLog->where('ResidentId', '=', $clientId);
-        if (array_key_exists('today', $args) && $args['today'] === 'yes') {
+        if (array_key_exists('today', $parsedRequest) && $parsedRequest['today'] === 'yes') {
             $services = $services->where('Updated', '=', Carbon::now());
         }
-        if (array_key_exists('include_recorded', $args) && $args['include_recorded'] === 'yes') {
+        if (array_key_exists('include_recorded', $parsedRequest) && $parsedRequest['include_recorded'] === 'yes') {
             $services = $services->WhereNotNull('Recorded');
         } else {
             $services = $services->WhereNull('Recorded');
