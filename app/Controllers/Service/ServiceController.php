@@ -17,6 +17,8 @@ class ServiceController implements IController
 
         $group->get('/service-load', ServiceLoadAction::class);
 
+        $group->get('/service-logs/{id}', ServiceLogsAction::class);
+
         $group->post('/service', ServiceUpdateAction::class)
             ->add(ServiceModelValidator::class);
 
