@@ -35,6 +35,11 @@ class ServiceLogLoadAction
         if (array_key_exists('today', $args) && $args['today'] === 'yes') {
             $services = $services->where('Updated', '=', Carbon::now());
         }
+        if (array_key_exists('include_recorded', $args) && $args['include_recorded'] === 'yes') {
+            $services = $services->WhereNotNull('Recorded');
+        } else {
+            $services = $services->WhereNull('Recorded');
+        }
         $services = $services->get();
 
         // If the record is not found then 404 error, otherwise status is 200.

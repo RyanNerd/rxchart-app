@@ -15,8 +15,7 @@ class ServiceLogController implements IController
     final public function register(RouteCollectorProxyInterface $group): void {
         $group->get('/service-log/{id}', ServiceLogReadAction::class);
 
-        $group->get('/service-log-load-all/{id}', ServiceLogLoadAction::class);
-        $group->get('/service-log-load-today/{id}', ServiceLogLoadAction::class);
+        $group->get('/service-log-load/{id}', ServiceLogLoadAction::class);
 
         $group->post('/service-log', ServiceLogUpdateAction::class)
             ->add(ServiceLogModelValidator::class);
