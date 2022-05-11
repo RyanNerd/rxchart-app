@@ -10,6 +10,9 @@ use Illuminate\Database\Query\Builder;
 /**
  * Class ModelBase
  * @mixin Builder
+ * @method static static|Builder withTrashed(bool $withTrashed = true)
+ * @method static static|Builder onlyTrashed()
+ * @method static static|Builder withoutTrashed()
  */
 abstract class ModelBase extends Model
 {

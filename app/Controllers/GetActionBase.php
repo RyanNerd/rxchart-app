@@ -24,8 +24,22 @@ class GetActionBase extends ActionBase
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
 
-        // Load the model with the given id (PK)
-        $model = $this->model->find($args['id']);
+        $model =  $this->model;
+
+        $clientId = $args['id'] ?? null;
+        if ($clientId !== null) {
+            $parsedRequest = $responseBody->getParsedRequest();
+            if (array_key_exists('with-trashed', $parsedRequest) && $parsedRequest['with-trashed'] === 'yes') {
+                $model = $model
+                    ->where('Id', '=', $clientId)
+                    ->withTrashed()
+                    ->first();
+            } else {
+                $model = $model->find($clientId);
+            }
+        } else {
+            $model = null;
+        }
 
         // If the record is not found then 404 error, otherwise status is 200.
         if ($model === null) {

@@ -28,12 +28,16 @@ class ServiceLogLoadAction
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
         $parsedRequest = $responseBody->getParsedRequest();
-        $clientId = $parsedRequest['id'];
+        $clientId = $parsedRequest['id'] ?? null;
+
+        $services = $this->serviceLog;
 
         // Load all records or if the query parameter today=yes then just load records for today
-        $services = $this->serviceLog->where('ResidentId', '=', $clientId);
+        if ($clientId !== null) {
+            $services = $this->serviceLog->where('ResidentId', '=', $clientId);
+        }
         if (array_key_exists('today', $parsedRequest) && $parsedRequest['today'] === 'yes') {
-            $services = $services->where('Updated', '=', Carbon::now());
+            $services = $services->whereDate('Updated', '=', Carbon::today());
         }
         if (array_key_exists('include_recorded', $parsedRequest) && $parsedRequest['include_recorded'] === 'yes') {
             $services = $services->WhereNotNull('Recorded');
