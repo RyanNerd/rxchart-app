@@ -43,4 +43,16 @@ class ServiceLog extends ModelBase
             $this->attributes['HmisId'] = $value;
         }
     }
+
+    /**
+     * Override Notes to null if empty string
+     * @param string|null $value
+     */
+    final public function setNotesAttribute(?string $value): void {
+        if (empty($value)) {
+            $this->attributes['Notes'] = null;
+        } else {
+            $this->attributes['Notes'] = $value;
+        }
+    }
 }
