@@ -17,7 +17,7 @@ class ServiceLogLoadAction
     public function __construct(private ServiceLog $serviceLog) {}
 
     /**
-     * Handle load all records request
+     * Handle loading ServiceLog records with some optional filters
      * @param Request $request
      * @param Response $response
      * @param array $args
@@ -32,21 +32,29 @@ class ServiceLogLoadAction
 
         $services = $this->serviceLog;
 
-        // Load all records or if the query parameter today=yes then just load records for today
+        // Load all records or if the query parameter dos exists then just load records for the date specified by dos
         if ($clientId !== null) {
-            $services = $this->serviceLog->where('ResidentId', '=', $clientId);
+            $services = $services->where('ResidentId', '=', $clientId);
         }
-        if (array_key_exists('today', $parsedRequest) && $parsedRequest['today'] === 'yes') {
-            $services = $services->whereDate('Updated', '=', Carbon::today());
+
+        if (array_key_exists('dos', $parsedRequest)) {
+            $dateOfService = Carbon::parse($parsedRequest['dos']);
+            if ($dateOfService->isCurrentDay()) {
+                $services = $services->whereDate('Updated', '=', Carbon::today());
+            } else {
+                $services = $services->whereDate('Updated', '=', $dateOfService);
+            }
         }
+
         if (array_key_exists('include_recorded', $parsedRequest) && $parsedRequest['include_recorded'] === 'yes') {
             $services = $services->WhereNotNull('Recorded');
         } else {
             $services = $services->WhereNull('Recorded');
         }
+
         $services = $services->get();
 
-        // If the record is not found then 404 error, otherwise status is 200.
+        // If no record is found then 404 error, otherwise status is 200.
         if ($services->count() === 0) {
             $data = null;
             $status = ResponseCodes::HTTP_NOT_FOUND;
