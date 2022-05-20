@@ -5,6 +5,7 @@ CREATE TABLE `ServiceLog` (
     `ServiceId` int NOT NULL,
     `HmisId` varchar(15) DEFAULT NULL,
     `Notes` varchar(150) DEFAULT NULL,
+    `DateOfService` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `Recorded` timestamp NULL DEFAULT NULL,
     `Created` timestamp NULL DEFAULT NULL,
     `Updated` timestamp NULL DEFAULT NULL,
@@ -13,6 +14,7 @@ CREATE TABLE `ServiceLog` (
     KEY `fk_ServiceLog_User` (`UserId`),
     KEY `fk_ServiceLog_Service` (`ServiceId`),
     KEY `fk_ServiceLog_Resident_idx` (`ResidentId`),
+    KEY `idx_ServiceLog_Date_Of_Service` (`DateOfService`),
     CONSTRAINT `fk_ServiceLog_Resident` FOREIGN KEY (`ResidentId`) REFERENCES `Resident` (`Id`),
     CONSTRAINT `fk_ServiceLog_Service` FOREIGN KEY (`ServiceId`) REFERENCES `Service` (`Id`),
     CONSTRAINT `fk_ServiceLog_User` FOREIGN KEY (`UserId`) REFERENCES `User` (`Id`)

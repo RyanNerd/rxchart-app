@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Willow\Models;
 
+use Carbon\Carbon;
 use DateTime;
 
 #[ApplyModelRule(ModelDefaultRules::class)]
@@ -12,18 +13,20 @@ use DateTime;
 #[ApplyModelColumnAttribute('UserId', 'int', null, ['NN','CE'])]
 #[ApplyModelColumnAttribute('HmisId', 'string', 15)]
 #[ApplyModelColumnAttribute('Notes', 'string', 150, null, 'NULL')]
+#[ApplyModelColumnAttribute('DateOfService', 'DateTime', null, ['NN'])]
 #[ApplyModelColumnAttribute('Recorded', 'DateTime')]
 #[ApplyModelColumnAttribute('Created', 'DateTime', null, ['CE'], 'NULL')]
 #[ApplyModelColumnAttribute('Updated', 'DateTime', null, ['CE'], 'NULL')]
 #[ApplyModelColumnAttribute('deleted_at', 'DateTime', null, ['CE'], 'NULL')]
 /**
- * @property integer $Id            // PK
- * @property integer $ResidentId    // Resident FK
- * @property integer $ServiceId     // Service FK
- * @property integer $UserId        // User FK
- * @property string  $HmisId        // HMIS #
- * @property string  $Notes         // Notes
- * @property DateTime $Recorded     // Date imported into HMIS
+ * @property integer $Id                // PK
+ * @property integer $ResidentId        // Resident FK
+ * @property integer $ServiceId         // Service FK
+ * @property integer $UserId            // User FK
+ * @property string  $HmisId            // HMIS #
+ * @property string  $Notes             // Notes
+ * @property DateTime $DateOfService    // Date of Service
+ * @property DateTime $Recorded         // Date imported into HMIS
  * @property DateTime $Created
  * @property DateTime $Updated
  * @property DateTime $deleted_at
@@ -54,5 +57,13 @@ class ServiceLog extends ModelBase
         } else {
             $this->attributes['Notes'] = $value;
         }
+    }
+
+    /**
+     * Override DateOfService due to it coming in as a string
+     * @param string $value
+     */
+    final public function setDateOfServiceAttribute(string $value): void {
+        $this->attributes['DateOfService'] = Carbon::parse($value)->format('Y-m-d h:i:s');
     }
 }

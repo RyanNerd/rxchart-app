@@ -40,9 +40,9 @@ class ServiceLogLoadAction
         if (array_key_exists('dos', $parsedRequest)) {
             $dateOfService = Carbon::parse($parsedRequest['dos']);
             if ($dateOfService->isCurrentDay()) {
-                $services = $services->whereDate('Updated', '=', Carbon::today());
+                $services = $services->whereDate('DateOfService', '=', Carbon::today());
             } else {
-                $services = $services->whereDate('Updated', '=', $dateOfService);
+                $services = $services->whereDate('DateOfService', '=', $dateOfService);
             }
         }
 
