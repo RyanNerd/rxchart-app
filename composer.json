@@ -19,6 +19,7 @@
         "php": "^8.0 || 8.1",
         "ext-json": "*",
         "ext-pdo": "*",
+        "ext-simplexml": "*",
         "dompdf/dompdf": "^1.2",
         "illuminate/database": "^v8.83.3",
         "illuminate/events": "^v8.83.3",
