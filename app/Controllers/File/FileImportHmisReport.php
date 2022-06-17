@@ -102,23 +102,38 @@ class FileImportHmisReport
             foreach ($hmisClients as $hmisClient) {
                 $name = $hmisClient['Name'];
                 $commaPosition = strpos($name, ',');
-                $lastName = trim($commaPosition ? substr($name, 0, $commaPosition - 1) : '');
+                $lastName = trim($commaPosition ? substr($name, 0, $commaPosition) : '');
                 $firstName = trim($commaPosition ? substr($name, $commaPosition + 1) : '');
                 $age = $hmisClient['Age'];
+
+                // Remove the middle name from $firstName
+                $spacePosition = strpos($firstName, ' ');
+                $firstName = $spacePosition ? substr($firstName, 0, $spacePosition) : '';
+
+                if (empty($lastName) || empty($firstName)) {
+                    continue;
+                }
+
+                // clone the clientModel object
                 $client = clone $this->clientModel;
+
+                // We want only deleted records
+                $client = $client::onlyTrashed();
 
                 // Since the XML data does not have DOB and only Age we use some fuzzy logic to try and find matches
                 $clients = $client
                     ->where('LastName', '=', $lastName)
                     ->where('FirstName', '=', $firstName)
-                    ->whereBetween('DOB_YEAR', [$thisYear - $age - 1, $thisYear - $age + 1])
-                    ->get();
+                    ->whereBetween('DOB_YEAR', [($thisYear - $age) - 3, ($thisYear - $age) + 3]);
 
-                $hmisId = $hmisClient['HmisId'];
-                $enrollId = $hmisClient['EnrollId'];
+                // Perform the query
+                $clients = $clients->get();
 
                 // Did we find any matches?
                 if ($clients->count() > 0) {
+                    $hmisId = $hmisClient['HmisId'];
+                    $enrollId = $hmisClient['EnrollId'];
+
                     /** @var Resident|ClientRepresentation $clientToUpdate */
                     foreach ($clients as $clientToUpdate) {
                         $shouldSave = false;
@@ -134,7 +149,7 @@ class FileImportHmisReport
                             }
                         }
 
-                        // If we should save then attempt to do so upon failure to save send the failed response
+                        // If we should save then attempt to do so. Upon failure to save send the failed response
                         if ($shouldSave && !$clientToUpdate->save()) {
                             $responseBody = $responseBody
                                 ->setData(null)
@@ -142,7 +157,11 @@ class FileImportHmisReport
                                 ->setMessage("Unable to save HMIS Client update. ID: " . $clientToUpdate->Id);
                             return $responseBody();
                         }
-                        $updatedClients[] = $clientToUpdate->toArray();
+
+                        // Add the updated client as an array to our updatedClients array if it was updated
+                        if ($shouldSave) {
+                            $updatedClients[] = $clientToUpdate->toArray();
+                        }
                     }
                 }
 
