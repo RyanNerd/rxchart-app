@@ -2,6 +2,7 @@
 namespace Willow\Controllers\File;
 
 use Carbon\Carbon;
+use Exception;
 use JsonException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UploadedFileInterface;
@@ -10,8 +11,42 @@ use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Willow\Middleware\ResponseBody;
 use Willow\Middleware\ResponseCodes;
+use Willow\Models\ClientRepresentation;
 use Willow\Models\Resident;
 
+/**
+ * Handles the upload of HMIS Excel XML client report
+ *
+ * The uploaded file should be in this XML format:
+ * <Worksheet ss:Name="DataSet1">
+ *  <Table>
+ *    <Row>
+ *       <Cell><Data ss:Type="String">Organization</Data></Cell>
+ *       <Cell><Data ss:Type="String">ProgramName</Data></Cell>
+ *       <Cell><Data ss:Type="String">Name</Data></Cell>
+ *       <Cell><Data ss:Type="String">SocSecNo</Data></Cell>
+ *       <Cell><Data ss:Type="String">GenderDesc</Data></Cell>
+ *       <Cell><Data ss:Type="String">GenderDescList</Data></Cell>
+ *       <Cell><Data ss:Type="String">RaceDesc</Data></Cell>
+ *       <Cell><Data ss:Type="String">RaceDescList</Data></Cell>
+ *       <Cell><Data ss:Type="String">Age</Data></Cell>
+ *       <Cell><Data ss:Type="String">EnrollDate</Data></Cell>
+ *       <Cell><Data ss:Type="String">ExitDate</Data></Cell>
+ *       <Cell><Data ss:Type="String">DaysEnrolled</Data></Cell>
+ *       <Cell><Data ss:Type="String">LenthofStay</Data></Cell>
+ *       <Cell><Data ss:Type="String">Enrolled</Data></Cell>
+ *       <Cell><Data ss:Type="String">StillEnrolled</Data></Cell>
+ *       <Cell><Data ss:Type="String">Exited</Data></Cell>
+ *       <Cell><Data ss:Type="String">EnrollID</Data></Cell>
+ *       <Cell><Data ss:Type="String">ProgramID</Data></Cell>
+ *       <Cell><Data ss:Type="String">ClientID</Data></Cell>
+ *       <Cell><Data ss:Type="String">ExitReason</Data></Cell>
+ *       <Cell><Data ss:Type="String">ExitDestination</Data></Cell>
+ *       <Cell><Data ss:Type="String">CaseID</Data></Cell>
+ *    </Row>
+ *   </Table>
+ *  </Worksheet>
+ */
 class FileImportHmisReport
 {
     public function __construct(private Resident $clientModel) {
@@ -26,75 +61,102 @@ class FileImportHmisReport
     public function __invoke(Request $request, Response $response): ResponseInterface {
         /** @var ResponseBody $responseBody */
         $responseBody = $request->getAttribute('response_body');
-
         $parsedRequest = $responseBody->getParsedRequest();
 
-        /**
-         * @var $files UploadedFileInterface[]
-         * @phpstan-ignore-next-line
-         */
-        $files = $parsedRequest['uploaded_files'];
-        $file = $files['single_file'];
+        // Lots of parsing of the uploaded XML file from HMIS
+        try {
+            /**
+             * @var $files UploadedFileInterface[]
+             * @phpstan-ignore-next-line
+             */
+            $files = $parsedRequest['uploaded_files'];
+            $file = $files['single_file'];
 
+            // Empty array for all the HMIS clients to be gathered from the XML file
+            $hmisClients = [];
 
-        // todo: try...catch
-        $hmisClients = [];
-        $excel = new SimpleXMLElement(file_get_contents($file));
-        $rows = $excel->Worksheet->Table->Row;
-        foreach ($rows as $row) {
-            $hmisClients[] = [
-                'Name' => $row->Cell[2]->Data->__toString(),
-                'Age' => (int)$row->Cell[8]->Data->__toString(),
-                'EnrollId' => (int)$row->Cell[16]->Data->__toString(),
-                'HmisId' => (int)$row->Cell[18]->Data->__toString()
-            ];
-        }
+            // Response data
+            $updatedClients = [];
 
-        $thisYear = Carbon::now()->year;
-        // Iterate through the parsed xml file looking up by name and age each client and updating the HmisId and EntrollId
-        foreach ($hmisClients as $hmisClient) {
-            $name = $hmisClient['Name'];
-            $commaPosition = strpos($name, ',');
-            $lastName = trim($commaPosition ? substr($name, 0,$commaPosition - 1) : '');
-            $firstName = trim($commaPosition ? substr($name, $commaPosition +1) : '');
-            $age = $hmisClient['Age'];
-            $client = clone $this->clientModel;
-            $clients = $client
-                ->where('LastName', '=', $lastName)
-                ->where('FirstName', '=', $firstName)
-                ->whereBetween('DOB_YEAR', [$thisYear - $age - 1, $thisYear - $age + 1])
-                ->get();
+            // Get the file contents
+            $xmlData = $file->getStream()->getContents();
 
-            $hmisId = $hmisClient['HmisId'];
-            $enrollId = $hmisClient['EnrollId'];
+            // The uploaded file is an Excel file in XML format. Try to load the file contents into the SimpleXML object
+            $excel = new SimpleXMLElement($xmlData);
 
-            // Did we find any matches?
-            if ($clients->count() > 0) {
-                /** @var Resident $clientToUpdate */
-                foreach ($clients as $clientToUpdate) {
-                    $shouldSave = false;
-                    if ($clientToUpdate->HMIS === null) {
-                        $clientToUpdate->HMIS = $hmisId;
-                        $clientToUpdate->EnrollmentId = $enrollId;
-                        $shouldSave = true;
-                    } else {
-                        // Only update the enrollmentId if the $enrollId from the xml import is greater
-                        if ($enrollId > (int)$clientToUpdate->EnrollmentId) {
+            // See class docblock for assumed XML format details
+            $rows = $excel->Worksheet->Table->Row;
+            foreach ($rows as $row) {
+                $hmisClients[] = [
+                    'Name' => $row->Cell[2]->Data->__toString(),
+                    'Age' => (int)$row->Cell[8]->Data->__toString(),
+                    'EnrollId' => (int)$row->Cell[16]->Data->__toString(),
+                    'HmisId' => (int)$row->Cell[18]->Data->__toString()
+                ];
+            }
+
+            // What year is it?
+            $thisYear = Carbon::now()->year;
+
+            // Iterate through the parsed xml file looking up by name and age each client
+            foreach ($hmisClients as $hmisClient) {
+                $name = $hmisClient['Name'];
+                $commaPosition = strpos($name, ',');
+                $lastName = trim($commaPosition ? substr($name, 0, $commaPosition - 1) : '');
+                $firstName = trim($commaPosition ? substr($name, $commaPosition + 1) : '');
+                $age = $hmisClient['Age'];
+                $client = clone $this->clientModel;
+
+                // Since the XML data does not have DOB and only Age we use some fuzzy logic to try and find matches
+                $clients = $client
+                    ->where('LastName', '=', $lastName)
+                    ->where('FirstName', '=', $firstName)
+                    ->whereBetween('DOB_YEAR', [$thisYear - $age - 1, $thisYear - $age + 1])
+                    ->get();
+
+                $hmisId = $hmisClient['HmisId'];
+                $enrollId = $hmisClient['EnrollId'];
+
+                // Did we find any matches?
+                if ($clients->count() > 0) {
+                    /** @var Resident|ClientRepresentation $clientToUpdate */
+                    foreach ($clients as $clientToUpdate) {
+                        $shouldSave = false;
+                        if ($clientToUpdate->HMIS === null) {
+                            $clientToUpdate->HMIS = $hmisId;
                             $clientToUpdate->EnrollmentId = $enrollId;
                             $shouldSave = true;
+                        } else {
+                            // Only update the enrollmentId if the $enrollId from the xml import is greater
+                            if ($clientToUpdate->EnrollmentId === null || $enrollId > (int)$clientToUpdate->EnrollmentId) {
+                                $clientToUpdate->EnrollmentId = $enrollId;
+                                $shouldSave = true;
+                            }
                         }
-                    }
 
-                    if ($shouldSave) {
-                        $clientToUpdate->save();
+                        // If we should save then attempt to do so upon failure to save send the failed response
+                        if ($shouldSave && !$clientToUpdate->save()) {
+                            $responseBody = $responseBody
+                                ->setData(null)
+                                ->setStatus(ResponseCodes::HTTP_INTERNAL_SERVER_ERROR)
+                                ->setMessage("Unable to save HMIS Client update. ID: " . $clientToUpdate->Id);
+                            return $responseBody();
+                        }
+                        $updatedClients[] = $clientToUpdate->toArray();
                     }
                 }
+
             }
+        } catch (Exception $exception) {
+            $responseBody = $responseBody
+                ->setData(null)
+                ->setStatus(ResponseCodes::HTTP_BAD_REQUEST)
+                ->setMessage('HMIS Import File Corrupted');
+            return $responseBody();
         }
 
-        // TODO: What to send back?
         $responseBody = $responseBody
-            ->setData(null)
+            ->setData($updatedClients)
             ->setStatus(ResponseCodes::HTTP_OK)
             ->setMessage('HMIS Import File Processed');
         return $responseBody();

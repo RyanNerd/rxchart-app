@@ -1,7 +1,7 @@
 CREATE TABLE `Service` (
     `Id` int NOT NULL AUTO_INCREMENT,
     `UserId` int NOT NULL,
-    `HmisId` varchar(15) DEFAULT NULL,
+    `HmisId` int DEFAULT NULL,
     `ServiceName` varchar(100) NOT NULL,
     `AllowMultiple` tinyint NOT NULL DEFAULT '0',
     `Created` timestamp NULL DEFAULT NULL,

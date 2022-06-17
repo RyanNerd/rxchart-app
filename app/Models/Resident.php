@@ -15,8 +15,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 #[ApplyModelColumnAttribute('DOB_MONTH', 'int')]
 #[ApplyModelColumnAttribute('DOB_DAY', 'int')]
 #[ApplyModelColumnAttribute('Notes', 'string')]
-#[ApplyModelColumnAttribute('HMIS', 'string', 12)]
-#[ApplyModelColumnAttribute('EnrollmentId', 'string', 12)]
+#[ApplyModelColumnAttribute('HMIS', 'int', null)]
+#[ApplyModelColumnAttribute('EnrollmentId', 'int', null)]
 #[ApplyModelColumnAttribute('Created', 'DateTime', null, ['CE'], 'NULL')]
 #[ApplyModelColumnAttribute('Updated', 'DateTime', null, ['CE'], 'NULL')]
 #[ApplyModelColumnAttribute('deleted_at', 'DateTime', null, ['CE'], 'NULL')]
@@ -30,8 +30,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property integer $DOB_MONTH     // Client's birth month
  * @property integer $DOB_DAY       // Client's birthday
  * @property ?string $Notes         // Details about the client
- * @property ?string $HMIS          // HMIS number
- * @property ?string $EnrollmentId  // EnrollmentId in HMIS for services
+ * @property ?integer $HMIS         // HMIS number
+ * @property ?integer $EnrollmentId // EnrollmentId in HMIS for services
  * @property DateTime $Created
  * @property DateTime $Updated
  * @property DateTime $deleted_at
@@ -73,7 +73,7 @@ class Resident extends ModelBase
         if (empty($value)) {
             $this->attributes['HMIS'] = null;
         } else {
-            $this->attributes['HMIS'] = $value;
+            $this->attributes['HMIS'] = (int)$value;
         }
     }
 
@@ -85,7 +85,7 @@ class Resident extends ModelBase
         if (empty($value)) {
             $this->attributes['EnrollmentId'] = null;
         } else {
-            $this->attributes['EnrollmentId'] = $value;
+            $this->attributes['EnrollmentId'] = (int)$value;
         }
     }
 }
