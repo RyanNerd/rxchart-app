@@ -77,6 +77,7 @@ class FileImportHmisReport
 
             // Response data
             $updatedClients = [];
+            $clientsNotFound = [];
 
             // Get the file contents
             $xmlData = $file->getStream()->getContents();
@@ -129,11 +130,11 @@ class FileImportHmisReport
                 // Perform the query
                 $clients = $clients->get();
 
+                $hmisId = $hmisClient['HmisId'];
+                $enrollId = $hmisClient['EnrollId'];
+
                 // Did we find any matches?
                 if ($clients->count() > 0) {
-                    $hmisId = $hmisClient['HmisId'];
-                    $enrollId = $hmisClient['EnrollId'];
-
                     /** @var Resident|ClientRepresentation $clientToUpdate */
                     foreach ($clients as $clientToUpdate) {
                         $shouldSave = false;
@@ -163,19 +164,29 @@ class FileImportHmisReport
                             $updatedClients[] = $clientToUpdate->toArray();
                         }
                     }
+                } else {
+                    $clientsNotFound[] = [
+                        'FirstName' => $firstName,
+                        'LastName' => $lastName,
+                        'Age' => $age,
+                        'HMIS' => $hmisId,
+                        'EnrollmentId' => $enrollId
+                    ];
                 }
-
             }
         } catch (Exception $exception) {
             $responseBody = $responseBody
                 ->setData(null)
                 ->setStatus(ResponseCodes::HTTP_BAD_REQUEST)
-                ->setMessage('HMIS Import File Corrupted');
+                ->setMessage(['HMIS Import File Error', $exception->getMessage()]);
             return $responseBody();
         }
 
         $responseBody = $responseBody
-            ->setData($updatedClients)
+            ->setData([
+                'updatedClients' => $updatedClients,
+                'clientsNotFound' => $clientsNotFound
+            ])
             ->setStatus(ResponseCodes::HTTP_OK)
             ->setMessage('HMIS Import File Processed');
         return $responseBody();

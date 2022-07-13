@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Willow\Models;
 
 use DateTime;
+use Exception;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[ApplyModelColumnAttribute('Id', 'int', null, ['PK', 'NN', 'AI'])]
@@ -86,6 +87,34 @@ class Resident extends ModelBase
             $this->attributes['EnrollmentId'] = null;
         } else {
             $this->attributes['EnrollmentId'] = (int)$value;
+        }
+    }
+
+    /**
+     * Strip white space from LastName
+     * @param string|null $value
+     * @return void
+     * @throws Exception
+     */
+    final public function setLastNameAttribute(?string $value): void {
+        if (!empty($value)) {
+            $this->attributes['LastName'] = trim($value);
+        } else {
+            throw new Exception('LastName can not be empty');
+        }
+    }
+
+    /**
+     * Strip white space from FirstName
+     * @param string|null $value
+     * @return void
+     * @throws Exception
+     */
+    final public function setFirstNameAttribute(?string $value): void {
+        if (!empty($value)) {
+            $this->attributes['FirstName'] = trim($value);
+        } else {
+            throw new Exception('FirstName can not be empty');
         }
     }
 }

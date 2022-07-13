@@ -1,0 +1,14 @@
+INSERT INTO Service (UserId, ServiceName, HmisId, Updated, Created) VALUES (2, 'Computer Lab', 688, NOW(), NOW());
+INSERT INTO Service (UserId, ServiceName, HmisId, Updated, Created) VALUES (2, 'Laundry', 689, NOW(), NOW());
+INSERT INTO Service (UserId, ServiceName, HmisId, Updated, Created) VALUES (2, 'Shower', 780, NOW(), NOW());
+INSERT INTO Service (UserId, ServiceName, HmisId, Updated, Created) VALUES (2, 'Voucher SP Thrift Store', 694, NOW(), NOW());
+INSERT INTO Service (UserId, ServiceName, HmisId, Updated, Created) VALUES (2, 'DI Voucher', 861, NOW(), NOW());
+INSERT INTO Service (UserId, ServiceName, HmisId, Updated, Created) VALUES (2, 'Donaction Closet', 703, NOW(), NOW());
+INSERT INTO Service (UserId, ServiceName, HmisId, Updated, Created) VALUES (2, 'Emergency Fund', 543, NOW(), NOW());
+INSERT INTO Service (UserId, ServiceName, HmisId, Updated, Created) VALUES (2, 'Food', 554, NOW(), NOW());
+INSERT INTO Service (UserId, ServiceName, HmisId, Updated, Created) VALUES (2, 'Hot Meal', 484, NOW(), NOW());
+INSERT INTO Service (UserId, ServiceName, HmisId, Updated, Created) VALUES (2, 'Pet Supllies', 718, NOW(), NOW());
+INSERT INTO Service (UserId, ServiceName, HmisId, Updated, Created) VALUES (2, 'Sack Meal', 485, NOW(), NOW());
+INSERT INTO Service (UserId, ServiceName, HmisId, Updated, Created) VALUES (2, 'Case Management', 702, NOW(), NOW());
+INSERT INTO Service (UserId, ServiceName, HmisId, Updated, Created) VALUES (2, 'CoC Case Management', 747, NOW(), NOW());
+INSERT INTO Service (UserId, ServiceName, HmisId, Updated, Created) VALUES (2, 'Crisis Management', 532, NOW(), NOW());
