@@ -123,8 +123,8 @@ class FileImportHmisReport
 
                 // Since the XML data does not have DOB and only Age we use some fuzzy logic to try and find matches
                 $clients = $client
-                    ->where('LastName', '=', $lastName)
-                    ->where('FirstName', '=', $firstName)
+                    ->where('LastName', 'LIKE', "%{$lastName}%")
+                    ->where('FirstName', 'LIKE', "%{$firstName}%")
                     ->whereBetween('DOB_YEAR', [($thisYear - $age) - 3, ($thisYear - $age) + 3]);
 
                 // Perform the query
