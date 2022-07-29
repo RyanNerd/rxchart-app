@@ -138,16 +138,10 @@ class FileImportHmisReport
                     /** @var Resident|ClientRepresentation $clientToUpdate */
                     foreach ($clients as $clientToUpdate) {
                         $shouldSave = false;
-                        if ($clientToUpdate->HMIS === null) {
+                        if ($clientToUpdate->EnrollmentId === null) {
                             $clientToUpdate->HMIS = $hmisId;
                             $clientToUpdate->EnrollmentId = $enrollId;
                             $shouldSave = true;
-                        } else {
-                            // Only update the enrollmentId if the $enrollId from the xml import is greater
-                            if ($clientToUpdate->EnrollmentId === null || $enrollId > (int)$clientToUpdate->EnrollmentId) {
-                                $clientToUpdate->EnrollmentId = $enrollId;
-                                $shouldSave = true;
-                            }
                         }
 
                         // If we should save then attempt to do so. Upon failure to save send the failed response
