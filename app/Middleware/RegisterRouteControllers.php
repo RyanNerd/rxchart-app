@@ -6,6 +6,7 @@ namespace Willow\Middleware;
 use Slim\Routing\RouteCollectorProxy;
 use Willow\Controllers\Authenticate\AuthenticateController;
 use Willow\Controllers\File\FileController;
+use Willow\Controllers\HmisUsers\HmisUsersController;
 use Willow\Controllers\MedHistory\MedHistoryController;
 use Willow\Controllers\Medicine\MedicineController;
 use Willow\Controllers\Pillbox\PillboxController;
@@ -15,11 +16,13 @@ use Willow\Controllers\Resident\ResidentController;
 use Willow\Controllers\Service\ServiceController;
 use Willow\Controllers\ServiceLog\ServiceLogController;
 
+
 class RegisterRouteControllers
 {
     public function __construct(
         private AuthenticateController $authenticateController,
         private FileController         $fileController,
+        private HmisUsersController    $hmisUsersController,
         private MedHistoryController   $medHistoryController,
         private MedicineController     $medicineController,
         private PillboxController      $pillboxController,
@@ -35,6 +38,7 @@ class RegisterRouteControllers
         // Register routes and actions for each controller
         $this->authenticateController->register($collectorProxy);
         $this->fileController->register($collectorProxy);
+        $this->hmisUsersController->register($collectorProxy);
         $this->medHistoryController->register($collectorProxy);
         $this->medicineController->register($collectorProxy);
         $this->pillboxController->register($collectorProxy);
