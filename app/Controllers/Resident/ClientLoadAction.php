@@ -19,6 +19,8 @@ use Willow\Models\Resident;
 
 class ClientLoadAction
 {
+    private const DRUG_HISTORY_DAYS = 14;
+
     public function __construct(
         private File        $file,
         private MedHistory  $medHistory,
@@ -63,7 +65,7 @@ class ClientLoadAction
                     ->toArray(),
                 'drugLogList' => $this->medHistory
                     ->where('ResidentId', '=', $clientId)
-                    ->whereDate('Updated', '>=', Carbon::now()->subDays(5))
+                    ->whereDate('Updated', '>=', Carbon::now()->subDays(self::DRUG_HISTORY_DAYS))
                     ->orderBy('Updated', 'desc')
                     ->get()
                     ->toArray(),
