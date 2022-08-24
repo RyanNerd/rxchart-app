@@ -1,10 +1,8 @@
-CREATE DATABASE  IF NOT EXISTS `RxChart` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `RxChart`;
--- MySQL dump 10.13  Distrib 8.0.28, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.30, for Linux (x86_64)
 --
 -- Host: localhost    Database: RxChart
 -- ------------------------------------------------------
--- Server version	8.0.28
+-- Server version	8.0.29
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -41,6 +39,27 @@ CREATE TABLE `File` (
   KEY `fk_File_Resident_idx` (`ResidentId`),
   CONSTRAINT `fk_File_Resident` FOREIGN KEY (`ResidentId`) REFERENCES `Resident` (`Id`),
   CONSTRAINT `fk_File_User` FOREIGN KEY (`UserId`) REFERENCES `User` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `HmisUsers`
+--
+
+DROP TABLE IF EXISTS `HmisUsers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `HmisUsers` (
+  `Id` int NOT NULL AUTO_INCREMENT,
+  `UserId` int NOT NULL,
+  `HmisUserName` varchar(45) NOT NULL,
+  `HmisUserId` varchar(6) NOT NULL,
+  `Created` timestamp NULL DEFAULT NULL,
+  `Updated` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `fk_HmisUsers_User` (`UserId`),
+  CONSTRAINT `fk_HmisUsers_User` FOREIGN KEY (`UserId`) REFERENCES `User` (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -205,6 +224,8 @@ CREATE TABLE `Resident` (
   `DOB_MONTH` tinyint DEFAULT NULL,
   `DOB_DAY` tinyint DEFAULT NULL,
   `Notes` varchar(500) DEFAULT NULL,
+  `HMIS` int DEFAULT NULL,
+  `EnrollmentId` int DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `Created` timestamp NULL DEFAULT NULL,
   `Updated` timestamp NULL DEFAULT NULL,
@@ -212,6 +233,60 @@ CREATE TABLE `Resident` (
   UNIQUE KEY `unique_Resident` (`UserId`,`LastName`,`FirstName`,`DOB_YEAR`,`DOB_MONTH`,`DOB_DAY`),
   KEY `fk_Resident_User` (`UserId`),
   CONSTRAINT `fk_Resident_User` FOREIGN KEY (`UserId`) REFERENCES `User` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `Service`
+--
+
+DROP TABLE IF EXISTS `Service`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Service` (
+  `Id` int NOT NULL AUTO_INCREMENT,
+  `UserId` int NOT NULL,
+  `HmisId` int DEFAULT NULL,
+  `ServiceName` varchar(100) NOT NULL,
+  `Created` timestamp NULL DEFAULT NULL,
+  `Updated` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `HmisId_UNIQUE` (`HmisId`),
+  KEY `fk_Service_User` (`UserId`),
+  CONSTRAINT `fk_Service_User` FOREIGN KEY (`UserId`) REFERENCES `User` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ServiceLog`
+--
+
+DROP TABLE IF EXISTS `ServiceLog`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ServiceLog` (
+  `Id` int NOT NULL AUTO_INCREMENT,
+  `UserId` int NOT NULL,
+  `ResidentId` int NOT NULL,
+  `ServiceId` int NOT NULL,
+  `HmisId` varchar(15) DEFAULT NULL,
+  `DateOfService` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `UnitOfMeasure` char(1) NOT NULL DEFAULT 'C',
+  `Units` int NOT NULL DEFAULT '1',
+  `UnitValue` double(10,2) NOT NULL DEFAULT '1.00',
+  `Recorded` timestamp NULL DEFAULT NULL,
+  `Created` timestamp NULL DEFAULT NULL,
+  `Updated` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `fk_ServiceLog_User` (`UserId`),
+  KEY `fk_ServiceLog_Service` (`ServiceId`),
+  KEY `fk_ServiceLog_Resident_idx` (`ResidentId`),
+  KEY `idx_ServiceLog_Date_Of_Service` (`DateOfService`),
+  CONSTRAINT `fk_ServiceLog_Resident` FOREIGN KEY (`ResidentId`) REFERENCES `Resident` (`Id`),
+  CONSTRAINT `fk_ServiceLog_Service` FOREIGN KEY (`ServiceId`) REFERENCES `Service` (`Id`),
+  CONSTRAINT `fk_ServiceLog_User` FOREIGN KEY (`UserId`) REFERENCES `User` (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -244,4 +319,4 @@ CREATE TABLE `User` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-03-31  1:09:18
+-- Dump completed on 2022-08-04  1:15:24
