@@ -40,6 +40,22 @@ class Resident extends ModelBase
     protected $table = 'Resident';
 
     /**
+     * Force a trim on the FirstName
+     * @param string $firstName
+     */
+    final public function setFirstNameAttribute(string $firstName): void {
+        $this->attributes['FirstName'] = trim($firstName);
+    }
+
+    /**
+     * Force a trim on the LastName
+     * @param string $lastName
+     */
+    final public function setLastNameAttribute(string $lastName): void {
+        $this->attributes['LastName'] = trim($lastName);
+    }
+
+    /**
      * Override Notes to null if empty string
      * @param string|null $value
      */
