@@ -38,9 +38,11 @@ class ClientRestoreAction
         if ($client !== null) {
             // Restore the deleted client
             if ($client->restore()) {
-                $client = $client->refresh();
-                $data = $client->attributesToArray();
+                $data = $client->refresh()->attributesToArray();
                 $status = ResponseCodes::HTTP_OK;
+            } else {
+                $status = ResponseCodes::HTTP_INTERNAL_SERVER_ERROR;
+                $responseBody = $responseBody->setMessage('Unable to restore client record: ' . $args['id']);
             }
         }
 
