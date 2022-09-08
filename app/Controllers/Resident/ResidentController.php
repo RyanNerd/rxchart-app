@@ -23,5 +23,7 @@ class ResidentController implements IController
         $group->delete('/resident/{id}', ResidentDeleteAction::class);
 
         $group->get('/client-load/{id}', ClientLoadAction::class);
+
+        $group->post('/client/restore/{id}', ClientRestoreAction::class);
     }
 }
