@@ -15,7 +15,7 @@ class ClientRestoreAction
     public function __construct(private Resident $client) {}
 
     /**
-     * Handle POST Restore request
+     * Handle Client Restore request
      * @param Request $request
      * @param Response $response
      * @param array $args
@@ -54,5 +54,4 @@ class ClientRestoreAction
         // Return the response as JSON
         return $responseBody();
     }
-
 }
